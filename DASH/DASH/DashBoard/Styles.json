@@ -14,5 +14,12 @@
     "backgroundColor": "#119DFF",
     "color": "white",
     "padding": "6px"
+  },
+
+"pie_chart_style" : {
+  "backgroundColor": "#FF8300",
+  "textAlign": "center",
+  "font-size": "7rem",
+  "height":"200px"
   }
 }

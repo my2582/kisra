@@ -1,13 +1,11 @@
 import dash_html_components as html
 import dash_core_components as dcc
-from datetime import date
 import json
 
 class Tab:
 
-    def __init__(self):
-        with open('C:\\Users\\Administrator\\IdeaProjects\\DASH\\.idea\\DashBoard\\Styles.json', 'rb') as f:
-            self.style = json.load(f)
+    def __init__(self, style):
+        self.style = style
         self.bluescript = list()
         self.input_id = "tabs-styled-with-inline"
         self.output_id = 'tabs-content-inline'

@@ -1,16 +1,15 @@
-import dash
-import dash_html_components as html
-import dash_core_components as dcc
-
-from dash.dependencies import Input, Output
+from datetime import date, timedelta
+import ReadWrite
+import pandas as pd
 
 class User:
     def __init__(self):
-        self.name = ''
-        self.starttime = ''
-
-    def layout(self):
-        return
+        self.file = ReadWrite.ReadWrite()
+        self.name = '투자자1'
+        self.start_time = '1/10/2020 1:00:00'
+        self.file_name = 'balance_s.pkl'
 
     def select(self):
+        data = pd.read_pickle(self.file.returnData(self.file_name))
+
         return
