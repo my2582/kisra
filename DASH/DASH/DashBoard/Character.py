@@ -21,7 +21,7 @@ class Character:
                 return False
         return True
 
-    def predict(self):
+    def predict(self) -> object:
         data = pd.read_pickle(self.file.returnData(self.file_name))
         score = 0
         for choice in self.options[:-3]:

@@ -1,11 +1,10 @@
 import dash_html_components as html
 import dash_core_components as dcc
 
-
 class SignUp:
 
-    def __init__(self):
-        pass
+    def __init__(self, id):
+        self.id = id
 
     def layout(self):
         layout = [
@@ -149,8 +148,8 @@ class SignUp:
             html.Button('Submit', id='submit-val', style={"background-color": "Yellow"}, n_clicks=0),
             html.Div([
                 html.Div(id='character-result'),
-                html.Br()
             ], id='output-div')
 
         ]
+
         return layout

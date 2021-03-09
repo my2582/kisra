@@ -5,7 +5,7 @@ import json
 
 class ReadWrite:
     def __init__(self):
-        with open(os.getcwd() + '\\path.json', 'rb') as f:
+        with open(os.getcwd() + '/path.json', 'rb') as f:
             self.path = json.load(f)
         self.data = ''
 

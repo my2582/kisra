@@ -2,7 +2,8 @@ import dash_html_components as html
 import dash_core_components as dcc
 
 class Analysis:
-    def __init__(self):
+    def __init__(self, id):
+        self.id = id
         pass
 
     def layout(self):
