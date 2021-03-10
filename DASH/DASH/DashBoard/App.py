@@ -1,50 +1,43 @@
 import dash
 import dash_html_components as html
-import Tab
-import SignUp
 import Character
-import Analysis
-import Info
 from dash.dependencies import Input, Output, State
 import plotly.express as px
 import dash_core_components as dcc
-import json
-import os
+import layout
 import User
 
 class App:
     def __init__(self):
-        with open(os.getcwd()+'\\Styles.json', 'rb') as f:
-            self.style = json.load(f)
         self.sheet = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
         self.app = dash.Dash(__name__, external_stylesheets=self.sheet)
+        self.layout = layout
+        self.user = User.User()
 
     def show_content(self):
-        style = self.style
         app = self.app
-        signup = SignUp.SignUp()
-        anal = Analysis.Analysis()
-        tab = Tab.Tab(self.style)
-        # info = Info.Info(user)
-        origin = tab.layout()
+        style = self.layout.style
+        tab = self.layout.tab
+        origin = tab
+        user = self.user
+        app.layout = origin
 
         @app.callback(
-            Output(tab.output_id, "children"),
-            Input(tab.input_id, "value")
+            Output(self.layout.output_id, 'style'),
+            Input(self.layout.input_id, "value"),
         )
-        def show_page(tab):
-            if tab == 'tab-1':
-                app.layout = html.Div(origin + signup.layout())
-                return signup.layout()
+        def show_page(tab_input):
+            if tab_input == 'signup':
+                app.layout.children[-1].children[0].style['visibility'] = 'visible'
+                return {'display': ''}
 
-            if tab == 'tab-2':
-                temp = app.layout.children[:-2]
-                print(temp)
-                app.layout = html.Div(temp+anal.layout())
-                print(app.layout)
-                return anal.layout()
+            if tab_input == 'analysis':
+                app.layout.children[-1].children[0].style['visibility'] = 'hidden'
+                app.layout.children[-1].children[1].style['visibility'] = 'visible'
+                print(app.layout.children[-1])
+                return {'display': ''}
 
-            if tab == 'tab-3':
+            if tab_input == 'info':
                 # app.layout = html.Div(info.layout())
                 pass
 
@@ -71,7 +64,7 @@ class App:
                 tags_id = [input_1, input_2, input_3, input_4, input_5, input_6, input_7, input_8, input_9,
                            input_10, input_11]
                 character = Character.Character(tags_id)
-                output = app.layout.children[-1]
+                output = app.layout.children[-1].children[-1]
                 if character.empty_check():
                     answer, df = character.predict()
                     result = '당신은 {0}형 투자자입니다. 당신에게 맞는 포트폴리오를 확인해 보세요'.format(answer)
@@ -91,3 +84,13 @@ class App:
                 output.children[0].children = warning
                 output.style = style['pie_chart_style']
                 return output
+
+        @app.callback(
+            Output('output-pos', 'children'),
+            Input('predict-slider', 'value'),
+            State('analysis-name', 'value'),
+            State('analysis-date', 'value')
+        )
+        def show_prediction(select, name, date):
+            name = '철수'
+            return html.Div()
