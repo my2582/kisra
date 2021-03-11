@@ -4,13 +4,14 @@ import Character
 from dash.dependencies import Input, Output, State
 import plotly.express as px
 import dash_core_components as dcc
+import dash_bootstrap_components as dbc
 import layout
 import User
 
 class App:
     def __init__(self):
         self.sheet = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
-        self.app = dash.Dash(__name__, external_stylesheets=self.sheet)
+        self.app = dash.Dash(__name__, external_stylesheets=self.sheet, suppress_callback_exceptions=True)
         self.layout = layout
         self.user = User.User()
 
@@ -23,19 +24,20 @@ class App:
         app.layout = origin
 
         @app.callback(
-            Output(self.layout.output_id, 'style'),
+            Output(self.layout.output_id, 'children'),
             Input(self.layout.input_id, "value"),
         )
         def show_page(tab_input):
             if tab_input == 'signup':
-                app.layout.children[-1].children[0].style['visibility'] = 'visible'
-                return {'display': ''}
+                app.layout.children[-1] = html.Div(self.layout.signup)
+                return html.Div(self.layout.signup)
 
             if tab_input == 'analysis':
-                app.layout.children[-1].children[0].style['visibility'] = 'hidden'
-                app.layout.children[-1].children[1].style['visibility'] = 'visible'
-                print(app.layout.children[-1])
-                return {'display': ''}
+                app.layout.children[-1] = html.Div(self.layout.analysis)
+                self.layout.analysis[0].children[1].value, self.layout.analysis[0].children[3].value = \
+                    user.name, user.date
+                print('analysis')
+                return html.Div(self.layout.analysis)
 
             if tab_input == 'info':
                 # app.layout = html.Div(info.layout())
@@ -56,7 +58,7 @@ class App:
             State('datetime', 'value'),
             State('name', 'value')
         )
-        def show_page(n_clicks, input_1, input_2, input_3, input_4,
+        def page1_result(n_clicks, input_1, input_2, input_3, input_4,
                       input_5, input_6, input_7, input_8, input_9, input_10,
                       input_11):
 
@@ -85,12 +87,96 @@ class App:
                 output.style = style['pie_chart_style']
                 return output
 
+
+
+        def page2_result(content):
+            if type(content) == str:
+                return dcc.ConfirmDialog(
+                        id='confirm',
+                        message=content
+                    )
+
+            before, after = content
+            table_header = [
+                html.Thead(html.Tr([html.Th("시점"), html.Th("현금성"), html.Th("주식"), html.Th("채권"), html.Th("대체"), html.Th('상세정보')]))
+            ]
+
+            row1 = html.Tr([html.Td("현재"), html.Td(before[before['asset_class'] == '현금성']['value'].iloc[0]),
+                            html.Td(before[before['asset_class'] == '주식']['value'].iloc[0]),
+                            html.Td(before[before['asset_class'] == '채권']['value'].iloc[0]),
+                            html.Td(before[before['asset_class'] == '대체']['value'].iloc[0]),
+                            html.Td(html.Div([html.Button('상세정보', id='detail-info-button'),
+                                    dbc.Modal(
+                                        [
+                                            dbc.ModalHeader("상세정보"),
+                                            dbc.ModalBody("A small modal.", id='record'),
+                                            dbc.ModalFooter(
+                                                dbc.Button("Close", id="close-detail-info", className="ml-auto")
+                                            ),
+                                        ],
+                                        id="modal-detail-info",
+                                        size="sm"
+                                    )]))])
+
+            row2 = html.Tr([html.Td("미래"), html.Td(before[before['asset_class'] == '현금성']['value'].iloc[0]),
+                            html.Td(before[before['asset_class'] == '주식']['value'].iloc[0]),
+                            html.Td(before[before['asset_class'] == '채권']['value'].iloc[0]),
+                            html.Td(before[before['asset_class'] == '대체']['value'].iloc[0]),
+                            html.Td('')],
+                            style={'background-color': '#FFA500'})
+
+
+            # if not content[-1]:
+            #     row2.style['background-color'] = '#ddd'
+            #     return html.Div(dbc.Table(table_header, html.Tbody([row1, row2]), bordered=True))
+
+            return html.Div(dbc.Table(table_header + [html.Tbody([row1, row2])], bordered=True))
+
+        def changePeriod(select):
+            for idx, sel in enumerate(select):
+                if select[idx] < 12:
+                    select[idx] = (12-select[idx])*30
+                    continue
+                if select[idx] < 14:
+                    select[idx] = (14-select[idx])*7
+                    continue
+                select[idx] = 17-select[idx]
+            return select
+
         @app.callback(
             Output('output-pos', 'children'),
             Input('predict-slider', 'value'),
             State('analysis-name', 'value'),
-            State('analysis-date', 'value')
+            State('analysis-datetime', 'value')
         )
         def show_prediction(select, name, date):
-            name = '철수'
-            return html.Div()
+            user.name, user.date = name, date
+            select = changePeriod(select)
+            result = user.closeData(select)
+            return page2_result(result)
+
+        @app.callback(
+            Output('modal-detail-info', 'is_open'),
+            Output('record', 'children'),
+            [Input('detail-info-button', 'n_clicks'),
+             Input('close-detail-info', 'n_clicks')],
+            State('modal-detail-info', 'is_open'),
+            State('predict-slider', 'value')
+        )
+        def detailInfo(open, close, is_open, select):
+            select = changePeriod(select)
+            result = user.closeData(select, True)
+            table_header = [
+                html.Thead(html.Tr([html.Th(col) for col in list(result.columns)]))
+            ]
+
+            rows = result.values.tolist()
+            table_row = list()
+            for row in rows:
+                temp = [html.Td(data) for data in row]
+                table_row.extend([html.Tr(temp)])
+
+            result = html.Div(dbc.Table(table_header + [html.Tbody(table_row)], bordered=True))
+            if open or close:
+                return not is_open, result
+            return is_open, result

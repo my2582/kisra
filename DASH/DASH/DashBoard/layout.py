@@ -1,6 +1,5 @@
 import dash_core_components as dcc
 import dash_html_components as html
-import dash_bootstrap_components as dbc
 import json
 import os
 
@@ -11,7 +10,7 @@ tabs_styles, tab_style, tab_selected_style = style['tabs_styles'], style['tab_st
 output_id = 'tabs-content-inline'
 input_id = "tabs-styled-with-inline"
 
-signup = html.Div([
+signup = [
     html.Div([
         html.Label('이름'),
         dcc.Input(value=None, type='text', id='name'),
@@ -154,10 +153,10 @@ signup = html.Div([
         html.Div(id='character-result'),
     ], id='output-div')
 
-    ], style={'visibility': "hidden"}
-)
+    ]
 
-analysis = html.Div([
+
+analysis = [
     html.Div([
         html.Label('이름'),
         dcc.Input(value='x', type='text', id='analysis-name'),
@@ -167,35 +166,34 @@ analysis = html.Div([
 
         , id='user-information-analysis'),
 
-    dcc.Slider(
+    dcc.RangeSlider(
         id='predict-slider',
         min=0,
         max=16,
-        value=0,
+        value=[0, 1],
         marks={
-            0: {'label': '1일'},
-            1: {'label': '2일'},
-            2: {'label': '3일'},
-            3: {'label': '1주'},
-            4: {'label': '2주'},
-            5: {'label': '1개월'},
-            6: {'label': '2개월'},
-            7: {'label': '3개월'},
+            0: {'label': '12개월'},
+            1: {'label': '11개월'},
+            2: {'label': '10개월'},
+            3: {'label': '9개월'},
+            4: {'label': '8개월'},
+            5: {'label': '7개월'},
+            6: {'label': '6개월'},
+            7: {'label': '5개월'},
             8: {'label': '4개월'},
-            9: {'label': '5개월'},
-            10: {'label': '6개월'},
-            11: {'label': '7개월'},
-            12: {'label': '8개월'},
-            13: {'label': '9개월'},
-            14: {'label': '10개월'},
-            15: {'label': '11개월'},
-            16: {'label': '12개월'},
+            9: {'label': '3개월'},
+            10: {'label': '2개월'},
+            11: {'label': '1개월'},
+            12: {'label': '2주'},
+            13: {'label': '1주'},
+            14: {'label': '3일'},
+            15: {'label': '2일'},
+            16: {'label': '1일'},
         }
     ),
     html.Div(id='output-pos')
-    ],
-    style={"visibility": "hidden"}, id='analysis'
-)
+    ]
+
 
 tab = html.Div([
     dcc.Tabs(id=input_id, value='signup', children=[
@@ -203,5 +201,5 @@ tab = html.Div([
         dcc.Tab(label='RA자문', value='analysis', style=tab_style, selected_style=tab_selected_style),
         dcc.Tab(label='투자내역', value='info', style=tab_style, selected_style=tab_selected_style)
     ], style=tabs_styles),
-    html.Div([signup, analysis], id=output_id, style={'display':'none'})
+    html.Div(id=output_id)
 ])
