@@ -6,6 +6,20 @@ class User:
         self.data = Data.Data()
         self.name, self.date = self.data.defaults()
 
+    def getStartDate(self):
+        return self.data.specificDate(self.name)
+
+    def changedUserData(self, data):
+        return self.data.changeSingleData(data)
+
+    def page3Data(self, date):
+        general, detail = self.data.returnPage3Data(self.name, date)
+        return self.fullCond(general), detail
+
+    def userList(self):
+        users = self.data.uniqueUser()
+        return [{'label': i, 'value': i} for i in users]
+
     def closeData(self, point, choice=False):
         result = self.data.returnData(point, self.name, self.date, choice)
 

@@ -2,6 +2,7 @@ import dash_core_components as dcc
 import dash_html_components as html
 import json
 import os
+from datetime import date
 
 with open(os.getcwd() + '/Styles.json', 'rb') as f:
     style = json.load(f)
@@ -155,7 +156,6 @@ signup = [
 
     ]
 
-
 analysis = [
     html.Div([
         html.Label('이름'),
@@ -194,6 +194,34 @@ analysis = [
     html.Div(id='output-pos')
     ]
 
+info = [
+    html.Div([
+        html.Label('이름'),
+        dcc.Dropdown(
+            id={
+                'type': 'filter-dropdown'
+            },
+            options=[],
+
+        value='x')], id='selection'),
+
+    html.Div([
+        html.Label('날짜'),
+        dcc.Input(value='y', type='text', id='info-datetime'),
+
+        html.Label('기준일'),
+        dcc.DatePickerSingle(
+            id='default-predict-date',
+            min_date_allowed=date.today(),
+            max_date_allowed=date.today(),
+            initial_visible_month=date.today(),
+            date=date.today()
+        )
+    ],
+        id='user-detail-info'),
+
+    html.Div(id='detail-info-output')
+]
 
 tab = html.Div([
     dcc.Tabs(id=input_id, value='signup', children=[

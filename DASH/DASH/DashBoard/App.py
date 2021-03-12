@@ -7,6 +7,9 @@ import dash_core_components as dcc
 import dash_bootstrap_components as dbc
 import layout
 import User
+import numpy as np
+from datetime import timedelta
+import plotly.graph_objects as go
 
 class App:
     def __init__(self):
@@ -36,12 +39,14 @@ class App:
                 app.layout.children[-1] = html.Div(self.layout.analysis)
                 self.layout.analysis[0].children[1].value, self.layout.analysis[0].children[3].value = \
                     user.name, user.date
-                print('analysis')
                 return html.Div(self.layout.analysis)
 
             if tab_input == 'info':
-                # app.layout = html.Div(info.layout())
-                pass
+                app.layout.children[-1] = html.Div(self.layout.info)
+                userList = user.userList()
+                self.layout.info[0].children[1].options = userList
+                self.layout.info[0].children[1].value = user.name
+                return html.Div(self.layout.info)
 
         @app.callback(
             Output('output-div', 'children'),
@@ -143,6 +148,46 @@ class App:
                 select[idx] = 17-select[idx]
             return select
 
+        def page3Layout(result, from_date, allowable):
+            chart, table = result
+            pie = px.pie(chart, names=chart['asset_class'].tolist(), values=chart['wt'].tolist())
+            fig = dcc.Graph(id='pie-chart-page3')
+            fig.figure = pie
+
+            table_header = [
+                html.Thead(html.Tr([html.Th("종목명"), html.Th("평가액"), html.Th("비중"), html.Th("비고")]))
+            ]
+            informations = table.loc[:, ['itemname', 'value', 'wt', 'asset_class']]
+            informations.loc[:, 'wt'] = informations.loc[:, 'wt']*100
+            sumOfInfo = [html.Td('계'), html.Td(sum(informations['value'])), html.Td(round(sum(informations['wt']))), html.Td('')]
+            informations = informations.values.tolist()
+            table_row = list()
+            for row in informations:
+                temp = [html.Td(data) for data in row]
+                table_row.extend([html.Tr(temp)])
+            table_row.extend([html.Tr(sumOfInfo)])
+            table_result = html.Div(dbc.Table(table_header + [html.Tbody(table_row)], bordered=True))
+
+            x_axis = [from_date]
+            now = from_date
+            while now<allowable:
+                now += timedelta(days=30)
+                x_axis.append(now)
+            y_axis = np.random.randn(2, len(x_axis)).tolist()
+            y_axis[0].sort()
+            y_axis[1].sort()
+
+            fig_2 = dcc.Graph(id='line-chart')
+            fig_line = go.Figure()
+            fig_line.add_trace(go.Scatter(x=x_axis, y=y_axis[0], mode='lines+markers', name='before'))
+            fig_line.add_trace(go.Scatter(x=x_axis, y=y_axis[1], mode='lines+markers', name='after'))
+            fig_2.figure = fig_line
+
+            return html.Div([fig,
+                             table_result,
+                             fig_2])
+
+
         @app.callback(
             Output('output-pos', 'children'),
             Input('predict-slider', 'value'),
@@ -177,6 +222,28 @@ class App:
                 table_row.extend([html.Tr(temp)])
 
             result = html.Div(dbc.Table(table_header + [html.Tbody(table_row)], bordered=True))
-            if open or close:
+            if open or not close:
                 return not is_open, result
             return is_open, result
+
+        @app.callback(
+            [
+                Output('info-datetime', 'value'),
+                Output('default-predict-date', 'min_date_allowed')],
+
+            Input({'type': 'filter-dropdown'}, 'value')
+        )
+        def page3DateResult(name):
+            user.name = name
+            startPoint = user.getStartDate()
+            return startPoint, startPoint
+
+        @app.callback(
+            Output('detail-info-output', 'children'),
+            Input('default-predict-date', 'date')
+        )
+        def page3OutputResult(pDate):
+            pDate += ' 0:0:0'
+            result = user.page3Data(pDate)
+            return page3Layout(result, user.changedUserData(user.date), user.changedUserData(pDate))
+
