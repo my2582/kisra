@@ -1,43 +1,43 @@
 ﻿종목코드,종목명,추적지수코드,추적지수티커,추적지수명,설정일,시장,자산군,투자자산,자산종류상세,퇴직연금 투자한도(70%),,
 itemcode,itemname,tracking_code,tracking_ticker,tracking_nm,inception_dt,market,asset_class,instruments,exposure,dc_risky_asset,strategy,issuer
-C000001,현금,CASH,,,,Domestic,Cash,Cash,Cash,1,,KIS
-D000001,예금,DEPOSIT,,,,Domestic,Cash,Deposit,Deposit,1,,KIS
-A069500,KODEX 200,K200,,,,Domestic,Equity,ETF,Large,0.7,Core,KODEX
-A105190,KINDEX 200,K200,,,,Domestic,Equity,ETF,Large,0.7,Core,KINDEX
-A102110,TIGER 200,K200,,,,Domestic,Equity,ETF,Large,0.7,Core,TIGER
-A232080,TIGER 코스닥150,KQ150,,,,Domestic,Equity,ETF,Small,0.7,Satellite,TIGER
-A278540,KODEX MSCI Korea TR,MSCI_KR,,,,Domestic,Equity,ETF,Large,0.7,Core,KODEX
-A229200,KODEX 코스닥 150,KQ150,,,,Domestic,Equity,ETF,Small,0.7,Satellite,KODEX
-A196230,KBSTAR 단기통안채,BOK_D.4,,,,Domestic,Fixed Income,ETF,Money,1,,KBSTAR
-A371460,TIGER 차이나전기차SOLACTIVE,CHINA_EV,,,,China,Equity,ETF,SmartBeta,0.7,Satellite,TIGER
-A293180,KODEX 2차전지산업,BATTERY_FN,,,,Domestic,Equity,ETF,Large,0.7,Satellite,KODEX
-A130730,KOSEF 단기자금,MM,,,,Domestic,Fixed Income,ETF,Money,1,,KOSEF
-A122260,KOSEF 통안채1년,BOK_D1,,,,Domestic,Fixed Income,ETF,ShortD,1,,KOSEF
-A314250,KODEX 미국FANG플러스(H),FANG,,,,USA,Equity,ETF,SmartBeta,0.7,Satellite,KODEX
-A139260,TIGER 200 IT,K200_IT,,,,Domestic,Equity,ETF,SmartBeta,0.7,Core,TIGER
-A364980,TIGER KRX2차전지K-뉴딜,BATTERY_K,,,,Domestic,Equity,ETF,SmartBeta,0.7,Satellite,TIGER
-A251350,KODEX 선진국MSCI World,MSCI_WO,,,,DM,Equity,ETF,Large,0.7,Core,KODEX
-A292150,TIGER TOP10,TOP10,,,,Domestic,Equity,ETF,Mega,0.7,Core,TIGER
-A091160,KODEX 반도체,SEMI_KRX,,,,Domestic,Equity,ETF,SmartBeta,0.7,Satellite,KODEX
-A367380,KINDEX 미국나스닥100,NQ100,,,,USA,Equity,ETF,SmartBeta,0.7,Satellite,KINDEX
-A091180,KODEX 자동차,AUTO_KRX,,,,Domestic,Equity,ETF,SmartBeta,0.7,Satellite,KODEX
-A091170,KODEX 은행,BANK_KRX,,,,Domestic,Equity,ETF,SmartBeta,0.7,Satellite,KODEX
-A372330,KODEX 차이나항셍테크,HSTECH,,,,China,Equity,ETF,SmartBeta,0.7,Satellite,KODEX
-A283580,KODEX 중국본토CSI300,CSI300,,,,China,Equity,ETF,Large,0.7,Satellite,KODEX
-A371160,TIGER 차이나항셍테크,HSTECH,,,,China,Equity,ETF,SmartBeta,0.7,Satellite,TIGER
-A364960,TIGER KRX BBIG K-뉴딜,BBIG,,,,Domestic,Equity,ETF,SmartBeta,0.7,Satellite,TIGER
-A245710,KINDEX 베트남VN30(합성),VN30,,,,Vietnam,Equity,ETF,Large,0.7,Satellite,KINDEX
-A102780,KODEX 삼성그룹,SAMSUNG_FN,,,,Domestic,Equity,ETF,SmartBeta,0.7,Satellite,KODEX
-A214980,KODEX 단기채권PLUS,MM_PLUS,,,,Domestic,Fixed Income,ETF,Money,1,,KODEX
-A360200,KINDEX 미국S&P500,SPX,,,,USA,Equity,ETF,Large,0.7,Core,KINDEX
-A302190,TIGER 중장기국채,KTB_D5,,,,Domestic,Fixed Income,ETF,LongD,1,,TIGER
-A157490,TIGER 소프트웨어,SW,,,,Domestic,Equity,ETF,SmartBeta,0.7,Satellite,TIGER
-A148070,KOSEF 국고채10년,KTB_D8,,,,Domestic,Fixed Income,ETF,LongD,1,,KOSEF
-A153130,KODEX 단기채권,MM,,,,Domestic,Fixed Income,ETF,Money,1,,KODEX
-A364990,TIGER KRX게임K-뉴딜,GAME_K,,,,Domestic,Equity,ETF,SmartBeta,0.7,Satellite,TIGER
-A266370,KODEX IT,IT,,,,Domestic,Equity,ETF,SmartBeta,0.7,Satellite,KODEX
-A114260,KODEX 국고채3년,KTB_D3,,,,Domestic,Fixed Income,ETF,ShortD,1,,KODEX
-A195930,TIGER 유로스탁스50(합성 H),STOXX50,,,,Europe,Equity,ETF,Large,0.7,Satellite,TIGER
-A273130,KODEX 종합채권(AA-이상)액티브,ACT_BOND_D4,,,,Domestic,Fixed Income,ETF,LongD,1,,KODEX
-A245340,TIGER 미국다우존스30,DOW30,,,,USA,Equity,ETF,Large,0.7,Satellite,TIGER
-A329750,TIGER 미국달러단기채권액티브,UST_D.5,,,,USA,Alternative,ETF,USD,1,,TIGER
+C000001,현금,CASH,,,,Domestic,Cash,Cash,Cash,N,,KIS
+D000001,예금,DEPOSIT,,,,Domestic,Cash,Deposit,Deposit,N,,KIS
+A069500,KODEX 200,K200,,,,Domestic,Equity,ETF,Large,Y,Core,KODEX
+A105190,KINDEX 200,K200,,,,Domestic,Equity,ETF,Large,Y,Core,KINDEX
+A102110,TIGER 200,K200,,,,Domestic,Equity,ETF,Large,Y,Core,TIGER
+A232080,TIGER 코스닥150,KQ150,,,,Domestic,Equity,ETF,Small,Y,Satellite,TIGER
+A278540,KODEX MSCI Korea TR,MSCI_KR,,,,Domestic,Equity,ETF,Large,Y,Core,KODEX
+A229200,KODEX 코스닥 150,KQ150,,,,Domestic,Equity,ETF,Small,Y,Satellite,KODEX
+A196230,KBSTAR 단기통안채,BOK_D.4,,,,Domestic,Fixed Income,ETF,Money,N,,KBSTAR
+A371460,TIGER 차이나전기차SOLACTIVE,CHINA_EV,,,,China,Equity,ETF,SmartBeta,Y,Satellite,TIGER
+A293180,KODEX 2차전지산업,BATTERY_FN,,,,Domestic,Equity,ETF,Large,Y,Satellite,KODEX
+A130730,KOSEF 단기자금,MM,,,,Domestic,Fixed Income,ETF,Money,N,,KOSEF
+A122260,KOSEF 통안채1년,BOK_D1,,,,Domestic,Fixed Income,ETF,ShortD,N,,KOSEF
+A314250,KODEX 미국FANG플러스(H),FANG,,,,USA,Equity,ETF,SmartBeta,Y,Satellite,KODEX
+A139260,TIGER 200 IT,K200_IT,,,,Domestic,Equity,ETF,SmartBeta,Y,Core,TIGER
+A364980,TIGER KRX2차전지K-뉴딜,BATTERY_K,,,,Domestic,Equity,ETF,SmartBeta,Y,Satellite,TIGER
+A251350,KODEX 선진국MSCI World,MSCI_WO,,,,DM,Equity,ETF,Large,Y,Core,KODEX
+A292150,TIGER TOP10,TOP10,,,,Domestic,Equity,ETF,Mega,Y,Core,TIGER
+A091160,KODEX 반도체,SEMI_KRX,,,,Domestic,Equity,ETF,SmartBeta,Y,Satellite,KODEX
+A367380,KINDEX 미국나스닥100,NQ100,,,,USA,Equity,ETF,SmartBeta,Y,Satellite,KINDEX
+A091180,KODEX 자동차,AUTO_KRX,,,,Domestic,Equity,ETF,SmartBeta,Y,Satellite,KODEX
+A091170,KODEX 은행,BANK_KRX,,,,Domestic,Equity,ETF,SmartBeta,Y,Satellite,KODEX
+A372330,KODEX 차이나항셍테크,HSTECH,,,,China,Equity,ETF,SmartBeta,Y,Satellite,KODEX
+A283580,KODEX 중국본토CSI300,CSI300,,,,China,Equity,ETF,Large,Y,Satellite,KODEX
+A371160,TIGER 차이나항셍테크,HSTECH,,,,China,Equity,ETF,SmartBeta,Y,Satellite,TIGER
+A364960,TIGER KRX BBIG K-뉴딜,BBIG,,,,Domestic,Equity,ETF,SmartBeta,Y,Satellite,TIGER
+A245710,KINDEX 베트남VN30(합성),VN30,,,,Vietnam,Equity,ETF,Large,Y,Satellite,KINDEX
+A102780,KODEX 삼성그룹,SAMSUNG_FN,,,,Domestic,Equity,ETF,SmartBeta,Y,Satellite,KODEX
+A214980,KODEX 단기채권PLUS,MM_PLUS,,,,Domestic,Fixed Income,ETF,Money,N,,KODEX
+A360200,KINDEX 미국S&P500,SPX,,,,USA,Equity,ETF,Large,Y,Core,KINDEX
+A302190,TIGER 중장기국채,KTB_D5,,,,Domestic,Fixed Income,ETF,LongD,N,,TIGER
+A157490,TIGER 소프트웨어,SW,,,,Domestic,Equity,ETF,SmartBeta,Y,Satellite,TIGER
+A148070,KOSEF 국고채10년,KTB_D8,,,,Domestic,Fixed Income,ETF,LongD,N,,KOSEF
+A153130,KODEX 단기채권,MM,,,,Domestic,Fixed Income,ETF,Money,N,,KODEX
+A364990,TIGER KRX게임K-뉴딜,GAME_K,,,,Domestic,Equity,ETF,SmartBeta,Y,Satellite,TIGER
+A266370,KODEX IT,IT,,,,Domestic,Equity,ETF,SmartBeta,Y,Satellite,KODEX
+A114260,KODEX 국고채3년,KTB_D3,,,,Domestic,Fixed Income,ETF,ShortD,N,,KODEX
+A195930,TIGER 유로스탁스50(합성 H),STOXX50,,,,Europe,Equity,ETF,Large,Y,Satellite,TIGER
+A273130,KODEX 종합채권(AA-이상)액티브,ACT_BOND_D4,,,,Domestic,Fixed Income,ETF,LongD,N,,KODEX
+A245340,TIGER 미국다우존스30,DOW30,,,,USA,Equity,ETF,Large,Y,Satellite,TIGER
+A329750,TIGER 미국달러단기채권액티브,UST_D.5,,,,USA,Alternative,ETF,USD,N,,TIGER
