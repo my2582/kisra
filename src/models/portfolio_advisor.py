@@ -20,19 +20,59 @@ class PortfolioAdvisor:
         현재 날짜
     freq : str
         {'d'|'w'|'m'} 중 1개 값을 가질 수 있으나 현재는 'w'만 지원.
+    w : DataFrame
+        추천된 포트폴리오 정보. self._optimize()가 실행될 때마다 이 값이 갱신된다.
+        컬럼: 종목코드(itemcode)가 인덱스이고, 비중(weights), 추적지수코드(tracking_code), 종목명(itemname)
+    weights : DataFrame
+        추천된 포트폴리오 정보인 self.w가 성향(risk_profile), 날짜별마다 저장되는 거대한 DataFrame이다.
     """
     def __init__(self,
             risk_profile=None,
             current_date=None,
-            freq='w'):
+            freq='w',
+            root_path='./'):
         
         self._risk_profile=risk_profile
         self.current_date=current_date
         self.freq=freq
+        self.df_rt = None
+        self.w = None
+        self.weights = None  
+        self.root_path = root_path
+    
+    def run(self, risk_profile=None, current_date=None, drop_wt_threshold=0.005,
+            model='Classic', rm='CDaR', method_mu='hist', method_cov='oas',
+            decay=0.97, allow_short=False, alpha=0.05):
+        r"""
+        최적화 모델을 실행한다(즉, 최적화를 한다).
+        risk_profile과 current_date값을 바꿔가면서 반복적으로 실행하면 self.weights에 추천 포트폴리오가 누적되어 저장된다.
+        """
+        self._risk_profile=risk_profile
+        self.current_date=current_date
 
+        self._load_data()
+        self._load_constraints()
 
-        self.load_data()
-        self.load_constraints()
+        self.w = self._optimize(drop_wt_threshold=drop_wt_threshold, model=model, rm=rm,
+                                method_mu=method_mu, method_cov=method_cov, decay=decay,
+                                allow_short=allow_short, alpha=alpha)
+        
+        if self.weights is None:
+            # run()이 처음으로 실행됐을 경우에는 'date', 'risk_profile' 컬럼의 빈 DataFrame을 만들어
+            # 결과값인 self.w값과 결합(concat)한다.
+            temp = pd.DataFrame(index=range(self.w.index.shape[0]), columns=['date', 'risk_profile'])
+            temp['date'] = self.current_date
+            temp['risk_profile'] = self._risk_profile
+            self.weights = pd.concat([temp, self.w.reset_index()], axis=1)
+        else:
+            temp = self.w.copy()
+            temp['date'] = self.current_date
+            temp['risk_profile'] = self._risk_profile
+            self.weights = pd.concat([self.weights, temp.reset_index()])
+            self.weights = self.weights.reset_index(drop=True)
+        
+        print('Completed optimization for {} on {}'.format(self._risk_profile, self.current_date))
+
     
     @property
     def risk_profile(self):
@@ -49,7 +89,7 @@ class PortfolioAdvisor:
             raise NameError('risk_profile must not be None.')
 
 
-    def load_data(self):
+    def _load_data(self):
         r"""
         종가, 투자가능종목, 제약조건 등 데이터를 읽어온다.
         """
@@ -60,28 +100,28 @@ class PortfolioAdvisor:
 
         # 가격 데이터
         # price_db.pkl
-        filepath = '../../data/external/'
+        filepath = self.root_path + 'data/external/'
         filename = 'price_db_' + self.freq + '.pkl'
         self.price_db = pd.read_pickle(filepath+filename)
         print('Loaded: {}'.format(filename))
 
         # 읽어온 종목들의 수익률 계산
-        self.calculate_internals()
+        self._calculate_internals()
 
         # instruments_m: 투자가능 종목들 목록 (현재 시점의 거래금액, 시총 보고 뽑음)
-        filepath = '../../data/processed/'
+        filepath = self.root_path + 'data/processed/'
         filename = 'instruments_m.pkl'
         self.instruments_m = pd.read_pickle(filepath+filename)
         print('Loaded: {}'.format(filename))
 
         # simulatable_instruments: 상장된 지 3년 넘은 종목 (시뮬레이션을 위해 필요한 요건)
-        filepath = '../../data/external/'
+        filepath = self.root_path + 'data/external/'
         filename = 'simulatable_instruments.pkl'
         self.simulatable_instruments = pd.read_pickle(filepath+filename)
         print('Loaded: {}.'.format(filename))
 
         # 사용자가 지정한 제약조건 테이블. Aw>=B 형식으로 되어 있어 사람이 이해하기 편함.
-        filepath = '../../data/processed/'
+        filepath = self.root_path + 'data/processed/'
         filename = 'constraints.pkl'
         self.df_constraints = pd.read_pickle(filepath+filename)
         print('Loaded: {}.'.format(filename))
@@ -94,7 +134,7 @@ class PortfolioAdvisor:
         # asset_classes는 Riskfolio 패키지가 요구하는 형식으로 고정되어 있는 투자종목들의 df임.
         self.asset_classes = utils.get_asset_classes(self.universe)
 
-    def calculate_internals(self):
+    def _calculate_internals(self):
         # Make `df_rt`, a matrix of log returns of all eligible **instruments** in the universe with:
         # - Columns: itemcode
         # - Rows: date
@@ -102,7 +142,7 @@ class PortfolioAdvisor:
 
         print('Price returns have been calculated.')
         
-    def load_constraints(self):
+    def _load_constraints(self):
         self.constraints = self.df_constraints[np.logical_or(
             self.df_constraints.risk_profile == str(self._risk_profile), self.df_constraints.risk_profile == 'Common')].drop(['risk_profile'], axis=1)
 
@@ -113,7 +153,7 @@ class PortfolioAdvisor:
 
         print('Portfolio constraints have been set in matrice A and B such that Aw>=B for a risk profile number {}.'.format(self._risk_profile))
     
-    def optimize(self, drop_wt_threshold=0.005, model='Classic', rm='CDaR', method_mu='hist', method_cov='oas', decay=0.97, allow_short=False, alpha=0.05):
+    def _optimize(self, drop_wt_threshold=0.005, model='Classic', rm='CDaR', method_mu='hist', method_cov='oas', decay=0.97, allow_short=False, alpha=0.05):
         r"""
         Riskfolio 패키지를 이용하여 최적화한다. Riskfolio는 내부적으로 최근 사용층을 넓혀가고 있는 cvxpy를 이용한다.
         ref: https://riskfolio-lib.readthedocs.io/en/latest/portfolio.html
@@ -163,21 +203,31 @@ class PortfolioAdvisor:
         self.w = self.port.optimization(model=self.model, rm=self.rm, obj=self.obj, rf=self.rf)
         print('Optimized weights have been estimated.')
 
-        # threshold보다 작은 비중은 버린다(0%로 처리).
-        self.drop_trivial_weights(threshold=drop_wt_threshold)
-        print('Weights < {} are dropped to zero.'.format(drop_wt_threshold))
+        # threshold보다 작은 비중을 추천받은 종목은 삭제한다.
+        self.drop_trivial_weights(threshold=drop_wt_threshold, drop=True)
+        print('Weights < {} are dropped.'.format(drop_wt_threshold))
 
         # ETF추적지수나 종목명 정보를 종목코드에 추가해서 반환한다.
         self.add_instruments_info()
+        self.w = self.w.sort_values(by='weights', ascending=False)
 
         return self.w
 
 
-    def drop_trivial_weights(self, threshold=0.005):
+    def drop_trivial_weights(self, threshold=0.005, drop=True):
         r"""
-        threshold보다 작은 비중은 버린다(0%로 처리).
+        threshold보다 작은 비중은 버린다.
+
+        Parameters
+        ----------
+        drop : boolean
+            True면 threshold값보다 추천 비중이 작은 종목을 삭제한다.
+            False면 0%로 설정하고 삭제하지는 않는다.
         """
-        self.w.loc[np.abs(self.w.weights)<threshold,'weights'] = 0
+        if drop :
+            self.w = self.w.drop(self.w.loc[np.abs(self.w.weights)<0.005,'weights'].index)
+        else:
+            self.w.loc[np.abs(self.w.weights)<threshold,'weights'] = 0
     
     def add_instruments_info(self):
         r"""
@@ -194,6 +244,11 @@ class PortfolioAdvisor:
         w_others = pd.DataFrame.from_dict(
             {'OTHERS': [self.w[self.w.weights < 0.0495].weights.sum(), 'Others', 'Others']},
             orient='index',
-            columns=w.columns) if small_wt >= 0.00495 else None
+            columns=self.w.columns) if small_wt >= 0.00495 else None
 
         return pd.concat([self.w.drop(self.w[self.w.weights<0.0495].index), w_others]).sort_values(by='weights', ascending=False)
+
+if __name__ == '__main__':
+    pa = PortfolioAdvisor()
+    pa.run(risk_profile=2, current_date='2020-01-10')
+    print(pa.w)
