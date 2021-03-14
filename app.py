@@ -17,7 +17,7 @@ class App:
         self.app = dash.Dash(__name__, external_stylesheets=self.sheet, suppress_callback_exceptions=True)
         self.server = self.app.server
         self.layout = layout
-        self.user = User.User()
+        self.user = User()
 
     def show_content(self):
         app = self.app

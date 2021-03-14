@@ -1,0 +1,20 @@
+# local package
+-e .
+
+# external requirements
+click
+Sphinx
+coverage
+awscli
+flake8
+python-dotenv>=0.5.1
+
+# heroku
+Flask==1.1.2
+gunicorn==20.0.4
+dash==1.19.0
+dash-bootstrap-components==0.11.3
+Riskfolio-Lib==0.1.4
+cvxpy==1.1.11
+numpy==1.20.1
+pandas==1.1.5

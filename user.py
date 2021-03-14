@@ -3,7 +3,7 @@ from data import Data
 
 class User:
     def __init__(self):
-        self.data = Data.Data()
+        self.data = Data()
         self.name, self.date = self.data.defaults()
 
     def getStartDate(self):
