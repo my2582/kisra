@@ -20,7 +20,8 @@ class Character:
         return True
 
     def predict(self) -> object:
-        data = pd.read_pickle(os.getcwd()+'\\data\\processed\\'+self.file_name)
+        # data = pd.read_pickle(os.getcwd()+'\\data\\processed\\'+self.file_name)
+        data = pd.read_pickle('./data/processed/'+self.file_name)
         score = 0
         for choice in self.options[:-3]:
             score += data[data['choice-id'] == choice]['risk_pref_value'].iloc[0]

@@ -4,8 +4,10 @@ from datetime import timedelta, datetime
 
 class Data:
     def __init__(self):
-        self.pre_data = pd.read_pickle(os.getcwd()+'\\data\\processed\\balance_m.pkl')
-        self.detail_data = pd.read_pickle(os.getcwd()+'\\data\\processed\\balance_s.pkl')
+        # self.pre_data = pd.read_pickle(os.getcwd()+'\\data\\processed\\balance_m.pkl')
+        # self.detail_data = pd.read_pickle(os.getcwd()+'\\data\\processed\\balance_s.pkl')
+        self.pre_data = pd.read_pickle('./data/processed/balance_m.pkl')
+        self.detail_data = pd.read_pickle('./data/processed/balance_s.pkl')
         self.columns = list(self.detail_data.columns)
 
     def uniqueUser(self):
