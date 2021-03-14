@@ -248,3 +248,10 @@ class App:
             result = user.page3Data(pDate)
             return page3Layout(result, user.changedUserData(user.date), user.changedUserData(pDate))
 
+
+
+if __name__ == '__main__':
+    app = App()
+    server = app.server
+    app.show_content()
+    app.app.run_server(debug = True)
