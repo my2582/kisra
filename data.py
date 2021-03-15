@@ -35,7 +35,7 @@ class Data:
             try:
                 dt = datetime.strptime(data, '%Y-%m-%d %H:%M:%S').date()
             except:
-                dt = datetime.strptime(data, '%m/%d/%Y %H:%M:%S').date()
+                dt = datetime.strptime(data, '%m/%d/%Y %H:%M:%S %p').date()
             return dt
         return data
 
@@ -44,7 +44,7 @@ class Data:
             try:
                 dt = datetime.strptime(self.detail_data.loc[i, 'date'], '%Y-%m-%d %H:%M:%S')
             except: 
-                dt = datetime.strptime(self.detail_data.loc[i, 'date'], '%m/%d/%Y %H:%M:%S')
+                dt = datetime.strptime(self.detail_data.loc[i, 'date'], '%m/%d/%Y %H:%M:%S %p')
 
             self.detail_data.loc[i, 'date'] = dt
 
@@ -53,7 +53,7 @@ class Data:
             try:
                 dt = datetime.strftime(data.loc[i, self.columns[0]], '%Y-%m-%d %H:%M:%S')
             except:
-                dt = datetime.strftime(data.loc[i, self.columns[0]], '%m/%d/%Y %H:%M:%S')
+                dt = datetime.strftime(data.loc[i, self.columns[0]], '%m/%d/%Y %H:%M:%S %p')
             data.loc[i, self.columns[0]] = dt
         return data
 
