@@ -250,5 +250,4 @@ def show_content(users):
 show_content(user)
 
 if __name__ == '__main__':
-
     app.run_server(debug = True)

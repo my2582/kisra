@@ -32,17 +32,29 @@ class Data:
 
     def changeSingleData(self, data):
         if type(data) == str:
-            return datetime.strptime(data, '%Y-%m-%d %H:%M:%S').date()
+            try:
+                dt = datetime.strptime(data, '%Y-%m-%d %H:%M:%S').date()
+            except:
+                dt = datetime.strptime(data, '%m/%d/%Y %H:%M:%S').date()
+            return dt
         return data
 
     def changeData(self):
         for i in range(len(self.detail_data)):
-            self.detail_data.loc[i, 'date'] = datetime.strptime(self.detail_data.loc[i, 'date'], '%Y-%m-%d %H:%M:%S')
+            try:
+                dt = datetime.strptime(self.detail_data.loc[i, 'date'], '%Y-%m-%d %H:%M:%S')
+            except: 
+                dt = datetime.strptime(self.detail_data.loc[i, 'date'], '%m/%d/%Y %H:%M:%S')
+
+            self.detail_data.loc[i, 'date'] = dt
 
     def unchangeData(self, data):
-
         for i in range(len(data)):
-            data.loc[i, self.columns[0]] = datetime.strftime(data.loc[i, self.columns[0]], '%Y-%m-%d %H:%M:%S')
+            try:
+                dt = datetime.strftime(data.loc[i, self.columns[0]], '%Y-%m-%d %H:%M:%S')
+            except:
+                dt = datetime.strftime(data.loc[i, self.columns[0]], '%m/%d/%Y %H:%M:%S')
+            data.loc[i, self.columns[0]] = dt
         return data
 
     def returnPage3Data(self, name, date):
