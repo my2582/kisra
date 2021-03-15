@@ -69,7 +69,7 @@ def show_content(users):
         if 0 < n_clicks:
             tags_id = [input_1, input_2, input_3, input_4, input_5, input_6, input_7, input_8, input_9,
                         input_10, input_11]
-            character = Character.Character(tags_id)
+            character = Character(tags_id)
             output = app.layout.children[-1].children[-1]
             if character.empty_check():
                 answer, df = character.predict()
