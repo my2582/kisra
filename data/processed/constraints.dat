@@ -1,0 +1,28 @@
+﻿
+risk_profile,Disabled,Type,Set,Position,Sign,Weight,Type Relative,Relative Set,Relative,Factor
+2,FALSE,Classes,Asset class,Equity,>=,0.03,,,,
+2,FALSE,Classes,Asset class,Equity,<=,0.1,,,,
+2,FALSE,Assets,,A130730,>=,0.2,,,,
+2,FALSE,Assets,,A153130,>=,0.2,,,,
+2,FALSE,Assets,,A214980,>=,0.1,,,,
+2,FALSE,Classes,Asset class,Alternative,<=,0.05,,,,
+3,FALSE,Classes,Asset class,Equity,>=,0.4,,,,
+3,FALSE,Classes,Asset class,Equity,<=,0.6,,,,
+3,FALSE,Classes,Asset class,Fixed Income,<=,0.7,,,,
+3,FALSE,Classes,Asset class,Alternative,<=,0.1,,,,
+4,FALSE,Classes,Asset class,Equity,>=,0.5,,,,
+4,FALSE,Classes,Asset class,Equity,<=,0.7,,,,
+4,FALSE,Classes,Asset class,Fixed Income,<=,0.5,,,,
+4,FALSE,Classes,Asset class,Alternative,<=,0.2,,,,
+2,FALSE,Classes,Strategy,Satellite,<=,,Classes,Strategy,Core,0
+3,FALSE,Classes,Strategy,Core,>=,,Classes,Strategy,Satellite,4
+4,FALSE,Classes,Strategy,Core,>=,,Classes,Strategy,Satellite,1.5
+Common,FALSE,All Assets,,,<=,0.25,,,,
+Common,FALSE,Classes,DC risky asset,Y,<=,0.7,,,,
+Common,FALSE,Classes,Issuer,KINDEX,<=,0.6,,,,
+Common,FALSE,Classes,Issuer,KODEX,<=,0.6,,,,
+Common,FALSE,Classes,Issuer,TIGER,<=,0.6,,,,
+Common,FALSE,Classes,Issuer,KBSTAR,<=,0.6,,,,
+Common,FALSE,Classes,Issuer,KOSEF,<=,0.6,,,,
+Common,FALSE,Classes,Issuer,ARIRANG,<=,0.6,,,,
+Common,FALSE,Classes,Issuer,HANARO,<=,0.6,,,,
