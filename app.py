@@ -19,7 +19,7 @@ class App:
         self.layout = layout
         self.user = User()
 
-    def run(self)
+    def run(self):
         r"""
         Run the app.
         """
