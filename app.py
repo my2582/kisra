@@ -15,7 +15,7 @@ class App:
     def __init__(self):
         self.sheet = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
         self.app = dash.Dash(__name__, external_stylesheets=self.sheet, suppress_callback_exceptions=True)
-        self.server = self.app.server
+        # self.server = self.app.server
         self.layout = layout
         self.user = User()
 
@@ -26,7 +26,12 @@ class App:
         # Set a global module singleton instance of this app.
         global app
         assert app is None, "Cannot instantiate more than one web app."
+
+        global server
+        assert server is None,  "Cannot instantiate more than one server."
         app = self.app
+        server = app.server
+        
         self.show_content()
         app.run_server(debug = True)
 
@@ -261,8 +266,7 @@ class App:
 
 
 if __name__ == "main":
-    app = App()
-    server = app.server
-    app.run()
+    my_web = App()
+    my_web.run()
     # app.show_content()
     # app.app.run_server(debug = True)
