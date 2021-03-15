@@ -19,8 +19,19 @@ class App:
         self.layout = layout
         self.user = User()
 
-    def show_content(self):
+    def run(self)
+        r"""
+        Run the app.
+        """
+        # Set a global module singleton instance of this app.
+        global app
+        assert app is None, "Cannot instantiate more than one web app."
         app = self.app
+        self.show_content()
+        app.run_server(debug = True)
+
+    def show_content(self):
+        # app = self.app
         style = self.layout.style
         tab = self.layout.tab
         origin = tab
@@ -249,8 +260,9 @@ class App:
             return page3Layout(result, user.changedUserData(user.date), user.changedUserData(pDate))
 
 
-
-app = App()
-server = app.server
-app.show_content()
-app.app.run_server(debug = True)
+if __name__ == "main":
+    app = App()
+    server = app.server
+    app.run()
+    # app.show_content()
+    # app.app.run_server(debug = True)
