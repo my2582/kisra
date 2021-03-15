@@ -16,8 +16,6 @@ sheet = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 app = dash.Dash(__name__, external_stylesheets=sheet, suppress_callback_exceptions=True)
 server = app.server
 user = User()
-show_content(user)
-
 
 def show_content(users):
     # app = self.app
@@ -249,6 +247,8 @@ def show_content(users):
         return page3Layout(result, user.changedUserData(user.date), user.changedUserData(pDate))
 
 
+show_content(user)
 
 if __name__ == '__main__':
+
     app.run_server(debug = True)
