@@ -10,12 +10,20 @@ from user import User
 import numpy as np
 from datetime import timedelta
 import plotly.graph_objects as go
+import os
+import psycopg2
 
 
 sheet = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 app = dash.Dash(__name__, external_stylesheets=sheet, suppress_callback_exceptions=True)
 server = app.server
 user = User()
+
+DATABASE_URL = os.environ['DATABASE_URL']
+
+conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+print(conn)
+
 
 def show_content(users):
     # app = self.app
