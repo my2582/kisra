@@ -41,7 +41,7 @@ class User:
         condition = ['현금성', '주식', '채권', '대체']
         present = set(list(data['asset_class']))
         need = [col for col in condition if col not in present]
-
+##
         if not need:
             return data
 

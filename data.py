@@ -1,4 +1,3 @@
-import os
 import pandas as pd
 from datetime import timedelta, datetime
 
@@ -42,7 +41,7 @@ class Data:
     def changeData(self):
         for i in range(len(self.detail_data)):
             try:
-                dt = datetime.strptime(self.detail_data.loc[i, 'date'], '%Y-%m-%d %H:%M:%S')
+                dt = datetime.strptime(self.detail_data.loc[i, 'date'], '%Y-%m-%d %H:%M:%S %p')
             except: 
                 dt = datetime.strptime(self.detail_data.loc[i, 'date'], '%m/%d/%Y %H:%M:%S %p')
 
@@ -51,7 +50,7 @@ class Data:
     def unchangeData(self, data):
         for i in range(len(data)):
             try:
-                dt = datetime.strftime(data.loc[i, self.columns[0]], '%Y-%m-%d %H:%M:%S')
+                dt = datetime.strftime(data.loc[i, self.columns[0]], '%Y-%m-%d %H:%M:%S %p')
             except:
                 dt = datetime.strftime(data.loc[i, self.columns[0]], '%m/%d/%Y %H:%M:%S %p')
             data.loc[i, self.columns[0]] = dt
@@ -61,7 +60,6 @@ class Data:
         user_id = self.check_name(name)
         baseline = self.detail_data[self.detail_data[self.columns[2]] == name]
         standard_date = ''
-
         if type(baseline.loc[0, self.columns[0]])!=str:
             baseline = self.unchangeData(baseline)
 
@@ -70,8 +68,16 @@ class Data:
                 standard_date = baseline.loc[i, self.columns[0]]
             if date < baseline.loc[i, self.columns[0]]:
                 break
-        return self.pre_data[(self.pre_data['date'] == standard_date)&(self.pre_data['userid'] == user_id)], \
-               baseline[baseline[self.columns[0]] == standard_date]
+
+        answer = self.pre_data[(self.pre_data['date'] == standard_date)&(self.pre_data['userid'] == user_id)]
+
+        if not len(answer):
+            temp = standard_date[:10]
+            temp = temp.split('-')
+            temp = str(int(temp[1]))+'/'+str(int(temp[2]))+'/'+temp[0]+' '+str(int(standard_date[11:13]))+standard_date[13:]
+            answer = self.pre_data[(self.pre_data['date'] == temp) & (self.pre_data['userid'] == user_id)]
+
+        return answer, baseline[baseline[self.columns[0]] == standard_date]
 
     def returnData(self, point, name, date, choice=False):
         user_id = self.check_name(name)
