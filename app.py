@@ -19,6 +19,14 @@ app = dash.Dash(__name__, external_stylesheets=sheet, suppress_callback_exceptio
 server = app.server
 user = User()
 
+DATABASE_URL = os.environ['DATABASE_URL']
+
+conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+con = conn.cursor()
+con.execute("CREATE TABLE customers(name varchar(255))")
+con.execute("INSERT into customers (name) values (%s)", ('hello'))
+con.commit()
+
 
 def show_content(users):
     # app = self.app
@@ -253,13 +261,6 @@ def show_content(users):
 show_content(user)
 
 if __name__ == '__main__':
-    DATABASE_URL = os.environ['DATABASE_URL']
-
-    conn = psycopg2.connect(DATABASE_URL, sslmode='require')
-    con = conn.cursor()
-    con.execute("CREATE TABLE customers(name varchar(255))")
-    con.execute("INSERT into customers (name) values (%s)", ('hello'))
-    con.commit()
 
 
     app.run_server(debug = True)
