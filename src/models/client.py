@@ -1,34 +1,28 @@
 import numpy as np
 import pandas as pd
+from load_data import Balance, AdvisedPortfolios, Singleton
 
-class User:
+class Client:
     r"""
-    투자자 클래스이다. 투자자 1명이 1개의 투자성향값을 갖고, 이에 따라 RA에 포트폴리오를 추천받는다.
+    고객(투자자) 클래스이다. 투자자 1명이 1개의 투자성향값을 갖고, 이에 따라 RA에 포트폴리오를 추천받는다.
     투자성향값이 같으면 추천받는 포트폴리오가 같다.
 
     Parameters
     ----------
-    accounts : list
-        계좌번호를 원소로하는 리스트임. 계좌번호는 str이다.
-        예) ['800-01', '810-01']
+    acc_no : str
+        계좌번호
     
     book_s : dict
         계좌번호를 key로 하고, 원장 상세 테이블(DataFrame)을 value로 하는 딕셔너리이다.
-        원장 상세 테이블은 book_s
+        원장 상세 테이블은 balance_s 형식의 데이터이다.
     """
 
     def __init__(self,
         userid=None,
         username=None,
-        accounts=None
     ):
         self.userid = userid
         self.username = username
-        self.accounts = accounts
-    
-    def add_acc_no(self, acc_no):
-        self.accounts[acc_no]
-
 
     @property
     def userid(self):

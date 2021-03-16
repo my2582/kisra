@@ -4,7 +4,7 @@ import pandas as pd
 import riskfolio.ConstraintsFunctions as cf
 import riskfolio.Portfolio as pf
 import datetime
-import utils
+from .utils import get_asset_classes
 
 
 class PortfolioAdvisor:
