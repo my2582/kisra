@@ -106,7 +106,14 @@ def get_advised_port(risk_profile, df_advised_ports=None):
     instruments_m = Instruments.instance().data
     advised_pf = advised_pf.merge(instruments_m.loc[:, ['itemcode']+col_to_add], left_on='itemcode', right_on='itemcode', how='left')
 
-    return advised_pf
+    # Price DB와 병합하기 위해서 컬럼 타입을 맞추기 위해 advised_pf 테이블의 date 컬럼 타입을 datetime으로 바꾼다.
+    advised_pf.loc[:, 'date'] = pd.to_datetime(advised_pf.date)
+
+    # 가격/거래량/거래대금 정보 추가
+    price_db = PriceDB.instance().data
+    advised_pf = advised_pf.merge(price_db, left_on=['date', 'itemcode'], right_on=['date', 'itemcode'], how='left')
+
+    return advised_pf.drop(['ret'], axis=1)
 
 
 def get_recommendation(client):

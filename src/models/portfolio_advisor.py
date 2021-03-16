@@ -4,7 +4,10 @@ import pandas as pd
 import riskfolio.ConstraintsFunctions as cf
 import riskfolio.Portfolio as pf
 import datetime
-from .utils import get_asset_classes
+from utils import get_asset_classes
+
+from asset import Asset
+from price import Price
 
 
 class PortfolioAdvisor:
@@ -247,6 +250,32 @@ class PortfolioAdvisor:
             columns=self.w.columns) if small_wt >= 0.00495 else None
 
         return pd.concat([self.w.drop(self.w[self.w.weights<0.0495].index), w_others]).sort_values(by='weights', ascending=False)
+
+
+
+
+def easy_add_assets(tickers, quantities, prices):
+    """
+    An easy way to add multiple assets to portfolio.
+    Args:
+        tickers (Sequence[str]): Ticker of assets in portfolio.
+        quantities (Sequence[float]): Quantities of respective assets in portfolio. Must be in the same order as ``tickers``.
+        prices (Sequence[float]): Prices of respective assets in portfolio. Must be in the same order as ``tickers``.
+
+    reference: https://github.com/siavashadpey/rebalance/blob/master/rebalance/portfolio/portfolio.py
+    """
+
+
+
+    assert (len(tickers) == len(quantities)) & (len(quantities) == len(prices)), \
+           "`names`, `quantities` and `prices` must be of the same length."
+
+    _assets = {}
+    for ticker, quantity, price in zip(tickers, quantities, prices):
+        _assets[ticker] = Asset(ticker, quantity, price)
+
+    return _assets
+
 
 if __name__ == '__main__':
     pa = PortfolioAdvisor()
