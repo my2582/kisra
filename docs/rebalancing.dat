@@ -1,0 +1,61 @@
+﻿Case,,,,,,,,,,,,,,
+1,1,n,old,,new,,,old',,new',,,new에서 고를 종목 기준,
+new에 없음,,,itemcode,exposure,itemcode,exposure,,itemcode,exposure,itemcode,exposure,diff,wt,pick
+,,,A01,MM,A02,MM,,A01,MM,A01,MM,,"diff(old wt, net wt) smallest",old와 같은 itemcode로 변경
+,,,,,A03,MM,,A01,MM,A03,MM,,,
+,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,
+new에 있음,,,A01,MM,A02,MM,,A01,MM,A02,MM,,"diff(old wt, net wt) smallest","if smallest's code == old's code, then do nothing"
+,,,,,A01,MM,,A01,MM,A01,MM,,,else replace the smallest one with the old's code.
+,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,
+new에 없음,n,1,A01,MM,A04,MM,,A01,MM,A04,MM,,"diff(old wt, net wt) smallest",old와 같은 itemcode로 변경
+,,,A02,MM,,,,A02,MM,A04,MM,,,
+,,,A03,MM,,,,A03,MM,A04,MM,,,
+,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,
+new에 있음,,,A01,MM,A04,MM,,A01,MM,A02,MM,,"diff(old wt, net wt) smallest","if smallest's code == old's code, then do nothing"
+,,,A02,MM,,,,A02,MM,A02,MM,,,else replace the smallest one with the old's code.
+,,,A03,MM,,,,A03,MM,A02,MM,,,
+,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,
+3,n,m,A01,MM,A04,MM,,A01,MM,A04,MM,,"make every possible pair(old, new)",A04를 old와 같은 itemcode로 변경
+new에 없음,,,A02,MM,A05,MM,,A02,MM,A04,MM,,"각 A01, A02, A03 와 A04로 리스트 만듦",pair 리스트에서 old 제거
+,,,A03,MM,,,,A03,MM,A04,MM,,"diff(old, A04)와 diff(old, A05)중 smallest 선정",
+,,,,,,,,A01,MM,A05,MM,,,"pick the next new one, which is A05"
+,,,,,,,,A02,MM,A05,MM,,리스트에 남은 old 종목과 A05로 리스트 만들,A05를 old와 같은 itemcode로 변경
+,,,,,,,,A03,MM,A05,MM,,남은 diff() 중 smallest 선정,pair 리스트에서 old 제거
+,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,new에 남은 종목이 없으면 종료
+,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,
+new에 있음,,,A01,MM,A02,MM,,A01,MM,A02,MM,,"make every possible pair(old, new)","if smallest's code == old's code, then do nothing"
+,,,A02,MM,A04,MM,,A02,MM,A02,MM,,"각 A01, A02, A03 와 A02로 리스트 만듦",else replace the smallest one with the old's code.
+,,,A03,MM,,,,A03,MM,A02,MM,,"diff(old, A02)와 diff(old, A04)중 smallest 선정",pair 리스트에서 old 제거
+,,,,,,,,A01,MM,A04,MM,,,
+,,,,,,,,A02,MM,A04,MM,,리스트에 남은 old 종목과 남은 new 종목 리스트에서,A05를 old와 같은 itemcode로 변경
+,,,,,,,,A03,MM,A04,MM,,남은 diff() 중 smallest 선정,pair 리스트에서 old 제거
+,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,new에 남은 종목이 없으면 종료
+,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,
+4,m,n,A01,MM,A03,MM,,A01,MM,A03,MM,,"make every possible pair(old, new)",A3을 old와 같은 itemcode로 변경
+new에 없음,,,A02,MM,A04,MM,,A02,MM,A03,MM,,"각 A01, A02, A03 와 A02로 리스트 만듦",pair리스트에서 old 제거
+,,,,,A05,MM,,A01,MM,A04,MM,,"diff(old, A03), diff(old, A04), diff(old, A05)중 smallest 선정",
+,,,,,,,,A02,MM,A04,MM,,,
+,,,,,,,,A01,MM,A05,MM,,리스트에 남은 old 종목과 남은 new 종목 리스트에서,"pick the next new one, which is A04 in this case."
+,,,,,,,,A02,MM,A05,MM,,남은 diff() 중 smallest 선정,
+,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,
+new에 있음,,,A01,MM,A01,MM,,A01,MM,A01,MM,,,
+,,,A02,MM,A02,MM,,A02,MM,A01,MM,,,
+,,,,,A04,MM,,A01,MM,A02,MM,,,
+,,,,,,,,A02,MM,A02,MM,,,
+,,,,,,,,A01,MM,A04,MM,,,
+,,,,,,,,A02,MM,A04,MM,,,
+,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,
+5,1,1,,,,,,,,,,,,
