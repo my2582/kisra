@@ -24,9 +24,9 @@ DATABASE_URL = os.environ['DATABASE_URL']
 conn = psycopg2.connect(DATABASE_URL, sslmode='require')
 con = conn.cursor()
 con.execute("CREATE TABLE customers(name varchar(255))")
-con.execute("INSERT into customers (name) values (%s)", ('hello'))
-con.commit()
-
+con.execute("INSERT into customers (name) values ('hello')")
+conn.commit()
+conn.close()
 
 def show_content(users):
     # app = self.app
