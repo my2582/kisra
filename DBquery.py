@@ -15,10 +15,9 @@ class query:
 
     def BetweenDate(self, table, dates, user):
         standard, start, end = dates
-        query = "select * from {0} where userid = %s "\
-                "and to_timestamp(date, 'mm/dd/yyyy HH:M1:SS AM') " \
+        query = "select * from {0} where to_timestamp(date, 'mm/dd/yyyy HH:M1:SS AM') " \
                 "BETWEEN to_timestamp(%s, 'mm/dd/yyyy HH:M1:SS AM') - interval %s and to_timestamp(%s,  'mm/dd/yyyy HH:M1:SS AM') - interval %s "
-        self.con.execute(query.format(table),  [user, standard, str(start)+' days', standard, str(end) +' days'])
+        self.con.execute(query.format(table),  [standard, str(start)+' days', standard, str(end) +' days'])
         self.conn.commit()
         return DataFrame(np.array(self.con.fetchall()))
 
