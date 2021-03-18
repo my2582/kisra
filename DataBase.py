@@ -50,14 +50,17 @@ class databaseDF:
         for i in range(len(general)):
             temp = general.iloc[i, :].values.tolist()
             self.con.execute(insert_query_gen.format('general'), temp)
+            self.conn.commit()
 
         for i in range(len(detail)):
             temp = detail.iloc[i, :].values.tolist()
             self.con.execute(insert_query_dtl.format('detail'), temp)
+            self.conn.commit()
 
         for i in range(len(user)):
             temp = user.iloc[i, :].values.tolist()
             self.con.execute(insert_query_user.format('userselection'), temp)
+            self.conn.commit()
         return
 
     def getDate(self, user, date):
