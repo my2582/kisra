@@ -15,7 +15,7 @@ class databaseDF:
         self.con.execute("CREATE TABLE IF NOT EXISTS general(date varchar(255), userid varchar(255), asset_class varchar(255), value float(24), wt float(24))")
         self.conn.commit()
         print('-----------2---------------------')
-        self.con.execute("CREATE TABLE IF NOT EXISTS detail(date varchar(255), userid varchar(255), name varchar(255), asset_class varchar(255), "
+        self.con.execute("CREATE TABLE IF NOT EXISTS detail(date varchar(255), userid varchar(255), name varchar(255), asset_class varchar(255), itemcode varchar(255), "
                                   "itemname varchar(255), quantity float(24), cost_price float(24), cost_value float(24), price float(24), value float(24), "
                                   "wt float(24), group_by varchar(255), original varchar(5))")
         self.conn.commit()
