@@ -28,11 +28,11 @@ class databaseDF:
 
     def insertDefault(self, data):
         general, detail, user = data
-        insert_query_gen = 'INSERT INTO {} (date, userid, asset_class, value, wt) values (%s, %s, %s, %s, %s)'
-        insert_query_dtl = 'INSERT INTO {} (date, userid, name, asset_class, itemcode, itemname,' \
+        insert_query_gen = 'INSERT INTO {0} (date, userid, asset_class, value, wt) values (%s, %s, %s, %s, %s)'
+        insert_query_dtl = 'INSERT INTO {0} (date, userid, name, asset_class, itemcode, itemname,' \
                            'quantity, cost_price, cost_value, price, value, wt, group_by, original) values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'
 
-        insert_query_user = 'INSERT INTO {} (userid, set_no, q_no, answer, risk_pref_value) values (%s, %s, %s, %s, %s)'
+        insert_query_user = 'INSERT INTO {0} (userid, set_no, q_no, answer, risk_pref_value) values (%s, %s, %s, %s, %s)'
 
         detail['quantity'] = detail['quantity'].values.astype(float)
         detail['cost_price'] = detail['cost_price'].values.astype(float)
