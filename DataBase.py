@@ -20,10 +20,14 @@ class databaseDF:
                                   "wt float(24), group_by varchar(255), original varchar(5))")
 
         print('-----------3---------------------')
-        self.con.execute("CREATE TABLE IF NOT EXISTS user(userid varchar(255), set_no float(24), q_no float(24), answer float(24), risk_pref_value float(24))")
+        self.con.execute("CREATE TABLE IF NOT EXISTS userselection(userid varchar(255), set_no float(24), q_no float(24), answer float(24), risk_pref_value float(24))")
 
-        self.insertDefault(data)
-        self.conn.commit()
+        self.con.execute("SELECT COUNT(*) FROM detail")
+
+        x = self.con.fetchall()
+        if not x[0][0]:
+            self.insertDefault(data)
+            self.conn.commit()
 
     def insertDefault(self, data):
         general, detail, user = data
