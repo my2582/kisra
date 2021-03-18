@@ -51,7 +51,7 @@ class databaseDF:
             self.con.execute(insert_query_gen.format('general'), temp)
 
         for i in range(len(detail)):
-            temp = general.iloc[i, :].values.tolist()
+            temp = detail.iloc[i, :].values.tolist()
             self.con.execute(insert_query_dtl.format('detail'), temp)
 
         for i in range(len(user)):
