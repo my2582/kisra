@@ -7,8 +7,7 @@ class databaseDF:
         self.dburl = os.environ['DATABASE_URL']
         self.conn = psycopg2.connect(self.dburl, sslmode='require')
         self.con = self.conn.cursor()
-        self.query = self.query(self.conn, self.con)
-
+        self.query = query(self.conn, self.con)
 
     def createDefault(self, data):
         try:
