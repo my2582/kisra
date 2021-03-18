@@ -59,6 +59,7 @@ class Data:
 
         if choice:
             data = self.db.getRecord(user_id, (standard_date, start, end))
+            print(data)
             data.columns = self.columns
             return data
 
