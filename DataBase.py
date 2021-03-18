@@ -56,7 +56,7 @@ class databaseDF:
 
         for i in range(len(user)):
             temp = user.iloc[i, :].values.tolist()
-            self.con.execute(insert_query_user.format('user'), temp)
+            self.con.execute(insert_query_user.format('userselection'), temp)
         return
 
     def getDate(self, user, date):
