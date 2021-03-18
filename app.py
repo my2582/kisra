@@ -187,18 +187,18 @@ def show_content(users):
 
 
     @app.callback(
-        Output('output-pos', 'children'),
+        [Output('output-pos', 'children'),
+        Output('analysis-datetime', 'value')],
         Input('predict-slider', 'value'),
-        State('analysis-name', 'value'),
-        State('analysis-datetime', 'value')
+        State('analysis-name', 'value')
     )
-    def show_prediction(select, name, date):
-        print(name, date)
-        user.name, user.date = name, date
+    def show_prediction(select, name):
+        user.name = name
+        date = user.getStartDate()
+        user.date = date
         select = changePeriod(select)
         result = user.closeData(select)
-        print(result)
-        return page2_result(result)
+        return page2_result(result), date
 
     @app.callback(
         Output('modal-detail-info', 'is_open'),
@@ -245,7 +245,7 @@ def show_content(users):
     )
     def page3OutputResult(pDate):
         pDate += ' 1:0:0 AM'
-        print(pDate)
+        print('pDate : ', pDate, type(pDate))
         result = user.page3Data(pDate)
         return page3Layout(result, datetime.strptime(user.date, '%m/%d/%Y %I:%M:%S %p'), datetime.strptime(pDate, '%m/%d/%Y %I:%M:%S %p'))
 
