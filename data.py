@@ -55,7 +55,7 @@ class Data:
         data = self.pre_data[self.pre_data['userid'] == user_id]
 
         start, end = point
-        standard_date = dt.today().strftime('%m/%d/%y')+' 0:00:00 AM'
+        standard_date = dt.today().strftime('%m/%d/%y')+' 1:00:00 AM'
 
         if choice:
             data = self.db.getRecord(user_id, (standard_date, start, end))
