@@ -7,7 +7,7 @@ class query:
         self.con = con
 
     def findDate(self, table, date, userid):
-        query = "select * from {0} where to_timestamp(%s,  'mm/dd/yyyy HH:M1:SS AM') > to_timestamp(date,  'mm/dd/yyyy HH:M1:SS AM') and userid=userid"
+        query = "select * from {0} where to_timestamp(%s,  'mm/dd/yyyy HH:M1:SS AM') > to_timestamp(date, 'mm/dd/yyyy HH:M1:SS AM') and userid=%s"
         self.con.execute(query.format(table), [date, userid])
         self.conn.commit()
         return self.con.fetchall()
