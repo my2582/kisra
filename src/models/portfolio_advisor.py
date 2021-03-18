@@ -277,6 +277,102 @@ def easy_add_assets(tickers, quantities, prices):
     return _assets
 
 
+
+def rebalance(self, target_allocation, verbose=False):
+    """
+    Rebalances the portfolio using the specified target allocation, the portfolio's current allocation,
+    and the available cash.
+    Args:
+        target_allocation (Dict[str, float]): Target asset allocation of the portfolio (in %). The keys of the dictionary are the tickers of the assets.
+        verbose (bool, optional): Verbosity flag. Default is False. 
+    Returns:
+        (tuple): tuple containing:
+            * new_units (Dict[str, int]): Units of each asset to buy. The keys of the dictionary are the tickers of the assets.
+            * prices (Dict[str, [float, str]]): The keys of the dictionary are the tickers of the assets. Each value of the dictionary is a 2-entry list. The first entry is the price of the asset during the rebalancing computation. The second entry is the currency of the asset.
+            * exchange_rates (Dict[str, float]): The keys of the dictionary are currencies. Each value is the exchange rate to CAD during the rebalancing computation.
+            * max_diff (float): Largest difference between target allocation and optimized asset allocation.
+    """
+
+    # order target_allocation dict in the same order as assets dict and upper key
+    target_allocation_reordered = {}
+    try:
+        for key in self.assets:
+            target_allocation_reordered[key] = target_allocation[key]
+    except:
+        raise Exception(
+            "'target_allocation not compatible with the assets of the portfolio."
+        )
+
+    target_allocation_np = np.fromiter(
+        target_allocation_reordered.values(), dtype=float)
+
+    assert abs(np.sum(target_allocation_np) -
+               100.) <= 1E-2, "target allocation must sum up to 100%."
+
+    # offload heavy work
+    (balanced_portfolio, new_units, prices, cost, exchange_history) = rebalancing_helper.rebalance(self, target_allocation_np)
+
+    # compute old and new asset allocation
+    # and largest diff between new and target asset allocation
+    old_alloc = self.asset_allocation()
+    new_alloc = balanced_portfolio.asset_allocation()
+    max_diff = max(
+        abs(target_allocation_np -
+            np.fromiter(new_alloc.values(), dtype=float)))
+
+    if verbose:
+        print("")
+        # Print shares to buy, cost, new allocation, old allocation target, and target allocation
+        print(
+            " Ticker      Ask     Quantity      Amount    Currency     Old allocation   New allocation     Target allocation"
+        )
+        print(
+            "                      to buy         ($)                      (%)              (%)                 (%)"
+        )
+        print(
+            "---------------------------------------------------------------------------------------------------------------"
+        )
+        for ticker in balanced_portfolio.assets:
+            print("%8s  %7.2f   %6.d        %8.2f     %4s          %5.2f            %5.2f               %5.2f" % \
+            (ticker, prices[ticker][0], new_units[ticker], cost[ticker], prices[ticker][1], \
+             old_alloc[ticker], new_alloc[ticker], target_allocation[ticker]))
+
+        print("")
+        print(
+            "Largest discrepancy between the new and the target asset allocation is %.2f %%."
+            % (max_diff))
+
+        # Print conversion exchange
+        if len(exchange_history) > 0:
+            print("")
+            if len(exchange_history) > 1:
+                print(
+                    "Before making the above purchases, the following currency conversions are required:"
+                )
+            else:
+                print(
+                    "Before making the above purchases, the following currency conversion is required:"
+                )
+
+            for exchange in exchange_history:
+                (from_amount, from_currency, to_amount, to_currency,
+                 rate) = exchange
+                print("    %.2f %s to %.2f %s at a rate of %.4f." %
+                      (from_amount, from_currency, to_amount, to_currency,
+                       rate))
+
+        # Print remaining cash
+        print("")
+        print("Remaining cash:")
+        for cash in balanced_portfolio.cash.values():
+            print("    %.2f %s." % (cash.amount, cash.currency))
+
+    # Now that we're done, we can replace old portfolio with the new one
+    self.__dict__.update(balanced_portfolio.__dict__)
+
+    return (new_units, prices, exchange_history, max_diff)
+
+
 if __name__ == '__main__':
     pa = PortfolioAdvisor()
     pa.run(risk_profile=2, current_date='2020-01-10')
