@@ -6,6 +6,7 @@ class databaseDF:
     def __init__(self):
         self.dburl = os.environ['DATABASE_URL']
         self.conn = psycopg2.connect(self.dburl, sslmode='require')
+        # self.conn = psycopg2.connect(host='127.0.0.1', dbname='postgres', user='postgres', password='kus410028@', port='5432', sslmode='prefer')
         self.con = self.conn.cursor()
         self.query = query(self.conn, self.con)
 
@@ -17,23 +18,13 @@ class databaseDF:
                                       "wt float(24), group_by varchar(255), original varchar(5))")
             self.con.execute("CREATE TABLE USER(userid varchar(255), set_no float(24), q_no float(24), answer float(24), risk_pref_value float(24))")
 
-            self.insert(data)
+            self.insertDefault(data)
             self.conn.commit()
 
-            return self.getSchema(data)
+            return
 
         except:
-            return self.getSchema(data)
-
-    def getSchema(self, data):
-        general = self.selectDefault(data[0], "select * from {}")
-        detail = self.selectDefault(data[1], "select * from {}")
-        user = self.selectDefault(data[2], "select * from {}")
-        self.conn.commit()
-        return general, detail, user
-
-    def selectDefault(self, data, query):
-        return self.con.fetchall(self.con.execute(query.format(data)))
+            return
 
     def insertDefault(self, data):
         general, detail, user = data
@@ -60,9 +51,10 @@ class databaseDF:
             temp = general.iloc[i, :].values.tolist()
             self.cur.execute(insert_query_dtl.format('detail'), temp)
 
-        for i in range(len(general)):
+        for i in range(len(user)):
             temp = user.iloc[i, :].values.tolist()
             self.cur.execute(insert_query_user.format('user'), temp)
+        return
 
     def getDate(self, user, date):
         value = self.query.findDate('detail', date, user)

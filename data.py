@@ -1,5 +1,6 @@
 import pandas as pd
 from DataBase import databaseDF
+from datetime import date as dt
 
 class Data:
     def __init__(self):
@@ -10,6 +11,7 @@ class Data:
         self.detail_data = pd.read_pickle('./data/processed/balance_s.pkl')
         self.columns = list(self.detail_data.columns)
         self.db = databaseDF()
+        self.db.createDefault((self.pre_data, self.detail_data, self.usersel))
 
     def uniqueUser(self):
         users = self.detail_data['name'].tolist()
@@ -53,7 +55,7 @@ class Data:
         data = self.pre_data[self.pre_data['userid'] == user_id]
 
         start, end = point
-        standard_date = date.today().strftime('%m/%d/%y')+' 0:00:00 AM'
+        standard_date = dt.today().strftime('%m/%d/%y')+' 0:00:00 AM'
 
         if choice:
             data = self.db.getRecord(user_id, (standard_date, start, end))

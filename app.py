@@ -228,16 +228,14 @@ def show_content(users):
         [
             Output('info-datetime', 'value'),
             Output('default-predict-date', 'min_date_allowed'),
-            Output('detail-info-output', 'children')
         ],
 
         Input({'type': 'filter-dropdown'}, 'value'),
-        State('default-predict-date', 'date')
     )
-    def page3DateResult(name, pDate):
+    def page3DateResult(name):
         user.name = name
         startPoint = user.getStartDate()
-        return startPoint, startPoint, page3OutputResult(pDate)
+        return startPoint, startPoint
 
     @app.callback(
         Output('detail-info-output', 'children'),
