@@ -8,25 +8,13 @@ import dash_bootstrap_components as dbc
 import layout
 from user import User
 import numpy as np
-from datetime import timedelta
+from datetime import timedelta, datetime
 import plotly.graph_objects as go
-import os
-import psycopg2
-
 
 sheet = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 app = dash.Dash(__name__, external_stylesheets=sheet, suppress_callback_exceptions=True)
 server = app.server
 user = User()
-
-DATABASE_URL = os.environ['DATABASE_URL']
-
-conn = psycopg2.connect(DATABASE_URL, sslmode='require')
-con = conn.cursor()
-con.execute("CREATE TABLE customers(name varchar(255))")
-con.execute("INSERT into customers (name) values ('hello')")
-conn.commit()
-conn.close()
 
 def show_content(users):
     # app = self.app
@@ -239,28 +227,29 @@ def show_content(users):
     @app.callback(
         [
             Output('info-datetime', 'value'),
-            Output('default-predict-date', 'min_date_allowed')],
+            Output('default-predict-date', 'min_date_allowed'),
+            Output('detail-info-output', 'children')
+        ],
 
-        Input({'type': 'filter-dropdown'}, 'value')
+        Input({'type': 'filter-dropdown'}, 'value'),
+        State('default-predict-date', 'date')
     )
-    def page3DateResult(name):
+    def page3DateResult(name, pDate):
         user.name = name
         startPoint = user.getStartDate()
-        return startPoint, startPoint
+        return startPoint, startPoint, page3OutputResult(pDate)
 
     @app.callback(
         Output('detail-info-output', 'children'),
         Input('default-predict-date', 'date')
     )
     def page3OutputResult(pDate):
-        pDate += ' 0:0:0'
+        pDate += ' 0:0:0 AM'
         result = user.page3Data(pDate)
-        return page3Layout(result, user.changedUserData(user.date), user.changedUserData(pDate))
+        return page3Layout(result, datetime.strptime(user.date, '%m/%d/%Y %I:%M:%S %p'), datetime.strptime(pDate, '%m/%d/%Y %I:%M:%S %p'))
 
 
 show_content(user)
 
 if __name__ == '__main__':
-
-
     app.run_server(debug = True)

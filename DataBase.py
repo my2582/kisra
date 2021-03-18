@@ -1,11 +1,14 @@
 import psycopg2
 import os
+from DBquery import query
 
 class databaseDF:
     def __init__(self):
         self.dburl = os.environ['DATABASE_URL']
         self.conn = psycopg2.connect(self.dburl, sslmode='require')
         self.con = self.conn.cursor()
+        self.query = self.query(self.conn, self.con)
+
 
     def createDefault(self, data):
         try:
@@ -61,3 +64,11 @@ class databaseDF:
         for i in range(len(general)):
             temp = user.iloc[i, :].values.tolist()
             self.cur.execute(insert_query_user.format('user'), temp)
+
+    def getDate(self, user, date):
+        value = self.query.findDate('detail', date, user)
+        return value[-1][0]
+
+    def getRecord(self, user, dates):
+        record = self.query.BetweenDate('detail', dates, user)
+        return record

@@ -9,9 +9,6 @@ class User:
     def getStartDate(self):
         return self.data.specificDate(self.name)
 
-    def changedUserData(self, data):
-        return self.data.changeSingleData(data)
-
     def page3Data(self, date):
         general, detail = self.data.returnPage3Data(self.name, date)
         return self.fullCond(general), detail
@@ -47,6 +44,6 @@ class User:
 
         date, user_id = data['date'].iloc[0], data['userid'].iloc[0]
         for col in need:
-            data = data.append({'date' : date, 'userid' : user_id, 'asset_class' : col,
-                         'value' : 0, 'wt' : 0}, ignore_index=True)
+            data = data.append({'date': date, 'userid': user_id, 'asset_class': col,
+                         'value': 0, 'wt': 0}, ignore_index=True)
         return data
