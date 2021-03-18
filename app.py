@@ -242,7 +242,7 @@ def show_content(users):
         Input('default-predict-date', 'date')
     )
     def page3OutputResult(pDate):
-        pDate += ' 0:0:0 AM'
+        pDate += ' 1:0:0 AM'
         result = user.page3Data(pDate)
         return page3Layout(result, datetime.strptime(user.date, '%m/%d/%Y %I:%M:%S %p'), datetime.strptime(pDate, '%m/%d/%Y %I:%M:%S %p'))
 
