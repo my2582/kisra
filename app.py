@@ -193,9 +193,11 @@ def show_content(users):
         State('analysis-datetime', 'value')
     )
     def show_prediction(select, name, date):
+        print(name, date)
         user.name, user.date = name, date
         select = changePeriod(select)
         result = user.closeData(select)
+        print(result)
         return page2_result(result)
 
     @app.callback(
@@ -243,6 +245,7 @@ def show_content(users):
     )
     def page3OutputResult(pDate):
         pDate += ' 1:0:0 AM'
+        print(pDate)
         result = user.page3Data(pDate)
         return page3Layout(result, datetime.strptime(user.date, '%m/%d/%Y %I:%M:%S %p'), datetime.strptime(pDate, '%m/%d/%Y %I:%M:%S %p'))
 
@@ -250,4 +253,4 @@ def show_content(users):
 show_content(user)
 
 if __name__ == '__main__':
-    app.run_server(debug = True)
+    app.run_server(debug=True)
