@@ -18,7 +18,7 @@ class Data:
         return list(set(users))
 
     def specificDate(self, name):
-        print('-------------------name------------------------------')
+        print('------------------name------------------------------')
         print(name)
         print(self.detail_data[(self.detail_data[self.columns[-1]] == 'Y') & (self.detail_data[self.columns[2]] == name)]['date'].values)
         return self.detail_data[(self.detail_data[self.columns[-1]] == 'Y') & (self.detail_data[self.columns[2]] == name)]['date'].values[0]
