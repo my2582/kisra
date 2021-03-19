@@ -216,6 +216,7 @@ def show_content(users):
         ]
 
         rows = result.values.tolist()
+        print(rows)
         table_row = list()
         for row in rows:
             temp = [html.Td(data) for data in row]
