@@ -71,7 +71,6 @@ def show_content(users):
             tags_id = [input_1, input_2, input_3, input_4, input_5, input_6, input_7, input_8, input_9,
                         input_10, input_11]
             character = Character(tags_id)
-            print(app.layout.children[-1].children[0])
             output = app.layout.children[-1].children[-1]
 
             if character.empty_check():
@@ -88,7 +87,6 @@ def show_content(users):
                                 break
                         if check:
                             break
-                print(answer)
 
                 risk_avg, df, score = character.predict(answer)
                 result = '당신의 점수는 {0}이며 {1}형 투자자입니다. 당신에게 맞는 포트폴리오를 확인해 보세요'.format(score, risk_avg)
