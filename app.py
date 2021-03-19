@@ -190,7 +190,7 @@ def show_content(users):
         [Output('output-pos', 'children'),
         Output('analysis-datetime', 'value')],
         Input('predict-slider', 'value'),
-        State('analysis-name', 'value')
+        Input('analysis-name', 'value')
     )
     def show_prediction(select, name):
         user.name = name
@@ -244,7 +244,11 @@ def show_content(users):
         Input('default-predict-date', 'date')
     )
     def page3OutputResult(pDate):
-        pDate += ' 1:0:0 AM'
+        try:
+            temp = pDate.split('-')
+            pDate = temp[1]+'/'+temp[2]+'/'+temp[0]+' 1:0:0 AM'
+        except:
+            pDate += ' 1:0:0 AM'
         print('pDate : ', pDate, type(pDate))
         result = user.page3Data(pDate)
         return page3Layout(result, datetime.strptime(user.date, '%m/%d/%Y %I:%M:%S %p'), datetime.strptime(pDate, '%m/%d/%Y %I:%M:%S %p'))
