@@ -18,7 +18,9 @@ class Data:
         return list(set(users))
 
     def specificDate(self, name):
-        return self.detail_data[(self.detail_data[self.columns[-1]] == 'Y') & (self.detail_data[self.columns[2]] == name)]['date'].iloc[0]
+        print('-------------------name------------------------------')
+        print(name)
+        return self.detail_data[(self.detail_data[self.columns[-1]] == 'Y') & (self.detail_data[self.columns[2]] == name)]['date'].loc[0]
 
     def defaults(self):
         background = self.detail_data[self.detail_data[self.columns[-1]] == 'Y']
