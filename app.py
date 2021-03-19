@@ -110,11 +110,13 @@ def show_content(users):
             return [None]*8
         outputs = user.selections(username)
         print('-----------------output-------------------------')
+        values = list()
         for i in range(8):
             response = outputs[i][0]
-            outputs[i] = response
-        print(outputs)
-        return outputs
+            print(response)
+            values.append(response)
+        print(values)
+        return values
 
     def page2_result(content):
         if type(content) == str:
