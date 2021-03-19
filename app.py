@@ -81,13 +81,14 @@ def show_content(users):
                     check = False
                     for i in range(1, len(for_selected.children), 3):
                         for j in range(len(for_selected.children[i].options)):
-                            if for_selected.children[i].options[j] == id:
+                            if for_selected.children[i].options[j]['value'] == id:
                                 answer.append(j+1)
                                 check = True
                                 break
                         if check:
                             break
                 print(answer)
+
                 risk_avg, df, score = character.predict(answer)
                 result = '당신의 점수는 {0}이며 {1}형 투자자입니다. 당신에게 맞는 포트폴리오를 확인해 보세요'.format(score, risk_avg)
                 pie = px.pie(df, names=df.columns[-1], values=df.columns[0])
