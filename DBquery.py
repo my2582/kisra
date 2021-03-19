@@ -37,9 +37,8 @@ class query:
         id = 0
         for i in self.con.fetchall():
             temp = i[0][-2:]
-            print(temp)
             if id<int(temp):
-                id = temp
+                id = int(temp)
         id += 1
         now = datetime.datetime.now()
         hour, timezone, type_hour = now.hour, 'AM', ''
