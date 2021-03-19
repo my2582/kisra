@@ -113,6 +113,7 @@ def show_content(users):
         values = []
         idx = 0
         for i in range(1, len(for_selected.children), 3):
+            print(for_selected.children[i].options, int(outputs[idx]))
             values.append(for_selected.children[i].options[int(outputs[idx][0]-1)]['value'])
             idx+=1
         print('-------------values-------------')
