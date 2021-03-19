@@ -26,8 +26,8 @@ class Character:
         score = 0
         for idx, choice in enumerate(self.options[:-3]):
             print(choice)
-            print(data[data['choices'] == choice])
-            risk_value = data[data['choices'] == choice]['risk_pref_value'].values[0]
+            print(data[data['choice-id'] == choice])
+            risk_value = data[data['choice-id'] == choice]['risk_pref_value'].values[0]
             print('risk_value : ', risk_value)
             score += risk_value
             answers[idx] = (answers[idx], risk_value)
