@@ -249,7 +249,6 @@ def show_content(users):
             pDate = temp[1]+'/'+temp[2]+'/'+temp[0]+' 1:0:0 AM'
         except:
             pDate += ' 1:0:0 AM'
-        print('pDate : ', pDate, type(pDate))
         result = user.page3Data(pDate)
         return page3Layout(result, datetime.strptime(user.date, '%m/%d/%Y %I:%M:%S %p'), datetime.strptime(pDate, '%m/%d/%Y %I:%M:%S %p'))
 

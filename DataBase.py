@@ -62,8 +62,11 @@ class databaseDF:
 
     def getDate(self, user, date):
         value = self.query.findDate('detail', date, user)
+        print(value)
         return value[-1][0]
 
     def getRecord(self, user, dates):
         record = self.query.BetweenDate('detail', dates, user)
+        print('-------------dates------------------')
+        print(record)
         return record
