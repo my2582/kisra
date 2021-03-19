@@ -37,6 +37,7 @@ class Data:
             return False
 
     def getSelection(self, name):
+        print(name)
         userid = self.check_name(name)
         return self.db.getSelection(userid)
 

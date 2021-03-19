@@ -106,6 +106,7 @@ def show_content(users):
         Input({'type': 'users-dropdown'}, 'value')
     )
     def selected(username):
+        print(username)
         outputs = user.selections(username)
         print('-----------------output-------------------------')
         print(outputs)
