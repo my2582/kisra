@@ -110,6 +110,9 @@ def show_content(users):
             return [None]*8
         outputs = user.selections(username)
         print('-----------------output-------------------------')
+        for i in range(8):
+            response = outputs[i][0]
+            outputs[i] = response
         print(outputs)
         return outputs
 
