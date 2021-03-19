@@ -16,6 +16,7 @@ class query:
     def BetweenDate(self, table, dates, user):
         standard, start, end = dates
         standard = standard[:6]+'2021'+standard[8:]
+        print(standard)
         query = "select * from {0} where to_timestamp(%s, 'mm/dd/yyyy HH:M1:SS AM') - interval %s <= to_timestamp(date, 'mm/dd/yyyy HH:M1:SS AM') " \
                 "and to_timestamp(date, 'mm/dd/yyyy HH:M1:SS AM') <= to_timestamp(%s, 'mm/dd/yyyy HH:M1:SS AM') - interval %s and userid=%s"
         self.con.execute(query.format(table),  [standard, str(start)+' days', standard, str(end) +' days', user])
