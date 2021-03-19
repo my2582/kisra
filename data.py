@@ -20,6 +20,7 @@ class Data:
     def specificDate(self, name):
         print('-------------------name------------------------------')
         print(name)
+        print(self.detail_data[(self.detail_data[self.columns[-1]] == 'Y') & (self.detail_data[self.columns[2]] == name)])
         return self.detail_data[(self.detail_data[self.columns[-1]] == 'Y') & (self.detail_data[self.columns[2]] == name)]['date'].loc[0]
 
     def defaults(self):
