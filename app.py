@@ -106,7 +106,8 @@ def show_content(users):
         Input({'type': 'users-dropdown'}, 'value')
     )
     def selected(username):
-        print(username)
+        if username == 'x':
+            return [None]*8
         outputs = user.selections(username)
         print('-----------------output-------------------------')
         print(outputs)
