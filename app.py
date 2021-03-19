@@ -32,7 +32,7 @@ def show_content(users):
         if tab_input == 'signup':
             app.layout.children[-1] = html.Div(layout.signup)
             userList = user.userList()
-            layout.signup[1].children[1].options = userList
+            layout.signup[1].children[1].options = userList + ['x']
             return html.Div(layout.signup)
 
         if tab_input == 'analysis':
@@ -71,10 +71,25 @@ def show_content(users):
             tags_id = [input_1, input_2, input_3, input_4, input_5, input_6, input_7, input_8, input_9,
                         input_10, input_11]
             character = Character(tags_id)
+
             output = app.layout.children[-1].children[-1]
             if character.empty_check():
-                answer, df = character.predict()
-                result = '당신은 {0}형 투자자입니다. 당신에게 맞는 포트폴리오를 확인해 보세요'.format(answer)
+
+                answer = []
+                for_selected = layout.signup[3]
+                for id in tags_id:
+                    check = False
+                    for i in range(1, len(for_selected.children), 3):
+                        for j in range(len(for_selected.children[i].options)):
+                            if for_selected.children[i].options[j] == id:
+                                answer.append(j+1)
+                                check = True
+                                break
+                        if check:
+                            break
+
+                risk_avg, df, score = character.predict(answer)
+                result = '당신의 점수는 {0}이며 {1}형 투자자입니다. 당신에게 맞는 포트폴리오를 확인해 보세요'.format(score, risk_avg)
                 pie = px.pie(df, names=df.columns[-1], values=df.columns[0])
                 output.children[0].children = result
                 if len(output.children) < 3:
@@ -113,7 +128,6 @@ def show_content(users):
         values = []
         idx = 0
         for i in range(1, len(for_selected.children), 3):
-            print(for_selected.children[i].options, int(outputs[idx][0]))
             values.append(for_selected.children[i].options[int(outputs[idx][0]-1)]['value'])
             idx+=1
         print('-------------values-------------')

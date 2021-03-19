@@ -77,3 +77,7 @@ class databaseDF:
     def getSelection(self, user):
         record = self.query.getUserSelection(user)
         return record
+
+    def newUser(self, answer, money):
+        self.query.newUser(answer, money)
+        return
