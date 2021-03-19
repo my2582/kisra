@@ -34,7 +34,12 @@ class query:
         query = "select distinct userid from userselection"
         self.con.execute(query)
         self.conn.commit()
-        id = int(self.con.fetchall()[-1][0][-2:])+1
+        id = 0
+        for i in self.con.fetchall():
+            temp = i[0][-2:]
+            if id<int(temp):
+                id = temp
+        id += 1
         now = datetime.datetime.now()
         hour, timezone, type_hour = now.hour, 'AM', ''
         if 12<now.hour:
@@ -50,7 +55,7 @@ class query:
             self.con.execute(query, ['A'+str(id), float(1), float(i+1), float(answers[i][0]), float(answers[i][1])])
             self.conn.commit()
 
-        query = "INSERT INTO detail (date, userid, name, asset_class, itemcode, itemname, quantity, cost_price, cost_value, price, value, wt, group_by, principal) " \
+        query = "INSERT INTO detail (date, userid, name, asset_class, itemcode, itemname, quantity, cost_price, cost_value, price, value, wt, group_by, original) " \
                 "values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
 
         self.con.execute(query, [date, 'A'+str(id), '투자자'+str(id), '현금성', 'C000001', '현금', float(money), float(1), float(money),
