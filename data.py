@@ -36,6 +36,10 @@ class Data:
         except:
             return False
 
+    def getSelection(self, name):
+        userid = self.check_name(name)
+        return self.db.
+
     def returnPage3Data(self, name, date):
         user_id = self.check_name(name)
 

@@ -31,6 +31,8 @@ def show_content(users):
     def show_page(tab_input):
         if tab_input == 'signup':
             app.layout.children[-1] = html.Div(layout.signup)
+            userList = user.userList()
+            layout.signup[2].children[1].options = userList
             return html.Div(layout.signup)
 
         if tab_input == 'analysis':
@@ -90,7 +92,22 @@ def show_content(users):
             output.style = style['pie_chart_style']
             return output
 
-
+    @app.callback(
+        [
+            Output('invest-experience', 'value'),
+            Output('invest-purpose', 'value'),
+            Output('character-risk', 'value'),
+            Output('annual-income', 'value'),
+            Output('finance-ratio', 'value'),
+            Output('invest-terms', 'value'),
+            Output('age-check', 'value'),
+            Output('self-understand-degree', 'value')
+         ],
+        Input({'type': 'users-dropdown'}, 'value')
+    )
+    def selected(username):
+        outputs = user.selections(username)
+        return outputs
 
     def page2_result(content):
         if type(content) == str:

@@ -17,6 +17,9 @@ class User:
         users = self.data.uniqueUser()
         return [{'label': i, 'value': i} for i in users]
 
+    def selections(self, name):
+        return self.data.getSelection(name)
+
     def closeData(self, point, choice=False):
         result = self.data.returnData(point, self.name, self.date, choice)
 

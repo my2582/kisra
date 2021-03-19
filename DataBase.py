@@ -73,3 +73,7 @@ class databaseDF:
         print(record)
 
         return record
+
+    def getSelection(self, user):
+        record = self.query.getUserSelection(user)
+        return record

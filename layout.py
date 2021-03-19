@@ -27,6 +27,17 @@ signup = [
     html.Hr(style={"width": "3000px"}),
 
     html.Div([
+     html.Label('투자자목록'),
+     dcc.Dropdown(
+         id={
+             'type': 'users-dropdown'
+         },
+         options=[],
+
+         value='x')], id='user-selection'),
+
+
+    html.Div([
         html.Label('1. 투자경험'),
         dcc.RadioItems(
             options=[

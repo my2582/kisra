@@ -23,5 +23,11 @@ class query:
         self.conn.commit()
         return DataFrame(np.array(self.con.fetchall()))
 
+    def getUserSelection(self, user):
+        query = "select answer from userselection where userid=%s"
+        self.con.execute(query, [user])
+        self.conn.commit()
+        return self.con.fetchall()
+
     def newUser(self):
         pass
