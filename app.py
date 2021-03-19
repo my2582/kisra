@@ -32,7 +32,7 @@ def show_content(users):
         if tab_input == 'signup':
             app.layout.children[-1] = html.Div(layout.signup)
             userList = user.userList()
-            layout.signup[2].children[1].options = userList
+            layout.signup[1].children[1].options = userList
             return html.Div(layout.signup)
 
         if tab_input == 'analysis':
