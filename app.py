@@ -71,7 +71,7 @@ def show_content(users):
             tags_id = [input_1, input_2, input_3, input_4, input_5, input_6, input_7, input_8, input_9,
                         input_10, input_11]
             character = Character(tags_id)
-
+            print(app.layout.children[-1].children[0])
             output = app.layout.children[-1].children[-1]
 
             if character.empty_check():
