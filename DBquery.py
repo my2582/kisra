@@ -37,6 +37,7 @@ class query:
         id = 0
         for i in self.con.fetchall():
             temp = i[0][-2:]
+            print(temp)
             if id<int(temp):
                 id = temp
         id += 1
