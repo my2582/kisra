@@ -24,8 +24,6 @@ signup = [
 
         , id='user-information'),
 
-    html.Hr(style={"width": "3000px"}),
-
     html.Div([
      html.Label('투자자목록'),
      dcc.Dropdown(
@@ -36,6 +34,7 @@ signup = [
 
          value='x')], id='user-selection'),
 
+    html.Hr(style={"width": "3000px"}),
 
     html.Div([
         html.Label('1. 투자경험'),

@@ -107,6 +107,8 @@ def show_content(users):
     )
     def selected(username):
         outputs = user.selections(username)
+        print('-----------------output-------------------------')
+        print(outputs)
         return outputs
 
     def page2_result(content):
