@@ -42,5 +42,5 @@ class Character:
                 "종류": ['채권', '주식', '대체', '현금']
             }
         )
-        return self.scoring[score//(len(self.options) - 3)], df, score
+        return self.scoring[score//(len(self.options) - 3)], df, score//(len(self.options) - 3)
 
