@@ -47,7 +47,7 @@ class query:
 
         query = "INSERT INTO userselection(userid, set_no, q_no, answer, risk_pref_value) values (%s, %s, %s, %s, %s)"
         for i in range(8):
-            self.con.execute(query, ['A'+str(id), 1, i+1, answers[i][0], answers[i][1]])
+            self.con.execute(query, ['A'+str(id), 1, i+1, answers[i][0].values.astype(float), answers[i][1].values.astype(float)])
             self.conn.commit()
 
         query = "INSERT INTO detail (date, userid, name, asset_class, itemcode, itemname, quantity, cost_price, cost_value, price, value, wt, group_by, principal) " \
