@@ -25,6 +25,8 @@ class Character:
         data = pd.read_pickle('./data/processed/'+self.file_name)
         score = 0
         for idx, choice in enumerate(self.options[:-3]):
+            print(choice)
+            print(data[data['choices'] == choice])
             risk_value = data[data['choices'] == choice]['risk_pref_value'].values[0]
             print('risk_value : ', risk_value)
             score += risk_value
