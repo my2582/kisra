@@ -72,7 +72,7 @@ def show_content(users):
                         input_10, input_11]
             character = Character(tags_id)
 
-            output = app.layout.children[-1].children[-1]
+            output = app.layout.children[-1][-1]
             if character.empty_check():
 
                 answer = []
