@@ -109,12 +109,12 @@ def show_content(users):
         if username == 'x':
             return [None]*8
         outputs = user.selections(username)
-        print('-----------------output-------------------------')
-        values = list()
-        for i in range(8):
-            response = outputs[i][0]
-            print(response)
-            values.append(response)
+        for_selected = layout.signup.children[3]
+        values = []
+        idx = 0
+        for i in range(1, len(for_selected.children), 2):
+            values.append(for_selected.children[i][int(outputs[idx][0])]['value'])
+        print('-------------values-------------')
         print(values)
         return values
 
