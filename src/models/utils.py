@@ -33,7 +33,7 @@ def get_asset_classes(instruments):
     return asset_classes
 
 
-def get_current_pos(userid, latest_balance=None):
+def get_current_port(userid, latest_balance=None):
     r"""
     이용자의 포트폴리오 포지션 정보를 최근 잔고를 기준으로 추출하여 반환한다.
     포트폴리오 포지션 구성:

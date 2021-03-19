@@ -106,11 +106,10 @@ class Portfolio:
         assert (len(tickers) == len(quantities)) & (len(quantities) == len(prices)), \
             "`names`, `quantities` and `prices` must be of the same length."
 
-        _assets = {}
         for ticker, quantity, price in zip(tickers, quantities, prices):
-            _assets[ticker] = Asset(ticker, quantity, price)
+            self._assets[ticker] = Asset(ticker, quantity, price)
 
-        return _assets
+    
 
 
     def asset_allocation(self):
@@ -262,7 +261,7 @@ class Portfolio:
             target_allocation_reordered.values(), dtype=float)
 
         assert abs(np.sum(target_allocation_np) -
-                   100.) <= 1E-2, "target allocation must sum up to 100%."
+                   100.) <= 1E-2, "target allocation must sum up to 100%. it's {}".format(np.sum(target_allocation_np))
 
         # offload heavy work
         (balanced_portfolio, new_units, prices, cost, exchange_history) = rebalancing_helper.rebalance(self, target_allocation_np)
