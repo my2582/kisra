@@ -39,6 +39,7 @@ class Data:
     def getSelection(self, name):
         print(name)
         userid = self.check_name(name)
+        print(userid)
         return self.db.getSelection(userid)
 
     def returnPage3Data(self, name, date):
