@@ -241,14 +241,16 @@ def show_content(users):
 
     @app.callback(
         Output('detail-info-output', 'children'),
-        Input('default-predict-date', 'date')
+        [Input('default-predict-date', 'date'),
+        Input({'type': 'filter-dropdown'}, 'value')]
     )
-    def page3OutputResult(pDate):
+    def page3OutputResult(pDate, userchoice):
         try:
             temp = pDate.split('-')
             pDate = temp[1]+'/'+temp[2]+'/'+temp[0]+' 1:0:0 AM'
         except:
             pDate += ' 1:0:0 AM'
+        user.name = userchoice
         result = user.page3Data(pDate)
         return page3Layout(result, datetime.strptime(user.date, '%m/%d/%Y %I:%M:%S %p'), datetime.strptime(pDate, '%m/%d/%Y %I:%M:%S %p'))
 
