@@ -53,7 +53,7 @@ signup = [
 
         html.Hr(style={"width": "3000px"}),
 
-        html.Label('2. 투자목적', ),
+        html.Label('2. 투자목적'),
 
         dcc.RadioItems(
             options=[

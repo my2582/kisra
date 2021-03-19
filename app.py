@@ -112,7 +112,7 @@ def show_content(users):
         for_selected = layout.signup[3]
         values = []
         idx = 0
-        for i in range(1, len(for_selected.children), 2):
+        for i in range(1, len(for_selected.children), 3):
             values.append(for_selected.children[i].options[int(outputs[idx][0])]['value'])
             idx+=1
         print('-------------values-------------')
