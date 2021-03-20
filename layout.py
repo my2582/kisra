@@ -24,6 +24,16 @@ signup = [
 
         , id='user-information'),
 
+    html.Div([
+     html.Label('투자자목록'),
+     dcc.Dropdown(
+         id={
+             'type': 'users-dropdown'
+         },
+         options=[],
+
+         value='x')], id='user-selection'),
+
     html.Hr(style={"width": "3000px"}),
 
     html.Div([
@@ -43,7 +53,7 @@ signup = [
 
         html.Hr(style={"width": "3000px"}),
 
-        html.Label('2. 투자목적', ),
+        html.Label('2. 투자목적'),
 
         dcc.RadioItems(
             options=[
@@ -151,7 +161,7 @@ signup = [
     html.Br(),
     html.Button('Submit', id='submit-val', style={"background-color": "Yellow"}, n_clicks=0),
     html.Div([
-        html.Div(id='character-result'),
+        html.Div(id='character-result')
     ], id='output-div')
 
     ]

@@ -8,25 +8,13 @@ import dash_bootstrap_components as dbc
 import layout
 from user import User
 import numpy as np
-from datetime import timedelta
+from datetime import timedelta, datetime
 import plotly.graph_objects as go
-import os
-import psycopg2
-
 
 sheet = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 app = dash.Dash(__name__, external_stylesheets=sheet, suppress_callback_exceptions=True)
 server = app.server
 user = User()
-
-DATABASE_URL = os.environ['DATABASE_URL']
-
-conn = psycopg2.connect(DATABASE_URL, sslmode='require')
-con = conn.cursor()
-con.execute("CREATE TABLE customers(name varchar(255))")
-con.execute("INSERT into customers (name) values ('hello')")
-conn.commit()
-conn.close()
 
 def show_content(users):
     # app = self.app
@@ -43,6 +31,8 @@ def show_content(users):
     def show_page(tab_input):
         if tab_input == 'signup':
             app.layout.children[-1] = html.Div(layout.signup)
+            userList = user.userList()
+            layout.signup[1].children[1].options = userList + ['x']
             return html.Div(layout.signup)
 
         if tab_input == 'analysis':
@@ -82,9 +72,24 @@ def show_content(users):
                         input_10, input_11]
             character = Character(tags_id)
             output = app.layout.children[-1].children[-1]
+
             if character.empty_check():
-                answer, df = character.predict()
-                result = '당신은 {0}형 투자자입니다. 당신에게 맞는 포트폴리오를 확인해 보세요'.format(answer)
+
+                answer = []
+                for_selected = layout.signup[3]
+                for id in tags_id:
+                    check = False
+                    for i in range(1, len(for_selected.children), 3):
+                        for j in range(len(for_selected.children[i].options)):
+                            if for_selected.children[i].options[j]['value'] == id:
+                                answer.append(j+1)
+                                check = True
+                                break
+                        if check:
+                            break
+
+                risk_avg, df, score = character.predict(answer)
+                result = '당신의 점수는 {0}이며 {1}형 투자자입니다. 당신에게 맞는 포트폴리오를 확인해 보세요'.format(score, risk_avg)
                 pie = px.pie(df, names=df.columns[-1], values=df.columns[0])
                 output.children[0].children = result
                 if len(output.children) < 3:
@@ -102,7 +107,34 @@ def show_content(users):
             output.style = style['pie_chart_style']
             return output
 
-
+    @app.callback(
+        [
+            Output('invest-experience', 'value'),
+            Output('invest-purpose', 'value'),
+            Output('character-risk', 'value'),
+            Output('annual-income', 'value'),
+            Output('finance-ratio', 'value'),
+            Output('invest-terms', 'value'),
+            Output('age-check', 'value'),
+            Output('self-understand-degree', 'value')
+         ],
+        Input({'type': 'users-dropdown'}, 'value')
+    )
+    def selected(username):
+        if username == 'x':
+            return [None]*8
+        outputs = user.selections(username)
+        print('-------------outputs----------------')
+        print(outputs)
+        for_selected = layout.signup[3]
+        values = []
+        idx = 0
+        for i in range(1, len(for_selected.children), 3):
+            values.append(for_selected.children[i].options[int(outputs[idx][0]-1)]['value'])
+            idx+=1
+        print('-------------values-------------')
+        print(values)
+        return values
 
     def page2_result(content):
         if type(content) == str:
@@ -199,16 +231,18 @@ def show_content(users):
 
 
     @app.callback(
-        Output('output-pos', 'children'),
+        [Output('output-pos', 'children'),
+        Output('analysis-datetime', 'value')],
         Input('predict-slider', 'value'),
-        State('analysis-name', 'value'),
-        State('analysis-datetime', 'value')
+        Input('analysis-name', 'value')
     )
-    def show_prediction(select, name, date):
-        user.name, user.date = name, date
+    def show_prediction(select, name):
+        user.name = name
+        date = user.getStartDate()
+        user.date = date
         select = changePeriod(select)
         result = user.closeData(select)
-        return page2_result(result)
+        return page2_result(result), date
 
     @app.callback(
         Output('modal-detail-info', 'is_open'),
@@ -226,6 +260,7 @@ def show_content(users):
         ]
 
         rows = result.values.tolist()
+        print(rows)
         table_row = list()
         for row in rows:
             temp = [html.Td(data) for data in row]
@@ -239,9 +274,10 @@ def show_content(users):
     @app.callback(
         [
             Output('info-datetime', 'value'),
-            Output('default-predict-date', 'min_date_allowed')],
+            Output('default-predict-date', 'min_date_allowed'),
+        ],
 
-        Input({'type': 'filter-dropdown'}, 'value')
+        Input({'type': 'filter-dropdown'}, 'value'),
     )
     def page3DateResult(name):
         user.name = name
@@ -250,17 +286,21 @@ def show_content(users):
 
     @app.callback(
         Output('detail-info-output', 'children'),
-        Input('default-predict-date', 'date')
+        [Input('default-predict-date', 'date'),
+        Input({'type': 'filter-dropdown'}, 'value')]
     )
-    def page3OutputResult(pDate):
-        pDate += ' 0:0:0'
+    def page3OutputResult(pDate, userchoice):
+        try:
+            temp = pDate.split('-')
+            pDate = temp[1]+'/'+temp[2]+'/'+temp[0]+' 1:0:0 AM'
+        except:
+            pDate += ' 1:0:0 AM'
+        user.name = userchoice
         result = user.page3Data(pDate)
-        return page3Layout(result, user.changedUserData(user.date), user.changedUserData(pDate))
+        return page3Layout(result, datetime.strptime(user.date, '%m/%d/%Y %I:%M:%S %p'), datetime.strptime(pDate, '%m/%d/%Y %I:%M:%S %p'))
 
 
 show_content(user)
 
 if __name__ == '__main__':
-
-
-    app.run_server(debug = True)
+    app.run_server(debug=True)
