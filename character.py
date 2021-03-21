@@ -3,7 +3,7 @@ from src.models.load_data import Balance, Instruments, AdvisedPortfolios, PriceD
 from DataBase import databaseDF
 
 class Character:
-    def __init__(self, characters, date):
+    def __init__(self, characters):
         self.options = characters
         self.db = databaseDF()
         self.file_name = 'profiles_m.pkl'
@@ -40,7 +40,7 @@ class Character:
 
         # 추천 포트폴리오를 가져온다.
         advised_pf = AdvisedPortfolios.instance().data
-        df = advised_pf.loc[(advised_pf.risk_profile==score) & (advised_pf.date==self.date)]
+        df = advised_pf.loc[(advised_pf.risk_profile==score) & (advised_pf.date==self.options[1])]
         df.loc[:, ['weights', 'asset_class']].groupby(
             'asset_class').sum().reset_index().rename(columns={
                 'asset_class': '자산군',
