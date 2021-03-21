@@ -1,20 +1,19 @@
 ﻿투자성형,제약해제,제약조건 적용범위,제약조건 적용클래스,제약조건 적용값(포지션,부등호방향,한도값,상대제약조건 사용시 적용범위,상대제약조건 적용클래스,상대제약조건 적용값(클래스),한도팩터(scalar)
 risk_profile,Disabled,Type,Set,Position,Sign,Weight,Type Relative,Relative Set,Relative,Factor
-2,False,Classes,Asset class,Equity,>=,0.10,,,,
+2,False,Classes,Asset class,Equity,>=,0.1,,,,
 2,False,Classes,Asset class,Equity,<=,0.25,,,,
 2,False,Assets,,A114260,>=,0.1,,,,
-2,False,Classes,Asset class,Alternative,<=,0.05,,,,
+2,False,Classes,Asset class,Alternative,<=,0.25,,,,
 3,False,Classes,Asset class,Equity,>=,0.4,,,,
 3,False,Classes,Asset class,Equity,<=,0.6,,,,
 3,False,Classes,Asset class,Fixed Income,<=,0.7,,,,
-3,False,Classes,Asset class,Alternative,<=,0.1,,,,
+3,False,Classes,Asset class,Alternative,<=,0.25,,,,
 4,False,Classes,Asset class,Equity,>=,0.5,,,,
 4,False,Classes,Asset class,Equity,<=,0.7,,,,
 4,False,Classes,Asset class,Fixed Income,<=,0.5,,,,
-4,False,Classes,Asset class,Alternative,<=,0.2,,,,
+4,False,Classes,Asset class,Alternative,<=,0.25,,,,
 2,False,Classes,Strategy,Satellite,<=,,Classes,Strategy,Core,0
 3,False,Classes,Strategy,Core,>=,,Classes,Strategy,Satellite,4
 4,False,Classes,Strategy,Core,>=,,Classes,Strategy,Satellite,1.5
-Common,False,All Assets,,,<=,0.20,,,,
+Common,False,All Assets,,,<=,0.25,,,,
 Common,False,Classes,DC risky asset,Y,<=,0.7,,,,
-
