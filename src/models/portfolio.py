@@ -1,3 +1,8 @@
+import datetime
+import pandas as pd
+
+from utils import get_current_port, get_advised_port, get_recommendation
+from load_data import Balance, Instruments, AdvisedPortfolios, PriceDB, Singleton
 import copy
 import math
 from typing import Sequence
@@ -8,7 +13,7 @@ from asset import Asset
 from cash import Cash
 from price import Price
 
-from rebalancing_helper import rebalance
+import rebalancing_helper
 
 
 class Portfolio:
@@ -16,6 +21,7 @@ class Portfolio:
     Portfolio class.
     Defines a :class:`.Portfolio` of :class:`.Asset` s and :class:`.Cash` and performs rebalancing of the portfolio.
     """
+
     def __init__(self):
         """
         Initialization.
@@ -23,7 +29,7 @@ class Portfolio:
         self._assets = {}
         self._cash = {}
         self._is_selling_allowed = False
-        self._common_currency = "CAD"
+        self._common_currency = "KRW"
 
     @property
     def cash(self):
@@ -37,10 +43,10 @@ class Portfolio:
     def cash(self, cash):
         self._cash = cash
 
-    def add_cash(self, amount, currency):
+    def add_cash(self, amount, currency='KRW'):
         """
         Adds cash to portfolio.
-        
+
         Args:
             amount (float) : Amount of cash
             currency (str) : Currency of cash
@@ -68,7 +74,7 @@ class Portfolio:
     def assets(self):
         """ 
         Dict[str, Asset]: Dictionary of assets in portfolio. The keys of the dictionary are the tickers of the assets.
-        
+
         No setter allowed.
         """
         return self._assets
@@ -109,9 +115,6 @@ class Portfolio:
         for ticker, quantity, price in zip(tickers, quantities, prices):
             self._assets[ticker] = Asset(ticker, quantity, price)
 
-    
-
-
     def asset_allocation(self):
         """
         Computes the portfolio's asset allocation.
@@ -133,7 +136,7 @@ class Portfolio:
 
         return asset_allocation
 
-    def market_value(self, currency):
+    def market_value(self, currency='KRW'):
         """
         Computes the total market value of the assets in the portfolio.
         Args:
@@ -148,7 +151,7 @@ class Portfolio:
 
         return mv
 
-    def cash_value(self, currency):
+    def cash_value(self, currency='KRW'):
         """
         Computes the cash value in the portfolio.
         Args:
@@ -163,7 +166,7 @@ class Portfolio:
 
         return cv
 
-    def value(self, currency):
+    def value(self, currency="KRW"):
         """
         Computes the total value (cash and assets) in the portfolio.
         Args:
@@ -209,19 +212,19 @@ class Portfolio:
 
         from_currency = from_currency.upper()
         to_currency = to_currency.upper()
-        
+
         # add cash instances of both currencies to portfolio if non-existent
         self.add_cash(0.0, from_currency)
         self.add_cash(0.0, to_currency)
-        
+
         if to_amount is None and from_amount is None:
             raise Exception(
                 "Argument `to_amount` or `from_amount` must be specified.")
-        
+
         if to_amount is not None and from_amount is not None:
             raise Exception(
                 "Please specify only `to_amount` or `from_amount`, not both.")
-        
+
         if to_amount is not None:
             from_amount = self.cash[to_currency].exchange_rate(
                 from_currency) * to_amount
@@ -264,7 +267,8 @@ class Portfolio:
                    100.) <= 1E-2, "target allocation must sum up to 100%. it's {}".format(np.sum(target_allocation_np))
 
         # offload heavy work
-        (balanced_portfolio, new_units, prices, cost, exchange_history) = rebalancing_helper.rebalance(self, target_allocation_np)
+        (balanced_portfolio, new_units, prices, cost,
+         exchange_history) = rebalancing_helper.rebalance(self, target_allocation_np)
 
         # compute old and new asset allocation
         # and largest diff between new and target asset allocation
@@ -287,9 +291,9 @@ class Portfolio:
                 "---------------------------------------------------------------------------------------------------------------"
             )
             for ticker in balanced_portfolio.assets:
-                print("%8s  %7.2f   %6.d        %8.2f     %4s          %5.2f            %5.2f               %5.2f" % \
-                (ticker, prices[ticker][0], new_units[ticker], cost[ticker], prices[ticker][1], \
-                 old_alloc[ticker], new_alloc[ticker], target_allocation[ticker]))
+                print("%8s  %7.2f   %6.d        %8.2f     %4s          %5.2f            %5.2f               %5.2f" %
+                      (ticker, prices[ticker][0], new_units[ticker], cost[ticker], prices[ticker][1],
+                       old_alloc[ticker], new_alloc[ticker], target_allocation[ticker]))
 
             print("")
             print(
@@ -334,7 +338,6 @@ class Portfolio:
         for ticker, asset in self._assets.items():
             self.buy_asset(ticker, - asset.quantity)
 
-
     def _combine_cash(self, currency=None):
         """
         Converts cash in portfolio to one currency.
@@ -345,20 +348,21 @@ class Portfolio:
         if currency is None:
             currency = self._common_currency
 
-        cash_vals = list(self.cash.values()) # needed since cash dict might increase in size
+        # needed since cash dict might increase in size
+        cash_vals = list(self.cash.values())
         for cash in cash_vals:
             if cash.currency == currency:
                 continue
-            
-            self.exchange_currency(to_currency=currency, from_currency=cash.currency, from_amount=cash.amount)
 
+            self.exchange_currency(
+                to_currency=currency, from_currency=cash.currency, from_amount=cash.amount)
 
     def _smart_exchange(self, currency_amount):
         """
         Performs currency exchange between Portfolio's different sources of cash based on amount required per currency.
         Args:
             currency_amount (Dict[str, float]): Amount needed per currency. The keys of the dictionary are the currency.
-    
+
         Returns:
             List[tuple]: tuple containing:
                     *  from_amount (float): Amount exchanged from currency indicated by `from_currency`
@@ -369,7 +373,6 @@ class Portfolio:
         """
 
         # first, compute amount we have to convert to and amount we have for conversion
-        
 
         to_conv = {}
         from_conv = copy.deepcopy(self.cash)
@@ -451,3 +454,70 @@ class Portfolio:
                         from_cash.amount = 0.00
 
         return exchange_history
+
+
+if __name__ == '__main__':
+    userid = 'A01'
+    risk_profile = 2
+
+    balance, balance_date = get_current_port(userid=userid)
+
+    price_db = PriceDB.instance().data
+    price_db.loc[price_db.date == balance_date]
+
+
+    try:
+        balance_date = datetime.datetime.strptime(
+            balance_date, '%Y-%m-%d %H:%M:%S %p').strftime('%Y-%m-%d')
+    except:
+        balance_date = datetime.datetime.strptime(
+            balance_date, '%m/%d/%Y %H:%M:%S %p').strftime('%Y-%m-%d')
+
+    new_port = get_advised_port(risk_profile=risk_profile)
+
+    old_new = pd.merge(balance.loc[:, ['itemcode', 'quantity', 'price', 'value', 'wt']], new_port.loc[:, ['itemcode', 'wt']],
+                       left_on=['itemcode'], right_on=['itemcode'], how='outer', suffixes=['_old', '_new'])
+
+    old_new.loc[:, ['value', 'wt_old', 'quantity', 'wt_new']] = old_new.loc[:, [
+        'value', 'wt_old', 'quantity', 'wt_new']].fillna(value=0)
+
+    assets = old_new.loc[(old_new.itemcode != 'C000001')
+                         & (old_new.itemcode != 'D000001'), :]
+    cash = old_new.loc[(old_new.itemcode == 'C000001') |
+                       (old_new.itemcode == 'D000001'), :]
+    old_assets = assets.drop(['wt_new'], axis=1)
+    # old_assets = old_assets.rename(columns={'price_old':'price', 'wt_old':'wt'})
+    old_cash = cash.drop(['wt_new'], axis=1)
+    # old_cash = old_cash.rename(columns={'price_old':'price', 'wt_old':'wt'})
+    old_tickers = assets.itemcode.tolist()
+    old_quantities = assets.quantity.astype(int).tolist()
+    assets = assets.merge(price_db.loc[price_db.date == balance_date, ['itemcode', 'price']],
+                 left_on='itemcode', right_on='itemcode', how='left', suffixes = ('', '_db'))
+    assets.loc[:, 'price'] = assets['price'].fillna(assets['price_db'])
+    old_prices = assets.price.tolist()
+    cash_amounts = cash.value.tolist()
+    cash_currency = ['KRW']*len(cash_amounts)
+
+    p = Portfolio()
+    p.easy_add_assets(tickers=old_tickers,
+                      quantities=old_quantities, prices=old_prices)
+    p.easy_add_cash(amounts=cash_amounts, currencies=cash_currency)
+    p.selling_allowed = True
+
+    new_tickers = old_new.loc[(old_new.itemcode != 'CASH') & (
+        old_new.itemcode != 'DEPOSIT'), 'itemcode'].tolist()
+    # 단위가 %이므로 100을 곱한다.
+    new_wt = (old_new.loc[(old_new.itemcode != 'CASH') & (
+        old_new.itemcode != 'DEPOSIT'), 'wt_new']*100).tolist()
+
+    target_asset_alloc = dict(zip(new_tickers, new_wt))
+
+
+    # p.rebalance() returns a tuple of:
+    # * new_units (Dict[str, int]): Units of each asset to buy. The keys of the dictionary are the tickers of the assets.
+    # * prices (Dict[str, [float, str]]): The keys of the dictionary are the tickers of the assets. Each value of the dictionary is a 2-entry list. The first entry is the price of the asset during the rebalancing computation. The second entry is the currency of the asset.
+    # * exchange_rates (Dict[str, float]): The keys of the dictionary are currencies. Each value is the exchange rate to CAD during the rebalancing computation.
+    # * max_diff (float): Largest difference between target allocation and optimized asset allocation.
+    (new_units, prices, _, max_diff) = p.rebalance(target_asset_alloc, verbose=True)
+
+    pass

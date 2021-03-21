@@ -43,28 +43,49 @@ class Singleton:
 @Singleton
 class Balance:
    def __init__(self):
-        self.access_path = '../../data/processed/'
+        # self.access_path = '../../data/processed/'
+        self.access_path = './data/processed/'
         self.filename = 'balance_s.pkl'
         self.data = pd.read_pickle(self.access_path+self.filename)
 
 @Singleton
 class Instruments:
    def __init__(self):
-        self.access_path = '../../data/processed/'
+        # self.access_path = '../../data/processed/'
+        self.access_path = './data/processed/'
         self.filename = 'instruments_m.pkl'
+        self.data = pd.read_pickle(self.access_path+self.filename)
+
+@Singleton
+class SimulatableInstruments:
+   def __init__(self):
+        # self.access_path = '../../data/processed/'
+        self.access_path = './data/external/'
+        self.filename = 'simulatable_instruments.pkl'
         self.data = pd.read_pickle(self.access_path+self.filename)
 
 @Singleton
 class AdvisedPortfolios:
    def __init__(self):
-        self.access_path = '../../data/processed/'
+        # self.access_path = '../../data/processed/'
+        self.access_path = './data/processed/'
         self.filename = 'advised_portfolios.pkl'
         self.data = pd.read_pickle(self.access_path+self.filename)
 
 @Singleton
 class PriceDB:
    def __init__(self):
-        self.access_path = '../../data/external/'
+        # self.access_path = '../../data/external/'
+        # path = '../../' if is_subfolder else './'
+        self.access_path = './data/external/'
         self.filename = 'price_db_d.pkl'
+        self.data = pd.read_pickle(self.access_path+self.filename)
+
+@Singleton
+class Constraints:
+   def __init__(self):
+        # self.access_path = '../../data/external/'
+        self.access_path = './data/processed/'
+        self.filename = 'constraints.pkl'
         self.data = pd.read_pickle(self.access_path+self.filename)
 

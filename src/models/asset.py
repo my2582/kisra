@@ -1,4 +1,9 @@
-from price import Price
+if __name__ == '__main__':
+    from price import Price
+elif __name__ == 'asset':
+    from price import Price
+else:
+    from .price import Price
 
 class Asset:
     """
@@ -22,7 +27,12 @@ class Asset:
         self._quantity = quantity
 
         # we set the price to ask
-        self._price = Price(price, 'KRW')
+        if price is not None:
+            self._price = Price(price, 'KRW')
+        else:
+            price_db = PriceDB.instance().data
+            price = price_db.loc[(price_db.date==price_db.loc[price_db.itemcode==ticker, 'date'].max()) & (price_db.itemcode==ticker), 'price'].values[0]
+            self._price = Price(price, 'KRW')
 
     @property
     def quantity(self):

@@ -1,6 +1,14 @@
 import pandas as pd
-from load_data import Singleton, Balance, Instruments, PriceDB, AdvisedPortfolios
-from client import Client
+
+if __name__ == '__main__':
+    from load_data import Singleton, Balance, Instruments, PriceDB, AdvisedPortfolios
+    from client import Client
+elif __name__ == 'utils':
+    from load_data import Singleton, Balance, Instruments, PriceDB, AdvisedPortfolios
+    from client import Client
+else:
+    from .load_data import Singleton, Balance, Instruments, PriceDB, AdvisedPortfolios
+    from .client import Client
 
 
 def get_asset_classes(instruments):
@@ -57,9 +65,11 @@ def get_current_port(userid, latest_balance=None):
         # Balance.instance()는 전 사용자의 잔고 상세내역 테이블의 인스턴스 반환.
         balance_s = Balance.instance().data
 
+        latest_date = balance_s.groupby(by='userid')['date'].max()[userid]
+
         # balance에 사용자(userid)의 최근 잔고 내역 저장
         balance = balance_s.loc[(balance_s.userid == userid) & (
-            balance_s.date == balance_s.groupby(by='userid')['date'].max()[userid])]
+            balance_s.date == latest_date)]
 
     balance = balance.drop(['userid', 'name', 'asset_class',
                             'group_by', 'principal', 'cost_price', 'cost_value'], axis=1)
@@ -69,7 +79,7 @@ def get_current_port(userid, latest_balance=None):
     instruments_m = Instruments.instance().data
     balance = balance.merge(instruments_m.loc[:, ['itemcode']+col_to_add], left_on='itemcode', right_on='itemcode', how='left')
 
-    return balance
+    return balance, latest_date
 
 
 def get_advised_port(risk_profile, df_advised_ports=None):
@@ -110,10 +120,10 @@ def get_advised_port(risk_profile, df_advised_ports=None):
     advised_pf.loc[:, 'date'] = pd.to_datetime(advised_pf.date)
 
     # 가격/거래량/거래대금 정보 추가
-    price_db = PriceDB.instance().data
-    advised_pf = advised_pf.merge(price_db, left_on=['date', 'itemcode'], right_on=['date', 'itemcode'], how='left')
+    # price_db = PriceDB.instance().data
+    # advised_pf = advised_pf.merge(price_db, left_on=['date', 'itemcode'], right_on=['date', 'itemcode'], how='left')
 
-    return advised_pf.drop(['ret'], axis=1)
+    return advised_pf
 
 
 def get_recommendation(client):

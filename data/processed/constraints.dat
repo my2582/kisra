@@ -1,10 +1,8 @@
 ﻿투자성형,제약해제,제약조건 적용범위,제약조건 적용클래스,제약조건 적용값(포지션,부등호방향,한도값,상대제약조건 사용시 적용범위,상대제약조건 적용클래스,상대제약조건 적용값(클래스),한도팩터(scalar)
 risk_profile,Disabled,Type,Set,Position,Sign,Weight,Type Relative,Relative Set,Relative,Factor
-2,False,Classes,Asset class,Equity,>=,0.03,,,,
-2,False,Classes,Asset class,Equity,<=,0.1,,,,
-2,False,Assets,,A130730,>=,0.2,,,,
-2,False,Assets,,A153130,>=,0.2,,,,
-2,False,Assets,,A214980,>=,0.1,,,,
+2,False,Classes,Asset class,Equity,>=,0.10,,,,
+2,False,Classes,Asset class,Equity,<=,0.25,,,,
+2,False,Assets,,A114260,>=,0.1,,,,
 2,False,Classes,Asset class,Alternative,<=,0.05,,,,
 3,False,Classes,Asset class,Equity,>=,0.4,,,,
 3,False,Classes,Asset class,Equity,<=,0.6,,,,
@@ -17,12 +15,6 @@ risk_profile,Disabled,Type,Set,Position,Sign,Weight,Type Relative,Relative Set,R
 2,False,Classes,Strategy,Satellite,<=,,Classes,Strategy,Core,0
 3,False,Classes,Strategy,Core,>=,,Classes,Strategy,Satellite,4
 4,False,Classes,Strategy,Core,>=,,Classes,Strategy,Satellite,1.5
-Common,False,All Assets,,,<=,0.25,,,,
+Common,False,All Assets,,,<=,0.20,,,,
 Common,False,Classes,DC risky asset,Y,<=,0.7,,,,
-Common,False,Classes,Issuer,KINDEX,<=,0.6,,,,
-Common,False,Classes,Issuer,KODEX,<=,0.6,,,,
-Common,False,Classes,Issuer,TIGER,<=,0.6,,,,
-Common,False,Classes,Issuer,KBSTAR,<=,0.6,,,,
-Common,False,Classes,Issuer,KOSEF,<=,0.6,,,,
-Common,False,Classes,Issuer,ARIRANG,<=,0.6,,,,
-Common,False,Classes,Issuer,HANARO,<=,0.6,,,,
+

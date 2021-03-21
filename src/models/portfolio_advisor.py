@@ -4,11 +4,17 @@ import pandas as pd
 import riskfolio.ConstraintsFunctions as cf
 import riskfolio.Portfolio as pf
 import datetime
-from utils import get_asset_classes
 
-from asset import Asset
-from price import Price
-
+if __name__ == '__main__':
+    from utils import get_asset_classes
+    from asset import Asset
+    from price import Price
+    from load_data import Singleton, Balance, Instruments, PriceDB, SimulatableInstruments, Constraints, AdvisedPortfolios
+else:
+    from .utils import get_asset_classes
+    from .asset import Asset
+    from .price import Price
+    from .load_data import Singleton, Balance, Instruments, PriceDB, SimulatableInstruments, Constraints, AdvisedPortfolios
 
 class PortfolioAdvisor:
     r"""
@@ -43,7 +49,7 @@ class PortfolioAdvisor:
         self.weights = None  
         self.root_path = root_path
     
-    def run(self, risk_profile=None, current_date=None, drop_wt_threshold=0.005,
+    def run(self, risk_profile=None, current_date=None, non_tradables=None, drop_wt_threshold=0.005,
             model='Classic', rm='CDaR', method_mu='hist', method_cov='oas',
             decay=0.97, allow_short=False, alpha=0.05):
         r"""
@@ -52,6 +58,7 @@ class PortfolioAdvisor:
         """
         self._risk_profile=risk_profile
         self.current_date=current_date
+        self.non_tradables = non_tradables
 
         self._load_data()
         self._load_constraints()
@@ -66,12 +73,19 @@ class PortfolioAdvisor:
             temp = pd.DataFrame(index=range(self.w.index.shape[0]), columns=['date', 'risk_profile'])
             temp['date'] = self.current_date
             temp['risk_profile'] = self._risk_profile
+
             self.weights = pd.concat([temp, self.w.reset_index()], axis=1)
+            self.weights = self.weights.merge(self.price_db.loc[self.price_db.date==self.current_date].drop(['date', 'ret', 'itemtype'], axis=1), left_on='itemcode', right_on='itemcode', how='left')
+            self.weights = self.weights.merge(self.instruments_m.loc[:, ['itemcode', 'asset_class']], left_on='itemcode', right_on='itemcode', how='left')
+
         else:
             temp = self.w.copy()
             temp['date'] = self.current_date
             temp['risk_profile'] = self._risk_profile
-            self.weights = pd.concat([self.weights, temp.reset_index()])
+
+            temp = temp.merge(self.price_db.loc[self.price_db.date==self.current_date].drop(['date', 'ret', 'itemtype'], axis=1), left_on='itemcode', right_on='itemcode', how='left')
+            temp = temp.merge(self.instruments_m.loc[:, ['itemcode', 'asset_class']], left_on='itemcode', right_on='itemcode', how='left')
+            self.weights = pd.concat([self.weights, temp.reset_index(drop=True)])
             self.weights = self.weights.reset_index(drop=True)
         
         print('Completed optimization for {} on {}'.format(self._risk_profile, self.current_date))
@@ -103,46 +117,59 @@ class PortfolioAdvisor:
 
         # 가격 데이터
         # price_db.pkl
-        filepath = self.root_path + 'data/external/'
-        filename = 'price_db_' + self.freq + '.pkl'
-        self.price_db = pd.read_pickle(filepath+filename)
-        print('Loaded: {}'.format(filename))
+        # filepath = self.root_path + 'data/external/'
+        # filename = 'price_db_' + self.freq + '.pkl'
+        # self.price_db = pd.read_pickle(filepath+filename)
+        self.price_db = PriceDB.instance().data
+        self.price_db = self.price_db[~self.price_db.itemcode.isin(self.non_tradables)] if self.non_tradables is not None else self.price_db
+        print('Loaded: PriceDB')
 
         # 읽어온 종목들의 수익률 계산
         self._calculate_internals()
 
         # instruments_m: 투자가능 종목들 목록 (현재 시점의 거래금액, 시총 보고 뽑음)
-        filepath = self.root_path + 'data/processed/'
-        filename = 'instruments_m.pkl'
-        self.instruments_m = pd.read_pickle(filepath+filename)
-        print('Loaded: {}'.format(filename))
+        # filepath = self.root_path + 'data/processed/'
+        # filename = 'instruments_m.pkl'
+        # self.instruments_m = pd.read_pickle(filepath+filename)
+        self.instruments_m = Instruments.instance().data
+        self.instruments_m = self.instruments_m[~self.instruments_m.itemcode.isin(self.non_tradables)] if self.non_tradables is not None else self.instruments_m
+        self.instruments_m = self.instruments_m.reset_index(drop=True)
+        print('Loaded: Instruments')
 
         # simulatable_instruments: 상장된 지 3년 넘은 종목 (시뮬레이션을 위해 필요한 요건)
-        filepath = self.root_path + 'data/external/'
-        filename = 'simulatable_instruments.pkl'
-        self.simulatable_instruments = pd.read_pickle(filepath+filename)
-        print('Loaded: {}.'.format(filename))
+        # filepath = self.root_path + 'data/external/'
+        # filename = 'simulatable_instruments.pkl'
+        # self.simulatable_instruments = pd.read_pickle(filepath+filename)
+        self.simulatable_instruments = SimulatableInstruments.instance().data
+        self.simulatable_instruments = self.simulatable_instruments[~self.simulatable_instruments.itemcode.isin(self.non_tradables)] if self.non_tradables is not None else self.simulatable_instruments
+        self.simulatable_instruments = self.simulatable_instruments.reset_index(drop=True)
+        print('Loaded: SimulatableInstruments')
 
         # 사용자가 지정한 제약조건 테이블. Aw>=B 형식으로 되어 있어 사람이 이해하기 편함.
-        filepath = self.root_path + 'data/processed/'
-        filename = 'constraints.pkl'
-        self.df_constraints = pd.read_pickle(filepath+filename)
-        print('Loaded: {}.'.format(filename))
+        # filepath = self.root_path + 'data/processed/'
+        # filename = 'constraints.pkl'
+        # self.df_constraints = pd.read_pickle(filepath+filename)
+        self.df_constraints = Constraints.instance().data
+        print('Loaded: Constraints')
 
         # universe가 투자가능(예:거래량요건 충족)&시뮬레이션가능(예:상장 후 3년 종가 존재요건 충족)을 종합한 df임.
         self.universe = pd.merge(self.simulatable_instruments, self.instruments_m, left_on='itemcode', right_on='itemcode', how='left')
         self.universe = self.universe.set_index(['itemcode'], drop=True).loc[self.df_rt.columns]
         self.universe = self.universe.reset_index()
 
+        # 거래불가 종목은 제외시킨다(예: 잔고가 100만원 이하일 경우 가격이 높은 ETF는 포트폴리오 내에서 1주 사기도 어려워 제외)
+        self.universe = self.universe[~self.universe.itemcode.isin(self.non_tradables)] if self.non_tradables is not None else self.universe
+        self.universe = self.universe.reset_index(drop=True)
+
+
         # asset_classes는 Riskfolio 패키지가 요구하는 형식으로 고정되어 있는 투자종목들의 df임.
-        self.asset_classes = utils.get_asset_classes(self.universe)
+        self.asset_classes = get_asset_classes(self.universe)
 
     def _calculate_internals(self):
         # Make `df_rt`, a matrix of log returns of all eligible **instruments** in the universe with:
         # - Columns: itemcode
         # - Rows: date
         self.df_rt = self.price_db[self.price_db.itemtype=='ETF'].pivot(index='date', columns='itemcode', values='ret').dropna()
-
         print('Price returns have been calculated.')
         
     def _load_constraints(self):
@@ -204,6 +231,7 @@ class PortfolioAdvisor:
             self.port.assets_stats(method_mu=method_mu, method_cov=method_cov, d=decay)
 
         self.w = self.port.optimization(model=self.model, rm=self.rm, obj=self.obj, rf=self.rf)
+        assert self.w is not None, "Optimization failed with these actual inputs: "
         print('Optimized weights have been estimated.')
 
         # threshold보다 작은 비중을 추천받은 종목은 삭제한다.
@@ -252,128 +280,8 @@ class PortfolioAdvisor:
         return pd.concat([self.w.drop(self.w[self.w.weights<0.0495].index), w_others]).sort_values(by='weights', ascending=False)
 
 
-
-
-# def easy_add_assets(tickers, quantities, prices):
-#     """
-#     An easy way to add multiple assets to portfolio.
-#     Args:
-#         tickers (Sequence[str]): Ticker of assets in portfolio.
-#         quantities (Sequence[float]): Quantities of respective assets in portfolio. Must be in the same order as ``tickers``.
-#         prices (Sequence[float]): Prices of respective assets in portfolio. Must be in the same order as ``tickers``.
-
-#     reference: https://github.com/siavashadpey/rebalance/blob/master/rebalance/portfolio/portfolio.py
-#     """
-
-
-
-#     assert (len(tickers) == len(quantities)) & (len(quantities) == len(prices)), \
-#            "`names`, `quantities` and `prices` must be of the same length."
-
-#     _assets = {}
-#     for ticker, quantity, price in zip(tickers, quantities, prices):
-#         _assets[ticker] = Asset(ticker, quantity, price)
-
-#     return _assets
-
-
-
-# def rebalance(self, target_allocation, verbose=False):
-#     """
-#     Rebalances the portfolio using the specified target allocation, the portfolio's current allocation,
-#     and the available cash.
-#     Args:
-#         target_allocation (Dict[str, float]): Target asset allocation of the portfolio (in %). The keys of the dictionary are the tickers of the assets.
-#         verbose (bool, optional): Verbosity flag. Default is False. 
-#     Returns:
-#         (tuple): tuple containing:
-#             * new_units (Dict[str, int]): Units of each asset to buy. The keys of the dictionary are the tickers of the assets.
-#             * prices (Dict[str, [float, str]]): The keys of the dictionary are the tickers of the assets. Each value of the dictionary is a 2-entry list. The first entry is the price of the asset during the rebalancing computation. The second entry is the currency of the asset.
-#             * exchange_rates (Dict[str, float]): The keys of the dictionary are currencies. Each value is the exchange rate to CAD during the rebalancing computation.
-#             * max_diff (float): Largest difference between target allocation and optimized asset allocation.
-#     """
-
-#     # order target_allocation dict in the same order as assets dict and upper key
-#     target_allocation_reordered = {}
-#     try:
-#         for key in self.assets:
-#             target_allocation_reordered[key] = target_allocation[key]
-#     except:
-#         raise Exception(
-#             "'target_allocation not compatible with the assets of the portfolio."
-#         )
-
-#     target_allocation_np = np.fromiter(
-#         target_allocation_reordered.values(), dtype=float)
-
-#     assert abs(np.sum(target_allocation_np) -
-#                100.) <= 1E-2, "target allocation must sum up to 100%."
-
-#     # offload heavy work
-#     (balanced_portfolio, new_units, prices, cost, exchange_history) = rebalancing_helper.rebalance(self, target_allocation_np)
-
-#     # compute old and new asset allocation
-#     # and largest diff between new and target asset allocation
-#     old_alloc = self.asset_allocation()
-#     new_alloc = balanced_portfolio.asset_allocation()
-#     max_diff = max(
-#         abs(target_allocation_np -
-#             np.fromiter(new_alloc.values(), dtype=float)))
-
-#     if verbose:
-#         print("")
-#         # Print shares to buy, cost, new allocation, old allocation target, and target allocation
-#         print(
-#             " Ticker      Ask     Quantity      Amount    Currency     Old allocation   New allocation     Target allocation"
-#         )
-#         print(
-#             "                      to buy         ($)                      (%)              (%)                 (%)"
-#         )
-#         print(
-#             "---------------------------------------------------------------------------------------------------------------"
-#         )
-#         for ticker in balanced_portfolio.assets:
-#             print("%8s  %7.2f   %6.d        %8.2f     %4s          %5.2f            %5.2f               %5.2f" % \
-#             (ticker, prices[ticker][0], new_units[ticker], cost[ticker], prices[ticker][1], \
-#              old_alloc[ticker], new_alloc[ticker], target_allocation[ticker]))
-
-#         print("")
-#         print(
-#             "Largest discrepancy between the new and the target asset allocation is %.2f %%."
-#             % (max_diff))
-
-#         # Print conversion exchange
-#         if len(exchange_history) > 0:
-#             print("")
-#             if len(exchange_history) > 1:
-#                 print(
-#                     "Before making the above purchases, the following currency conversions are required:"
-#                 )
-#             else:
-#                 print(
-#                     "Before making the above purchases, the following currency conversion is required:"
-#                 )
-
-#             for exchange in exchange_history:
-#                 (from_amount, from_currency, to_amount, to_currency,
-#                  rate) = exchange
-#                 print("    %.2f %s to %.2f %s at a rate of %.4f." %
-#                       (from_amount, from_currency, to_amount, to_currency,
-#                        rate))
-
-#         # Print remaining cash
-#         print("")
-#         print("Remaining cash:")
-#         for cash in balanced_portfolio.cash.values():
-#             print("    %.2f %s." % (cash.amount, cash.currency))
-
-#     # Now that we're done, we can replace old portfolio with the new one
-#     self.__dict__.update(balanced_portfolio.__dict__)
-
-#     return (new_units, prices, exchange_history, max_diff)
-
-
 if __name__ == '__main__':
     pa = PortfolioAdvisor()
-    pa.run(risk_profile=2, current_date='2020-01-10')
+    pa.run(risk_profile=2, current_date='2021-02-08')
+    pa.run(risk_profile=2, current_date='2021-02-15')
     print(pa.w)

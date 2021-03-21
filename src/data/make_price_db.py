@@ -54,7 +54,8 @@ df_db = {}
 
 frequency = ['d', 'w', 'm']
 # We need an extra 1 record for return calcaultion.
-min_datapoints = {'d': 365*3+1, 'w': 52*3+1, 'm': 12*3+1}
+min_active_years = 2   # 종가가 존재하는 최소 연도
+min_datapoints = {'d': 365*min_active_years+1, 'w': 52*min_active_years+1, 'm': 12*min_active_years+1}
 window_3m = {'d': 90, 'w': 12, 'm': 3}
 
 for freq in frequency:
@@ -80,11 +81,18 @@ df['ecos_w']['itemcode'] = 'CALL'
 df['ecos_w']['itemtype'] = 'riskfree'
 df['ecos_w'].rename(columns={'call':'price'}, inplace=True)
 
+df['ecos_d'] = pd.read_csv(filepath + 'ecos_d' + '.dat', header=3, parse_dates=['date'])
+df['ecos_d']['itemcode'] = 'CALL'
+df['ecos_d']['itemtype'] = 'riskfree'
+df['ecos_d'].rename(columns={'call':'price'}, inplace=True)
+
+
 
 # In[6]:
 
 
 df_db['w'] = pd.concat([df_db['w'], df['ecos_w']])
+df_db['d'] = pd.concat([df_db['d'], df['ecos_d']])
 
 
 # ## Pickle final restuls

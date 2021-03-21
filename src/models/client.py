@@ -1,6 +1,12 @@
 import numpy as np
 import pandas as pd
-from load_data import Balance, AdvisedPortfolios, Singleton
+
+if __name__ == '__main__':
+    from load_data import Balance, AdvisedPortfolios, Singleton
+elif __name__ == 'client':
+    from load_data import Balance, AdvisedPortfolios, Singleton
+else:
+    from .load_data import Balance, AdvisedPortfolios, Singleton
 
 class Client:
     r"""
