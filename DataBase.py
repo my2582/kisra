@@ -4,9 +4,9 @@ from DBquery import query
 
 class databaseDF:
     def __init__(self):
-        # self.dburl = os.environ['DATABASE_URL']
-        # self.conn = psycopg2.connect(self.dburl, sslmode='require')
-        self.conn = psycopg2.connect(host='127.0.0.1', dbname='postgres', user='postgres', password='alstn121!', port='5432', sslmode='prefer')
+        self.dburl = os.environ['DATABASE_URL']
+        self.conn = psycopg2.connect(self.dburl, sslmode='require')
+        # self.conn = psycopg2.connect(host='127.0.0.1', dbname='postgres', user='postgres', password='alstn121!', port='5432', sslmode='prefer')
         self.con = self.conn.cursor()
         self.query = query(self.conn, self.con)
 
