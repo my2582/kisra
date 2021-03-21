@@ -39,7 +39,7 @@ class Character:
 
         # 추천 포트폴리오를 가져온다.
         advised_pf = AdvisedPortfolios.instance().data
-        df = advised_pf.loc[(advised_pf.risk_profile==score) & (advised_pf.date==self.options[1])]
+        df = advised_pf.loc[(advised_pf.risk_profile==score) & (advised_pf.date==self.options[-2])]
         df.loc[:, ['weights', 'asset_class']].groupby(
             'asset_class').sum().reset_index().rename(columns={
                 'asset_class': '자산군',
