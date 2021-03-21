@@ -14,7 +14,6 @@ class Character:
             4: '적극투자',
             5: '공격투자'
         }
-        self.date = date
 
     def empty_check(self):
         for content in self.options:
