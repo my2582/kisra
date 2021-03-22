@@ -51,6 +51,10 @@ class Character:
         print(balance)
 
         new_port = get_advised_port(risk_profile=risk_profile, df_advised_ports=advised_pf)
+        print('new_port.price')
+        print(new_port.price)
+        print('advised_pf.price')
+        print(advised_pf.price)
 
         old_new = pd.merge(balance.loc[:, ['itemcode', 'quantity', 'price', 'value', 'wt']], new_port.loc[:, ['itemcode', 'wt']],
                         left_on=['itemcode'], right_on=['itemcode'], how='outer', suffixes=['_old', '_new'])
