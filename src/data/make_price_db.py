@@ -54,7 +54,7 @@ df_db = {}
 
 frequency = ['d', 'w', 'm']
 # We need an extra 1 record for return calcaultion.
-min_active_years = 2   # 종가가 존재하는 최소 연도
+min_active_years = 1   # 종가가 존재하는 최소 연도
 min_datapoints = {'d': 365*min_active_years+1, 'w': 52*min_active_years+1, 'm': 12*min_active_years+1}
 window_3m = {'d': 90, 'w': 12, 'm': 3}
 
