@@ -45,6 +45,8 @@ class Character:
         print(advised_pf)
         current_date = self.options[-2]  # 날짜.
         current_date = datetime.strptime(current_date, '%Y-%m-%d').strftime('%Y-%m-%d')
+
+        print('the current date is {}'.format(current_date))
         df = advised_pf.loc[(advised_pf.date==current_date) & (advised_pf.risk_profile==score), :]
         df.loc[:, ['weights', 'itemname']].groupby(
                 'itemname').sum().reset_index().rename(columns={
