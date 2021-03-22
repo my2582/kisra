@@ -171,7 +171,7 @@ analysis = [
         html.Label('이름'),
         dcc.Input(value='x', type='text', id='analysis-name'),
 
-        html.Label('날짜'),
+        html.Label('자문기준일'),
         dcc.Input(value='y', type='text', id='analysis-datetime')]
 
         , id='user-information-analysis'),
@@ -180,7 +180,7 @@ analysis = [
         id='predict-slider',
         min=0,
         max=16,
-        value=[0, 1],
+        value=[0, 16],
         marks={
             0: {'label': '12개월'},
             1: {'label': '11개월'},
