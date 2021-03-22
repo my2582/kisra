@@ -113,8 +113,10 @@ class Character:
         current_date = self.options[-2]  # 날짜.
         current_date = datetime.strptime(current_date, '%Y-%m-%d').strftime('%Y-%m-%d')
         risk_profile = score//len(self.options)
+        
         username = self.options[-1]
-        userid = 'A' + ('0'+re.findall('\d+', s )[0])[-2:]
+        # 사용자명에서 숫자만 갖고온다. 그래서 A+숫자 형식의 userid를 만든다.
+        userid = 'A' + ('0'+re.findall('\d+', username)[0])[-2:] 
 
         print('the current date is {}'.format(current_date))
         df = advised_pf.loc[(advised_pf.date==current_date) & (advised_pf.risk_profile==risk_profile), :]
