@@ -75,9 +75,8 @@ def rebalance(portfolio, target_allocation):
     prices = {}
     cost = {}
     for ticker, asset in balanced_portfolio.assets.items():
-        # prices[ticker] = [asset.price,
-        #                   asset.currency]  # price and currency of price
-        prices[ticker] = asset.price
+        prices[ticker] = [asset.price,
+                          asset.currency]  # price and currency of price
         cost[ticker] = balanced_portfolio.buy_asset(
             ticker, new_units[ticker])
 
