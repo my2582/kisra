@@ -25,7 +25,7 @@ class Character:
                 return False
         return True
 
-    def trade_as_advised(self, advised_pf, username, userid, current_date, risk_profile):
+    def get_ordersheets(self, advised_pf, username, userid, current_date, risk_profile):
         balance = self.db.getDetail(userid=userid)
 
         print('balance[0] is '.format(balance[0]))
@@ -157,12 +157,13 @@ class Character:
         print('추천포트폴리오:')
         print(df)
 
-
-        new_units, prices = self.trade_as_advised(advised_pf, username, userid, current_date, risk_profile)
+        new_units, prices = self.get_ordersheets(advised_pf, username, userid, current_date, risk_profile)
         print('---new_units---')
         print(new_units)
         print('---prices----')
         print(prices)
+
+        
 
         return self.scoring[score//(len(self.options) - 3)], df, score//(len(self.options) - 3)
 

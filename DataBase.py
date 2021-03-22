@@ -33,7 +33,7 @@ class databaseDF:
         self.con.execute("CREATE TABLE IF NOT EXISTS advised_pf(date varchar(255), risk_profile float(24), itemcode varchar(255), weights float(24), tracking_code varchar(255), "
                                     "itemname varchar(255), price float(24), volume float(24), trading_amt_mln float(24), asset_class varchar(255))")
         self.conn.commit()
-        self.con.execute("CREATE TABLE IF NOT EXISTS trade(trade_no varchar(255), date varchar(255), userid varchar(255), BS varchar(255), itemcode varchar(255), "
+        self.con.execute("CREATE TABLE IF NOT EXISTS trade(date varchar(255), userid varchar(255), BS varchar(255), itemcode varchar(255), "
                                     "itemname varchar(255), quantity float(24), price float(24), value float(24))")
         self.conn.commit()
 
