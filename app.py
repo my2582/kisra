@@ -28,6 +28,9 @@ def show_content(users):
     
     db = databaseDF()
     advised_pf = AdvisedPortfolios.instance().data
+    print('type(advised_pf)'.format(type(advised_pf)))
+    print('Here is your advised_pf:')
+    print(advised_pf.tail(3))
     db.insert_advised_pf(advised_pf)
     
     @app.callback(
