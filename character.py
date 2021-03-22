@@ -1,6 +1,7 @@
 import pandas as pd
 from src.models.load_data import Balance, Instruments, AdvisedPortfolios, PriceDB, Singleton
 from DataBase import databaseDF
+from datetime import datetime
 
 class Character:
     def __init__(self, characters):
@@ -39,7 +40,9 @@ class Character:
 
         # 추천 포트폴리오를 가져온다.
         advised_pf = AdvisedPortfolios.instance().data
-        df = advised_pf.loc[(advised_pf.risk_profile==score) & (advised_pf.date==self.options[-2])]
+        current_date = self.options[-2]  # 날짜.
+        current_date = datetime.strptime(current_date, '%Y-%m-%d').strftime('%Y-%m-%d')
+        df = advised_pf.loc[(advised_pf.date==current_date) & (advised_pf.risk_profile==score), :]
         df.loc[:, ['weights', 'asset_class']].groupby(
             'asset_class').sum().reset_index().rename(columns={
                 'asset_class': '자산군',
