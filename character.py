@@ -34,12 +34,17 @@ class Character:
         price_db = PriceDB.instance().data
         price_db.loc[price_db.date == balance_date]
 
+        print('----price_db-----')
+        print(price_db.tail())
+
         try:
-            balance_date = datetime.datetime.strptime(
+            balance_date = datetime.strptime(
                 balance_date, '%Y-%m-%d %H:%M:%S %p').strftime('%Y-%m-%d')
         except:
-            balance_date = datetime.datetime.strptime(
+            balance_date = datetime.strptime(
                 balance_date, '%m/%d/%Y %H:%M:%S %p').strftime('%Y-%m-%d')
+
+        print('balance_date: {}'.format(balance_date))
 
         new_port = get_advised_port(risk_profile=risk_profile)
 
