@@ -71,7 +71,9 @@ def show_content(users):
             tags_id = [input_1, input_2, input_3, input_4, input_5, input_6, input_7, input_8, input_9,
                         input_10, input_11]
             character = Character(tags_id)
-            output = []
+            output = html.Div([
+                html.Div(id='character-result')
+            ], id='output-div')
 
             if character.empty_check():
 
@@ -98,7 +100,7 @@ def show_content(users):
                     fig.figure.layout.paper_bgcolor = style['pie_chart_style']['backgroundColor']
                     output.children.append(fig)
                 output.style = style['pie_chart_style']
-                return html.Div(output, id='characters')
+                return output
 
             warning = '비어있는 항목이 있습니다! 전부 체크해 주세요'
             if 2 < len(output.children):
