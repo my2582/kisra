@@ -160,9 +160,7 @@ signup = [
     html.Br(),
     html.Br(),
     html.Button('Submit', id='submit-val', style={"background-color": "Yellow"}, n_clicks=0),
-    html.Div([
-        html.Div(id='character-result')
-    ], id='output-div')
+    html.Div(id='output-div')
 
     ]
 
