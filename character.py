@@ -113,6 +113,8 @@ class Character:
         # * max_diff (float): Largest difference between target allocation and optimized asset allocation.
         (new_units, prices, _, max_diff) = p.rebalance(target_asset_alloc, verbose=True)
 
+        return (new_units, prices)
+
 
     def predict(self, answers) -> object:
         # data = pd.read_pickle(os.getcwd()+'\\data\\processed\\'+self.file_name)
@@ -156,15 +158,11 @@ class Character:
         print(df)
 
 
-        self.trade_as_advised(advised_pf, username, userid, current_date, risk_profile)
+        new_units, prices = self.trade_as_advised(advised_pf, username, userid, current_date, risk_profile)
+        print('---new_units---')
+        print(new_units)
+        print('---prices----')
+        print(prices)
 
-        # self.db.trade(advised_pf, current_date)
-
-        # df = pd.DataFrame(
-        #     {
-        #         "자산": [0, 0, 0, int(self.options[-3])],
-        #         "종류": ['채권', '주식', '대체', '현금']
-        #     }
-        # )
         return self.scoring[score//(len(self.options) - 3)], df, score//(len(self.options) - 3)
 
