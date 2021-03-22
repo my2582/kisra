@@ -40,12 +40,15 @@ class Character:
 
         # 추천 포트폴리오를 가져온다.
         advised_pf = AdvisedPortfolios.instance().data
+        print('advised_pf.shape is {}'.format(advised_pf.shape))
+        print('advised_pf is')
+        print(advised_pf)
         current_date = self.options[-2]  # 날짜.
         current_date = datetime.strptime(current_date, '%Y-%m-%d').strftime('%Y-%m-%d')
         df = advised_pf.loc[(advised_pf.date==current_date) & (advised_pf.risk_profile==score), :]
-        df.loc[:, ['weights', 'asset_class']].groupby(
-            'asset_class').sum().reset_index().rename(columns={
-                'asset_class': '자산군',
+        df.loc[:, ['weights', 'itemname']].groupby(
+                'itemname').sum().reset_index().rename(columns={
+                'itemname': '종목명',
                 'weights': '비중'
             })
         
