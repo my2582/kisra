@@ -131,7 +131,7 @@ class Character:
         print(df)
 
 
-        trade_as_advised(advised_pf, username, userid, current_date, risk_profile)
+        self.trade_as_advised(advised_pf, username, userid, current_date, risk_profile)
 
         # self.db.trade(advised_pf, current_date)
 
