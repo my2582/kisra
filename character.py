@@ -26,7 +26,7 @@ class Character:
         return True
 
     def trade_as_advised(self, advised_pf, username, userid, current_date, risk_profile):
-        balance = self.db.select_detail(userid=userid)
+        balance = self.db.getDetail(userid=userid)
 
         print('balance[0] is '.format(balance[0]))
         balance_date = balance[0][0]

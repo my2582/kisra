@@ -93,6 +93,10 @@ class databaseDF:
         self.query.newUser(answer, money)
         return
 
-    def insert_advised_pf(self, pf):
-        self.query.insert_advised_pf(pf)
-        return
+    def getDetail(self, userid):
+        record = self.query.getUserDetail()
+        query = "select * from detail where userid=%s and date=(select max(date) from detail where userid=%s)"
+        print('-------------detail------------------')
+        print(userid)
+        print(record)
+        return record

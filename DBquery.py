@@ -69,7 +69,7 @@ class query:
 
         return
 
-    def select_detail(self, userid):
+    def getUserDetail(self, userid):
         query = "select * from detail where userid=%s and date=(select max(date) from detail where userid=%s)"
         self.con.execute(query, [userid])
         self.conn.commit()
