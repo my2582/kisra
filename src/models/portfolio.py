@@ -1,19 +1,19 @@
 import datetime
 import pandas as pd
 
-from utils import get_current_port, get_advised_port, get_recommendation
-from load_data import Balance, Instruments, AdvisedPortfolios, PriceDB, Singleton
+from .utils import get_current_port, get_advised_port, get_recommendation
+from .load_data import Balance, Instruments, AdvisedPortfolios, PriceDB, Singleton
 import copy
 import math
 from typing import Sequence
 
 import numpy as np
 
-from asset import Asset
-from cash import Cash
-from price import Price
+from .asset import Asset
+from .cash import Cash
+from .price import Price
 
-import rebalancing_helper
+import .rebalancing_helper
 
 
 class Portfolio:
