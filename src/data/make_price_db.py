@@ -30,6 +30,7 @@ itemtype = 'ETF'
 
 data_files = ['price_d', 'volume_d', 'price_w', 'volume_w', 'price_m', 'volume_m']
 filepath = '../../data/external/'
+# filepath = './data/external/'
 df = {}
 for filename in data_files:
     df[filename] = pd.read_csv(filepath + filename + '.dat', header=7)

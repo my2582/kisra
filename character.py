@@ -45,6 +45,10 @@ class Character:
                 'asset_class': '자산군',
                 'weights': '비중'
             })
+        
+        print('self.options is {}'.format(self.options))
+        print('추천포트폴리오:')
+        print(df)
 
         # df = pd.DataFrame(
         #     {

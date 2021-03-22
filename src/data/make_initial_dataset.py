@@ -20,4 +20,12 @@ for filename in data_files:
     df[filename].to_pickle(filepath + filename + '.pkl')
     print('Pickled: {}'.format(filename))
 
+data_files = ['simulatable_instruments']
+filepath = '../../data/external/'
+df = {}
+for filename in data_files:
+    df[filename] = pd.read_csv(filepath + filename + '.dat', header=1)
+    df[filename].to_pickle(filepath + filename + '.pkl')
+    print('Pickled: {}'.format(filename))
+
 print('Completed.')
