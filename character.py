@@ -89,9 +89,6 @@ class Character:
 
         target_asset_alloc = dict(zip(new_tickers, new_wt))
 
-        print('---old_port---')
-        print(old_port)
-
         print('---new_port---')
         print(new_port)
 
