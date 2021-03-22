@@ -4,6 +4,7 @@ elif __name__ == 'asset':
     from price import Price
 else:
     from .price import Price
+    from src.models.load_data import Singleton, Balance, Instruments, PriceDB, SimulatableInstruments, Constraints, AdvisedPortfolios
 
 class Asset:
     """
@@ -31,7 +32,9 @@ class Asset:
             self._price = Price(price, 'KRW')
         else:
             price_db = PriceDB.instance().data
+            print('in asset.py, price_db.tail() is '.format(price_db.tail(3)))
             price = price_db.loc[(price_db.date==price_db.loc[price_db.itemcode==ticker, 'date'].max()) & (price_db.itemcode==ticker), 'price'].values[0]
+            print('in asset.py, price is {}'.format(price))
             self._price = Price(price, 'KRW')
 
     @property
