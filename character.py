@@ -1,6 +1,6 @@
 import pandas as pd
 from src.models.load_data import Balance, Instruments, AdvisedPortfolios, PriceDB, Singleton
-from utils import get_current_port, get_advised_port, get_recommendation
+from src.models.utils import get_current_port, get_advised_port, get_recommendation
 from DataBase import databaseDF
 from datetime import datetime
 import re
