@@ -75,7 +75,7 @@ class Character:
         old_quantities = assets.quantity.astype(int).tolist()
         assets = assets.merge(price_db.loc[price_db.date == balance_date, ['itemcode', 'price']],
                     left_on='itemcode', right_on='itemcode', how='left', suffixes = ('', '_db'))
-        assets.loc[:, 'price'] = assets['price'].fillna(assets['price_db'])
+        # assets.loc[:, 'price'] = assets['price'].fillna(assets['price_db'])
         old_prices = assets.price.tolist()
         cash_amounts = cash.value.tolist()
         cash_currency = ['KRW']*len(cash_amounts)
