@@ -69,6 +69,13 @@ class query:
 
         return
 
+    def select_detail(self, userid):
+        query = "select * from detail where userid=%s and date=(select max(date) from detail where userid=%s)"
+        self.con.execute(query, [userid])
+        self.conn.commit()
+        return self.con.fetchall()
+
+
     def insert_advised_pf(self, pf):
         query = "INSERT INTO advised_pf(date, risk_profile, itemcode, weights, tracking_code, itemname, price, volume, trading_amt_mln, asset_class) values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
         for index, row in pf.iterrows():

@@ -1,7 +1,10 @@
 import pandas as pd
 from src.models.load_data import Balance, Instruments, AdvisedPortfolios, PriceDB, Singleton
+from utils import get_current_port, get_advised_port, get_recommendation
 from DataBase import databaseDF
 from datetime import datetime
+import re
+from portfolio import Portfolio
 
 class Character:
     def __init__(self, characters):
@@ -21,6 +24,70 @@ class Character:
             if not content:
                 return False
         return True
+
+    def trade_as_advised(self, advised_pf, username, userid, current_date, risk_profile):
+        balance = self.db.select_detail(userid=userid)
+
+        print('balance[0] is '.format(balance[0]))
+        balance_date = balance[0][0]
+
+        price_db = PriceDB.instance().data
+        price_db.loc[price_db.date == balance_date]
+
+        try:
+            balance_date = datetime.datetime.strptime(
+                balance_date, '%Y-%m-%d %H:%M:%S %p').strftime('%Y-%m-%d')
+        except:
+            balance_date = datetime.datetime.strptime(
+                balance_date, '%m/%d/%Y %H:%M:%S %p').strftime('%Y-%m-%d')
+
+        new_port = get_advised_port(risk_profile=risk_profile)
+
+        old_new = pd.merge(balance.loc[:, ['itemcode', 'quantity', 'price', 'value', 'wt']], new_port.loc[:, ['itemcode', 'wt']],
+                        left_on=['itemcode'], right_on=['itemcode'], how='outer', suffixes=['_old', '_new'])
+
+        old_new.loc[:, ['value', 'wt_old', 'quantity', 'wt_new']] = old_new.loc[:, [
+            'value', 'wt_old', 'quantity', 'wt_new']].fillna(value=0)
+
+        assets = old_new.loc[(old_new.itemcode != 'C000001')
+                            & (old_new.itemcode != 'D000001'), :]
+        cash = old_new.loc[(old_new.itemcode == 'C000001') |
+                        (old_new.itemcode == 'D000001'), :]
+        old_assets = assets.drop(['wt_new'], axis=1)
+        # old_assets = old_assets.rename(columns={'price_old':'price', 'wt_old':'wt'})
+        old_cash = cash.drop(['wt_new'], axis=1)
+        # old_cash = old_cash.rename(columns={'price_old':'price', 'wt_old':'wt'})
+        old_tickers = assets.itemcode.tolist()
+        old_quantities = assets.quantity.astype(int).tolist()
+        assets = assets.merge(price_db.loc[price_db.date == balance_date, ['itemcode', 'price']],
+                    left_on='itemcode', right_on='itemcode', how='left', suffixes = ('', '_db'))
+        assets.loc[:, 'price'] = assets['price'].fillna(assets['price_db'])
+        old_prices = assets.price.tolist()
+        cash_amounts = cash.value.tolist()
+        cash_currency = ['KRW']*len(cash_amounts)
+
+        p = Portfolio()
+        p.easy_add_assets(tickers=old_tickers,
+                        quantities=old_quantities, prices=old_prices)
+        p.easy_add_cash(amounts=cash_amounts, currencies=cash_currency)
+        p.selling_allowed = True
+
+        new_tickers = old_new.loc[(old_new.itemcode != 'CASH') & (
+            old_new.itemcode != 'DEPOSIT'), 'itemcode'].tolist()
+        # 단위가 %이므로 100을 곱한다.
+        new_wt = (old_new.loc[(old_new.itemcode != 'CASH') & (
+            old_new.itemcode != 'DEPOSIT'), 'wt_new']*100).tolist()
+
+        target_asset_alloc = dict(zip(new_tickers, new_wt))
+
+
+        # p.rebalance() returns a tuple of:
+        # * new_units (Dict[str, int]): Units of each asset to buy. The keys of the dictionary are the tickers of the assets.
+        # * prices (Dict[str, [float, str]]): The keys of the dictionary are the tickers of the assets. Each value of the dictionary is a 2-entry list. The first entry is the price of the asset during the rebalancing computation. The second entry is the currency of the asset.
+        # * exchange_rates (Dict[str, float]): The keys of the dictionary are currencies. Each value is the exchange rate to CAD during the rebalancing computation.
+        # * max_diff (float): Largest difference between target allocation and optimized asset allocation.
+        (new_units, prices, _, max_diff) = p.rebalance(target_asset_alloc, verbose=True)
+
 
     def predict(self, answers) -> object:
         # data = pd.read_pickle(os.getcwd()+'\\data\\processed\\'+self.file_name)
@@ -45,9 +112,12 @@ class Character:
         print(advised_pf)
         current_date = self.options[-2]  # 날짜.
         current_date = datetime.strptime(current_date, '%Y-%m-%d').strftime('%Y-%m-%d')
+        risk_profile = score//len(self.options)
+        username = self.options[-1]
+        userid = 'A' + ('0'+re.findall('\d+', s )[0])[-2:]
 
         print('the current date is {}'.format(current_date))
-        df = advised_pf.loc[(advised_pf.date==current_date) & (advised_pf.risk_profile==score//len(self.options)), :]
+        df = advised_pf.loc[(advised_pf.date==current_date) & (advised_pf.risk_profile==risk_profile), :]
         df = df.loc[:, ['weights', 'itemname']].groupby(
                 'itemname').sum().reset_index().rename(columns={
                 'itemname': 'Name',
@@ -57,6 +127,11 @@ class Character:
         print('self.options is {}'.format(self.options))
         print('추천포트폴리오:')
         print(df)
+
+
+        trade_as_advised(advised_pf, username, userid, current_date, risk_profile)
+
+        # self.db.trade(advised_pf, current_date)
 
         # df = pd.DataFrame(
         #     {

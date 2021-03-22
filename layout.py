@@ -159,7 +159,7 @@ signup = [
 
     html.Br(),
     html.Br(),
-    html.Button('Submit', id='submit-val', style={"background-color": "Yellow"}, n_clicks=0),
+    html.Button('Submit', value='추천 포트폴리오 구매하기', id='submit-val', style={"background-color": "Yellow"}, n_clicks=0),
     html.Div([
         html.Div(id='character-result')
     ], id='output-div')
