@@ -68,3 +68,11 @@ class query:
         self.conn.commit()
 
         return
+
+    def insert_advised_pf(self, pf):
+        query = "INSERT INTO advised_pf(date, risk_profile, itemcode, weights, tracking_code, itemname, price, volume, trading_amt_mln, asset_class varchar) values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+        for row in pf:
+            self.con.execute(query, [row.date, row.risk_profile, row.itemcode, row.weights, row.tracking_code, row.itemname, row.price, row.volume, row.trading_amt_mln, row.asset_class])
+            self.conn.commit()
+
+        return

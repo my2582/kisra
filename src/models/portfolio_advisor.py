@@ -122,6 +122,17 @@ class PortfolioAdvisor:
         # - `asset_classes` <- `universe` <- simulatable_instruments.pkl left join with instruments_m.pkl
         # - `constraints` <- constraints.pkl
 
+        # simulatable_instruments: 상장된 지 3년 넘은 종목 (시뮬레이션을 위해 필요한 요건)
+        # filepath = self.root_path + 'data/external/'
+        # filename = 'simulatable_instruments.pkl'
+        # self.simulatable_instruments = pd.read_pickle(filepath+filename)
+        self.simulatable_instruments = SimulatableInstruments.instance().data
+        self.simulatable_instruments = self.simulatable_instruments[~self.simulatable_instruments.itemcode.isin(
+            self.non_tradables)] if self.non_tradables is not None else self.simulatable_instruments
+        self.simulatable_instruments = self.simulatable_instruments.reset_index(
+            drop=True)
+        print('Loaded: SimulatableInstruments')
+
         # 가격 데이터
         # price_db.pkl
         # filepath = self.root_path + 'data/external/'
@@ -130,6 +141,8 @@ class PortfolioAdvisor:
         self.price_db = PriceDB.instance().data
         self.price_db = self.price_db[~self.price_db.itemcode.isin(
             self.non_tradables)] if self.non_tradables is not None else self.price_db
+        self.price_db = self.price_db[self.price_db.itemcode.isin(
+            list(self.simulatable_instruments.itemcode) + ['CALL'])]
         print('Loaded: PriceDB')
 
         # 읽어온 종목들의 수익률 계산
@@ -145,17 +158,6 @@ class PortfolioAdvisor:
         self.instruments_m = self.instruments_m.reset_index(drop=True)
         print('Loaded: Instruments')
 
-        # simulatable_instruments: 상장된 지 3년 넘은 종목 (시뮬레이션을 위해 필요한 요건)
-        # filepath = self.root_path + 'data/external/'
-        # filename = 'simulatable_instruments.pkl'
-        # self.simulatable_instruments = pd.read_pickle(filepath+filename)
-        self.simulatable_instruments = SimulatableInstruments.instance().data
-        self.simulatable_instruments = self.simulatable_instruments[~self.simulatable_instruments.itemcode.isin(
-            self.non_tradables)] if self.non_tradables is not None else self.simulatable_instruments
-        self.simulatable_instruments = self.simulatable_instruments.reset_index(
-            drop=True)
-        print('Loaded: SimulatableInstruments')
-
         # 사용자가 지정한 제약조건 테이블. Aw>=B 형식으로 되어 있어 사람이 이해하기 편함.
         # filepath = self.root_path + 'data/processed/'
         # filename = 'constraints.pkl'
@@ -166,8 +168,7 @@ class PortfolioAdvisor:
         # universe가 투자가능(예:거래량요건 충족)&시뮬레이션가능(예:상장 후 3년 종가 존재요건 충족)을 종합한 df임.
         self.universe = pd.merge(self.simulatable_instruments, self.instruments_m,
                                  left_on='itemcode', right_on='itemcode', how='left')
-        self.universe = self.universe.set_index(
-            ['itemcode'], drop=True).loc[self.df_rt.columns]
+        self.universe = self.universe.set_index(['itemcode'], drop=True)
         self.universe = self.universe.reset_index()
 
         # 동일 추적지수를 갖는 ETF에서는 거래량 1위만 선정

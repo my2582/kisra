@@ -10,6 +10,8 @@ from user import User
 import numpy as np
 from datetime import timedelta, datetime
 import plotly.graph_objects as go
+from DataBase import databaseDF
+from src.models.load_data import AdvisedPortfolios, Singleton
 
 sheet = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 app = dash.Dash(__name__, external_stylesheets=sheet, suppress_callback_exceptions=True)
@@ -23,6 +25,13 @@ def show_content(users):
     origin = tab
     user = users
     app.layout = origin
+    
+    load_advised_pf()
+
+    def load_advised_pf():
+        db = databaseDF()
+        advised_pf = AdvisedPortfolios.instance().data
+        db.insert_advised_pf(advised_pf)
 
     @app.callback(
         Output(layout.output_id, 'children'),
@@ -33,6 +42,7 @@ def show_content(users):
             app.layout.children[-1] = html.Div(layout.signup)
             userList = user.userList()
             layout.signup[1].children[1].options = userList + ['x']
+
             return html.Div(layout.signup)
 
         if tab_input == 'analysis':
