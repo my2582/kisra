@@ -50,8 +50,8 @@ class Character:
         df = advised_pf.loc[(advised_pf.date==current_date) & (advised_pf.risk_profile==score//len(self.options)), :]
         df = df.loc[:, ['weights', 'itemname']].groupby(
                 'itemname').sum().reset_index().rename(columns={
-                'itemname': '종목명',
-                'weights': '비중'
+                'itemname': 'Name',
+                'weights': 'Weight'
             })
         
         print('self.options is {}'.format(self.options))
