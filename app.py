@@ -73,10 +73,7 @@ def show_content(users):
             character = Character(tags_id)
             print('tags_id: {}'.format(tags_id))
             assert app.layout.children[-1] is not None, "app.layout is none."
-            try:
-                output = app.layout.children[-1].children[-1]
-            except:
-                print('app.layout.children is {}'.format(app.layout.children))
+            output = app.layout.children[-1].children[-1]
 
             if character.empty_check():
 
