@@ -13,7 +13,7 @@ from src.models.asset import Asset
 from src.models.cash import Cash
 from src.models.price import Price
 
-import src.models.rebalancing_helper
+from src.models import rebalancing_helper
 
 
 class Portfolio:
