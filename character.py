@@ -46,7 +46,11 @@ class Character:
 
         print('balance_date: {}'.format(balance_date))
 
-        new_port = get_advised_port(risk_profile=risk_profile)
+        balance = pd.DataFrame(balance, columns=['date', 'userid', 'name', 'asset_class', 'itemcode', 'itemname', 'quantity', 'cost_price', 'cost_value', 'price', 'value', 'wt', 'group_by', 'original'])
+        print('---balance---')
+        print(balance)
+
+        new_port = get_advised_port(risk_profile=risk_profile, df_advised_ports=advised_pf)
 
         old_new = pd.merge(balance.loc[:, ['itemcode', 'quantity', 'price', 'value', 'wt']], new_port.loc[:, ['itemcode', 'wt']],
                         left_on=['itemcode'], right_on=['itemcode'], how='outer', suffixes=['_old', '_new'])
