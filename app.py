@@ -26,17 +26,15 @@ def show_content(users):
     user = users
     app.layout = origin
     
-    load_advised_pf()
-
-    def load_advised_pf():
-        db = databaseDF()
-        advised_pf = AdvisedPortfolios.instance().data
-        db.insert_advised_pf(advised_pf)
-
+    db = databaseDF()
+    advised_pf = AdvisedPortfolios.instance().data
+    db.insert_advised_pf(advised_pf)
+    
     @app.callback(
         Output(layout.output_id, 'children'),
         Input(layout.input_id, "value"),
     )
+    
     def show_page(tab_input):
         if tab_input == 'signup':
             app.layout.children[-1] = html.Div(layout.signup)
