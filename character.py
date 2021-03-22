@@ -4,7 +4,7 @@ from utils import get_current_port, get_advised_port, get_recommendation
 from DataBase import databaseDF
 from datetime import datetime
 import re
-from portfolio import Portfolio
+from src.models.portfolio import Portfolio
 
 class Character:
     def __init__(self, characters):
