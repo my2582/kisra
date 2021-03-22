@@ -57,7 +57,7 @@ class Character:
         print('advised_pf.price')
         print(advised_pf.price)
 
-        old_new = pd.merge(balance.loc[:, ['itemcode', 'quantity', 'price', 'value', 'wt']], new_port.loc[:, ['itemcode', 'wt']],
+        old_new = pd.merge(balance.loc[:, ['itemcode', 'quantity', 'value', 'wt']], new_port.loc[:, ['itemcode', 'wt']],
                         left_on=['itemcode'], right_on=['itemcode'], how='outer', suffixes=['_old', '_new'])
 
         old_new.loc[:, ['value', 'wt_old', 'quantity', 'wt_new']] = old_new.loc[:, [
