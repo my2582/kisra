@@ -47,6 +47,7 @@ class Character:
         print('balance_date: {}'.format(balance_date))
 
         balance = pd.DataFrame(balance, columns=['date', 'userid', 'name', 'asset_class', 'itemcode', 'itemname', 'quantity', 'cost_price', 'cost_value', 'price', 'value', 'wt', 'group_by', 'original'])
+        balance = balance.drop(['price'], axis=1)
         print('---balance---')
         print(balance)
 
