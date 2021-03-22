@@ -94,7 +94,7 @@ class databaseDF:
         return
 
     def getDetail(self, userid):
-        record = self.query.getUserDetail()
+        record = self.query.getUserDetail(userid=userid)
         query = "select * from detail where userid=%s and date=(select max(date) from detail where userid=%s)"
         print('-------------detail------------------')
         print(userid)
