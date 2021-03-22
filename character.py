@@ -89,6 +89,17 @@ class Character:
 
         target_asset_alloc = dict(zip(new_tickers, new_wt))
 
+        print('---old_port---')
+        print(old_port)
+
+        print('---new_port---')
+        print(new_port)
+
+        print('---old_new---')
+        print(old_new)
+
+        print('----target_asset_alloc----')
+        print(target_asset_alloc)
 
         # p.rebalance() returns a tuple of:
         # * new_units (Dict[str, int]): Units of each asset to buy. The keys of the dictionary are the tickers of the assets.
