@@ -148,7 +148,7 @@ class Character:
         (new_units, prices, remaining_cash, max_diff) = p.rebalance(target_asset_alloc, verbose=True)
 
         # 리밸런싱을 실행하기 위한 주문내역을 detail 테이블에 넣기 위하여 df 로 받음.
-        new_detail = get_detail(new_units, prices, remaining_cash)
+        new_detail = self.get_detail(new_units, prices, remaining_cash)
 
         # detail 테이블에 기록
         self.db.insert_detail(new_detail)
