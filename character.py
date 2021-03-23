@@ -147,7 +147,7 @@ class Character:
         print('The date we are looking for is {}'.format(current_date))
         df = advised_pf.loc[(advised_pf.date==current_date) & (advised_pf.risk_profile==risk_profile), :]
         df = df.loc[:, ['weights', 'itemname']].groupby(
-                'itemname').sum().reset_index())
+                'itemname').sum().reset_index()
         
         print('self.options is {}'.format(self.options))
         print('추천포트폴리오(risk profile {}):'.format(risk_profile))
