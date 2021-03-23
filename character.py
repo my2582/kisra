@@ -193,7 +193,7 @@ class Character:
                 print('dt {}, balance_date {}-type(balance):'.format(dt, balance_date, type(balance)))
                 print(balance)
                 balance = pd.DataFrame(balance)
-                balance.columns = self.bal_col
+                balance.columns = bal_col
                 
                 try:
                     balance_date = datetime.strptime(
@@ -226,14 +226,15 @@ class Character:
             answers[idx] = (answers[idx], risk_value)
         print('----------------answer------------------')
         print(answers)
-        self.db.newUser(answers, self.options[-3])
+        self.current_date = self.options[-2]  # 날짜.
+        self.current_date = datetime.strptime(self.current_date, '%Y-%m-%d').strftime('%Y-%m-%d')
+
+        self.db.newUser(answers, money=self.options[-3], current_date=self.current_date)
 
 
         # 추천 포트폴리오를 가져온다.
         self.advised_pf = AdvisedPortfolios.instance().data
         self.risk_profile = self.score//(len(self.options)-3)
-        self.current_date = self.options[-2]  # 날짜.
-        self.current_date = datetime.strptime(self.current_date, '%Y-%m-%d').strftime('%Y-%m-%d')
         
         self.username = self.options[-1]
         # 사용자명에서 숫자만 갖고온다. 그래서 A+숫자 형식의 userid를 만든다.
