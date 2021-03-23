@@ -325,10 +325,12 @@ class Portfolio:
             for cash in balanced_portfolio.cash.values():
                 print("    %.2f %s." % (cash.amount, cash.currency))
 
+            remaining_cash = sum([cash.amount for cash in balanced_portfolio.cash.values()])
+
         # Now that we're done, we can replace old portfolio with the new one
         self.__dict__.update(balanced_portfolio.__dict__)
 
-        return (new_units, prices, exchange_history, max_diff)
+        return (new_units, prices, remaining_cash, max_diff)
 
     def _sell_everything(self):
         """

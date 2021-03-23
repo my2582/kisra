@@ -10,7 +10,7 @@ risk_profile,Disabled,Type,Set,Position,Sign,Weight,Type Relative,Relative Set,R
 3,False,Classes,Asset class,Fixed Income,<=,0.7,,,,
 3,False,Classes,Asset class,Alternative,<=,0.25,,,,
 3,False,Assets,,A237370,>=,0.02,,,,
-4,False,Classes,Asset class,Equity,>=,0.5,,,,
+4,False,Classes,Asset class,Equity,>=,0.6,,,,
 4,False,Classes,Asset class,Equity,<=,0.7,,,,
 4,False,Classes,Asset class,Fixed Income,<=,0.5,,,,
 4,False,Classes,Asset class,Alternative,<=,0.25,,,,

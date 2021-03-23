@@ -322,11 +322,11 @@ class PortfolioAdvisor:
 
 if __name__ == '__main__':
     pa = PortfolioAdvisor()
-    pa.run(risk_profile=2, current_date='2020-02-01')
+    pa.run(risk_profile=2, current_date='2021-02-01')
     print(pa.w)
-    pa.run(risk_profile=3, current_date='2020-02-01')
+    pa.run(risk_profile=3, current_date='2021-02-01')
     print(pa.w)
-    pa.run(risk_profile=4, current_date='2020-02-01')
+    pa.run(risk_profile=4, current_date='2021-02-01')
     print(pa.w)
 
     pass

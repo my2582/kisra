@@ -95,8 +95,24 @@ class databaseDF:
 
     def getDetail(self, userid):
         record = self.query.getUserDetail(userid=userid)
-        query = "select * from detail where userid=%s and date=(select max(date) from detail where userid=%s)"
         print('-------------detail------------------')
         print(userid)
         print(record)
         return record
+
+    def insert_detail(self, new_detail):
+        insert_query_dtl = 'INSERT INTO {0} (date, userid, name, asset_class, itemcode, itemname,' \
+                           'quantity, cost_price, cost_value, price, value, wt, group_by, original) values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'
+
+        new_detail['quantity'] = new_detail['quantity'].values.astype(float)
+        new_detail['cost_price'] = new_detail['cost_price'].values.astype(float)
+        new_detail['cost_value'] = new_detail['cost_value'].values.astype(float)
+        new_detail['price'] = new_detail['price'].values.astype(float)
+        new_detail['value'] = new_detail['value'].values.astype(float)
+        new_detail['wt'] = new_detail['wt'].values.astype(float)
+
+
+        for i in range(len(new_detail)):
+            temp = new_detail.iloc[i, :].values.tolist()
+            self.con.execute(insert_query_dtl.format('new_detail'), temp)
+            self.conn.commit()

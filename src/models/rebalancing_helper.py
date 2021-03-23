@@ -42,9 +42,6 @@ def rebalance(portfolio, target_allocation):
     for sol_mv, ticker in zip(to_buy_vals,
                               balanced_portfolio.assets.keys()):
         if portfolio.selling_allowed:
-            print('--ticker is {}'.format(ticker))
-            print('portfolio.assets[ticker].market_value_in(cmn_curr): {}'.format(portfolio.assets[ticker].market_value_in(cmn_curr)))
-            print('portfolio.assets[ticker].price_in(cmn_curr): {}'.format(portfolio.assets[ticker].price_in(cmn_curr)))
             new_units[ticker] = math.floor(
                 (sol_mv - portfolio.assets[ticker].market_value_in(
                     cmn_curr)) / portfolio.assets[ticker].price_in(

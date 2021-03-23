@@ -5,8 +5,10 @@ elif __name__ == 'asset':
 else:
     from .price import Price
 
-
-from src.models.load_data import Singleton, Balance, Instruments, PriceDB, SimulatableInstruments, Constraints, AdvisedPortfolios
+try:
+    from src.models.load_data import Singleton, Balance, Instruments, PriceDB, SimulatableInstruments, Constraints, AdvisedPortfolios
+except:
+    from load_data import Singleton, Balance, Instruments, PriceDB, SimulatableInstruments, Constraints, AdvisedPortfolios
 
 class Asset:
     """
