@@ -42,6 +42,7 @@ class Character:
         detail = detail.merge(temp, left_index=True, right_index=True, how='inner')
 
         instruments_m = Instruments.instance().data
+        detail['price'] = detail['cost_price']
         detail['cost_value'] = detail['quantity']*detail['cost_price']
         detail['value'] = detail['quantity']*detail['cost_price']  # 매입가와 평가가격 동일하다고 가정
         detail = detail.merge(instruments_m.loc[:, ['itemcode', 'itemname', 'asset_class']], left_on='itemcode', right_on='itemcode', how='left')
