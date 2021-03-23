@@ -142,7 +142,9 @@ class Character:
         # 사용자명에서 숫자만 갖고온다. 그래서 A+숫자 형식의 userid를 만든다.
         userid = 'A' + ('0'+re.findall('\d+', username)[0])[-2:] 
 
-        print('the current date is {}'.format(current_date))
+        # c_date: 추천 포트폴리오DB에서 사용자가 입력한 날짜와 가장 가까운 날짜.
+        current_date = advised_pf.loc[advised_pf.date <= current_date, ['date']].max().date
+        print('The date we are looking for is {}'.format(current_date))
         df = advised_pf.loc[(advised_pf.date==current_date) & (advised_pf.risk_profile==risk_profile), :]
         df = df.loc[:, ['weights', 'itemname']].groupby(
                 'itemname').sum().reset_index().rename(columns={
