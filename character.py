@@ -229,7 +229,7 @@ class Character:
         self.current_date = self.options[-2]  # 날짜.
         self.current_date = datetime.strptime(self.current_date, '%Y-%m-%d').strftime('%Y-%m-%d')
 
-        self.db.newUser(answers, money=self.options[-3], current_date=self.current_date)
+        self.userid = self.db.newUser(answers, money=self.options[-3], current_date=self.current_date)
 
 
         # 추천 포트폴리오를 가져온다.
@@ -238,7 +238,7 @@ class Character:
         
         self.username = self.options[-1]
         # 사용자명에서 숫자만 갖고온다. 그래서 A+숫자 형식의 userid를 만든다.
-        self.userid = 'A' + ('0'+re.findall('\d+', self.username)[0])[-2:] 
+        # self.userid = 'A' + ('0'+re.findall('\d+', self.username)[0])[-2:] 
 
         first_advised_port, new_units, prices, remaining_cash = self.simulate_trades(first_trade=True)
         self.simulate_trades(first_trade=False, new_units=new_units, prices=prices, remaining_cash=remaining_cash)

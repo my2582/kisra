@@ -72,7 +72,7 @@ class query:
         self.con.execute(query, [date, 'A'+str(id), '현금성', float(money), float(1)])
         self.conn.commit()
 
-        return
+        return userid
 
     def getUserDetail(self, userid):
         query = "select * from detail where userid=%s and date=(select max(date) from detail where userid=%s)"
