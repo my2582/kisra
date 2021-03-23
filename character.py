@@ -157,6 +157,53 @@ class Character:
 
         return (new_units, prices, remaining_cash)
 
+    def simulate_trades(self, first_trade=False, new_units=None, prices=None, remaining_cash=None):
+        if first_trade:
+            # 추천 포트폴리오DB에서 사용자가 입력한 날짜와 가장 가까운 날짜.
+            self.current_date = self.advised_pf.loc[self.advised_pf.date <= self.current_date, ['date']].max().date
+            print('The date we are looking for is {}'.format(self.current_date))
+            df = self.advised_pf.loc[(self.advised_pf.date==self.current_date) & (self.advised_pf.risk_profile==self.risk_profile), :]
+
+            first_advised_port = copy.deepcopy(df)
+            first_advised_port = first_advised_port.loc[:, ['weights', 'itemname']].groupby(
+                    'itemname').sum().reset_index()
+    
+            print('self.options is {}'.format(self.options))
+            print('첫 추천포트폴리오(risk profile {}):'.format(self.risk_profile))
+            print(first_advised_port)
+
+            new_units, prices, remaining_cash = self.get_ordersheets()
+            print('---new_units---')
+            print(new_units)
+            print('---prices----')
+            print(prices)
+
+            return first_advised_port, new_units, prices, remaining_cash
+        else:
+            dates = advised_pf.loc[(advised_pf.risk_profile==risk_profile) & (advised_pf.date > current_date), 'date'].unique()
+            every5day = dates[::5]
+            for dt in dates:
+                balance = self.db.getDetail(userid=self.userid)
+                balance_date = balance[0][0]
+                print('dt {}, balance_date {}-type(balance):'.format(dt, balance_date, type(balance)))
+                print(balance)
+                try:
+                    balance_date = datetime.strptime(
+                        balance_date, '%Y-%m-%d %H:%M:%S %p').strftime('%Y-%m-%d')
+                except:
+                    balance_date = datetime.strptime(
+                        balance_date, '%m/%d/%Y %H:%M:%S %p').strftime('%Y-%m-%d')
+
+                if dt is every5day:
+                    # 추천 포트폴리리와 현재 포트폴리오 비중차가 5% 넘게 나는 종목이 생기면 리밸런싱 (그러면 종가도 업데이트되는 셈)
+                    pass
+                else:
+                    # 종가만 업데이트
+                    pass
+
+        return new_units, prices, remaining_cash
+
+
     def predict(self, answers) -> object:
         # data = pd.read_pickle(os.getcwd()+'\\data\\processed\\'+self.file_name)
         data = pd.read_pickle('./data/processed/'+self.file_name)
@@ -183,53 +230,6 @@ class Character:
         self.username = self.options[-1]
         # 사용자명에서 숫자만 갖고온다. 그래서 A+숫자 형식의 userid를 만든다.
         self.userid = 'A' + ('0'+re.findall('\d+', self.username)[0])[-2:] 
-
-        def simulate_trades(self, first_trade=False, new_units=None, prices=None, remaining_cash=None):
-            if first_trade:
-                # 추천 포트폴리오DB에서 사용자가 입력한 날짜와 가장 가까운 날짜.
-                self.current_date = self.advised_pf.loc[self.advised_pf.date <= self.current_date, ['date']].max().date
-                print('The date we are looking for is {}'.format(self.current_date))
-                df = self.advised_pf.loc[(self.advised_pf.date==self.current_date) & (self.advised_pf.risk_profile==self.risk_profile), :]
-
-                first_advised_port = copy.deepcopy(df)
-                first_advised_port = first_advised_port.loc[:, ['weights', 'itemname']].groupby(
-                        'itemname').sum().reset_index()
-        
-                print('self.options is {}'.format(self.options))
-                print('첫 추천포트폴리오(risk profile {}):'.format(self.risk_profile))
-                print(first_advised_port)
-
-                new_units, prices, remaining_cash = self.get_ordersheets()
-                print('---new_units---')
-                print(new_units)
-                print('---prices----')
-                print(prices)
-
-                return first_advised_port, new_units, prices, remaining_cash
-            else:
-                dates = advised_pf.loc[(advised_pf.risk_profile==risk_profile) & (advised_pf.date > current_date), 'date'].unique()
-                every5day = dates[::5]
-                for dt in dates:
-                    balance = self.db.getDetail(userid=self.userid)
-                    balance_date = balance[0][0]
-                    print('dt {}, balance_date {}-type(balance):'.format(dt, balance_date, type(balance)))
-                    print(balance)
-                    try:
-                        balance_date = datetime.strptime(
-                            balance_date, '%Y-%m-%d %H:%M:%S %p').strftime('%Y-%m-%d')
-                    except:
-                        balance_date = datetime.strptime(
-                            balance_date, '%m/%d/%Y %H:%M:%S %p').strftime('%Y-%m-%d')
-
-                    if dt is every5day:
-                        # 추천 포트폴리리와 현재 포트폴리오 비중차가 5% 넘게 나는 종목이 생기면 리밸런싱 (그러면 종가도 업데이트되는 셈)
-                        pass
-                    else:
-                        # 종가만 업데이트
-                        pass
-
-            return new_units, prices, remaining_cash
-
 
         first_advised_port, new_units, prices, remaining_cash = self.simulate_trades(first_trade=True)
         self.simulate_trades(first_trade=False, new_units=new_units, prices=prices, remaining_cash=remaining_cash)
