@@ -29,14 +29,8 @@ class Asset:
         self._ticker = ticker
         self._quantity = quantity
 
-        # we set the price to ask
-        # if price is not None:
-        #     self._price = Price(price, 'KRW')
-        # else:
         price_db = PriceDB.instance().data
-        print('in asset.py, price_db.tail() is '.format(price_db.tail(3)))
         price = price_db.loc[(price_db.date==price_db.loc[price_db.itemcode==ticker, 'date'].max()) & (price_db.itemcode==ticker), 'price'].values[0]
-        print('in asset.py, price is {}'.format(price))
         self._price = Price(price, 'KRW')
 
     @property
