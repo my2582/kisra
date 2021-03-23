@@ -111,7 +111,12 @@ class databaseDF:
         new_detail['value'] = new_detail['value'].values.astype(float)
         new_detail['wt'] = new_detail['wt'].values.astype(float)
 
+        print('new_detail.columns:')
+        print(new_detail.columns)
 
+        temp = new_detail.iloc[0, :].values.tolist()
+        print('values:')
+        print(temp)
         for i in range(len(new_detail)):
             temp = new_detail.iloc[i, :].values.tolist()
             self.con.execute(insert_query_dtl.format('detail'), temp)
