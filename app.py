@@ -103,16 +103,36 @@ def show_content(users):
                         if check:
                             break
 
-                risk_avg, df, score, new_units, prices, remaining_cash  = character.predict(answer)
+                risk_avg, df, df_asset_class, score, new_units, prices, remaining_cash = character.predict(
+                    answer)
                 result = '당신의 점수는 {0}이며 {1}형 투자자입니다. 당신에게 맞는 포트폴리오를 확인해 보세요'.format(
                     score, risk_avg)
-                pie = px.pie(df, names=df.iloc[:, 0], values=df.iloc[:, 1])
+                # 파이차트 (종목별)
+                pie = px.pie(df, names=df.iloc[:, 0], values=df.iloc[:, 1],
+                             title="추천 포트폴리오", color_discrete_sequence=px.colors.qualitative.Set3)
+
+                # 바 차트(자산군별)
+                asset_class = ['Fixed Income', 'Alternative', 'Cash', 'Equity']
+                df_ac = pd.DataFrame(asset_class, columns=['asset_class'])
+                df_by_asset_class = df.loc[:, ['wt', 'asset_class']].groupby(
+                    'asset_class').sum().sort_values('wt', ascending=False).reset_index()
+                df_by_asset_class = df_by_asset_class.merge(df_ac, left_on='asset_class', right_on='asset_class', how='right').sort_values(
+                    'wt', ascending=False).reset_index(drop=True)
+                bar_chart = px.bar(df_by_asset_class, y='wt', x='asset_class', title='자산군별 비중',
+                                   labels={'asset_class': '자산군', 'wt': '비중'},
+                                   orientation='v', color="asset_class", color_continuous_scale='darkmint',
+                                   template='plotly_dark')
                 output.children[0].children = result
                 if len(output.children) < 3:
                     fig = dcc.Graph(id='pie-chart')
                     fig.figure = pie
                     fig.figure.layout.paper_bgcolor = style['pie_chart_style']['backgroundColor']
+
+                    fig_bar = dcc.Graph(id='bar-chart')
+                    fig_bar.figure=bar_chart
+                    fig_bar.figure.layout.paper_bgcolor = style['pie_chart_style']['backgroundColor']
                     output.children.append(fig)
+                    output.children.append(fig_bar)
                 output.style = style['pie_chart_style']
                 return output
 
