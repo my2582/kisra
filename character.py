@@ -28,7 +28,7 @@ class Character:
     def get_detail(self, new_units, prices, remaining_cash):
         # c_date: 추천 포트폴리오DB에서 사용자가 입력한 날짜와 가장 가까운 날짜.
         c_date = self.advised_pf.loc[self.advised_pf.date <= self.current_date, ['date']].max().date
-        df = self.advised_pf.loc[(self.advised_pf.date==c_date) & (advised_pf.risk_profile==self.risk_profile), :]
+        df = self.advised_pf.loc[(self.advised_pf.date==c_date) & (self.advised_pf.risk_profile==self.risk_profile), :]
 
         # 보유수량
         detail = pd.DataFrame.from_dict(new_units, orient='index').rename(columns={0:'quantity'})
