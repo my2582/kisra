@@ -102,7 +102,7 @@ class databaseDF:
 
     def insert_detail(self, new_detail):
         insert_query_dtl = 'INSERT INTO detail (itemcode, quantity, cost_price, price, cost_value, value, ' \
-                           'itemname, asset_class, date, userid, username, group_by, original, wt) values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'
+                           'itemname, asset_class, date, userid, name, group_by, original, wt) values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'
 
         new_detail['quantity'] = new_detail['quantity'].values.astype(float)
         new_detail['cost_price'] = new_detail['cost_price'].values.astype(float)
