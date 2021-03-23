@@ -114,5 +114,5 @@ class databaseDF:
 
         for i in range(len(new_detail)):
             temp = new_detail.iloc[i, :].values.tolist()
-            self.con.execute(insert_query_dtl.format('new_detail'), temp)
+            self.con.execute(insert_query_dtl.format('detail'), temp)
             self.conn.commit()
