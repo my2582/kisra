@@ -75,7 +75,7 @@ class Character:
         return detail
 
     def get_ordersheets(self):
-        balance = self.db.getDetail(userid=userid)
+        balance = self.db.getDetail(userid=self.userid)
 
         print('balance[0] is '.format(balance[0]))
         balance_date = balance[0][0]
@@ -97,7 +97,7 @@ class Character:
         print('---balance---')
         print(balance)
 
-        new_port = get_advised_port(risk_profile=risk_profile, df_advised_ports=advised_pf)
+        new_port = get_advised_port(risk_profile=self.risk_profile, df_advised_ports=self.advised_pf)
 
         old_new = pd.merge(balance.loc[:, ['itemcode', 'quantity', 'value', 'wt']], new_port.loc[:, ['itemcode', 'wt']],
                         left_on=['itemcode'], right_on=['itemcode'], how='outer', suffixes=['_old', '_new'])
