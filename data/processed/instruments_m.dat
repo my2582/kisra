@@ -42,3 +42,4 @@ A273130,KODEX 종합채권(AA-이상)액티브,ACT_BOND_D4,,,채권-중수익,Do
 A245340,TIGER 미국다우존스30,DOW30,,,주식-다우30,USA,Equity,ETF,EQ_S_DOW30,Y,Satellite,TIGER
 A329750,TIGER 미국달러단기채권액티브,UST_D.5,,,대체-미국달러,USA,Alternative,ETF,AL_FX_USD,N,,TIGER
 A329650,KODEX TRF3070,BAL_WO3KTB7,,,대체-채혼,Global,Alternative,ETF,AL_BAL_E3F7,N,Core,KODEX
+A237370,KODEX 배당성장채권혼합,BAL_KO3KTB7,,,대체-채혼,Domestic,Alternative,ETF,AL_BAL_E3F7,N,Core,KODEX

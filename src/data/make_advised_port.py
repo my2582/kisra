@@ -1,7 +1,8 @@
 import pandas as pd
 
 import repackage
-repackage.up()
+repackage.up(1)
+
 
 from models.portfolio_advisor import PortfolioAdvisor
 
@@ -10,8 +11,8 @@ pa = PortfolioAdvisor(root_path='../../')
 path_to_save = './data/processed/'
 filename = 'advised_portfolios.pkl'
 
-start_date = '2020-08-01'
-end_date = '2021-02-28'
+start_date = '2019-01-01'
+end_date = '2021-03-19'
 
 for date in pd.bdate_range(start=start_date, end=end_date):
     for r in [2,3,4]:

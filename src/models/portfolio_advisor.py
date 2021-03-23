@@ -54,7 +54,7 @@ class PortfolioAdvisor:
     def run(self, risk_profile=None, current_date=None, non_tradables=None, drop_wt_threshold=0.005,
             model='Classic', rm='CDaR', method_mu='hist', method_cov='oas',
             decay=0.97, allow_short=False, alpha=0.05):
-        r"""
+        r""" 
         최적화 모델을 실행한다(즉, 최적화를 한다).
         risk_profile과 current_date값을 바꿔가면서 반복적으로 실행하면 self.weights에 추천 포트폴리오가 누적되어 저장된다.
         """
@@ -143,10 +143,8 @@ class PortfolioAdvisor:
             self.non_tradables)] if self.non_tradables is not None else self.price_db
         self.price_db = self.price_db[self.price_db.itemcode.isin(
             list(self.simulatable_instruments.itemcode) + ['CALL'])]
+        self.price_db = self.price_db.reset_index(drop=True)
         print('Loaded: PriceDB')
-
-        # 읽어온 종목들의 수익률 계산
-        self._calculate_internals()
 
         # instruments_m: 투자가능 종목들 목록 (현재 시점의 거래금액, 시총 보고 뽑음)
         # filepath = self.root_path + 'data/processed/'
@@ -168,18 +166,25 @@ class PortfolioAdvisor:
         # universe가 투자가능(예:거래량요건 충족)&시뮬레이션가능(예:상장 후 3년 종가 존재요건 충족)을 종합한 df임.
         self.universe = pd.merge(self.simulatable_instruments, self.instruments_m,
                                  left_on='itemcode', right_on='itemcode', how='left')
+        self.universe = self.universe.merge(pd.Series(self.price_db.itemcode.unique(), name='itemcode'),
+                                 left_on='itemcode', right_on='itemcode', how='inner')
         self.universe = self.universe.set_index(['itemcode'], drop=True)
         self.universe = self.universe.reset_index()
 
         # 동일 추적지수를 갖는 ETF에서는 거래량 1위만 선정
-        most_liquid_names = self.universe.loc[:, ['itemcode', 'itemname', 'tracking_code', 'trading_amt_mln']].groupby(
-            ['tracking_code'])[['itemcode', 'itemname', 'trading_amt_mln']].max().itemcode
-        self.universe.set_index('itemcode', drop=True).loc[most_liquid_names]
+        # self.most_liquid_names = self.universe.loc[:, ['itemcode', 'itemname', 'tracking_code', 'trading_amt_mln']].groupby(
+        #     ['tracking_code'])[['itemcode', 'itemname', 'trading_amt_mln']].max().itemcode
+        most_liquid_idx = self.universe.loc[:, ['itemcode', 'itemname', 'tracking_code', 'trading_amt_mln']].groupby(['tracking_code'])['trading_amt_mln'].transform(max) == self.universe['trading_amt_mln']
+        # self.universe = self.universe.set_index('itemcode', drop=True).loc[self.most_liquid_names]
+        self.universe = self.universe.loc[most_liquid_idx]
 
         # self.non_tradables: 거래불가 종목은 제외시킨다(예: 잔고가 100만원 이하일 경우 가격이 높은 ETF는 포트폴리오 내에서 1주 사기도 어려워 제외)
         self.universe = self.universe[~self.universe.itemcode.isin(
             self.non_tradables)] if self.non_tradables is not None else self.universe
-        self.universe = self.universe.reset_index(drop=True)
+        self.universe = self.universe.reset_index(drop=False)
+
+        # 읽어온 종목들의 수익률 계산
+        self._calculate_internals()
 
         # asset_classes는 Riskfolio 패키지가 요구하는 형식으로 고정되어 있는 투자종목들의 df임.
         self.asset_classes = get_asset_classes(self.universe)
@@ -188,8 +193,12 @@ class PortfolioAdvisor:
         # Make `df_rt`, a matrix of log returns of all eligible **instruments** in the universe with:
         # - Columns: itemcode
         # - Rows: date
+        
+        # 아래 코드에
+        # .loc[:, self.universe.itemcode] 를 붙이는 이유는
+        # self.universe의 itemcode 순서와 df_rt의 컬럼(=itemcode) 순서를 맞추기 위해서이다.
         self.df_rt = self.price_db[self.price_db.itemtype == 'ETF'].pivot(
-            index='date', columns='itemcode', values='ret').dropna()
+            index='date', columns='itemcode', values='ret').loc[:, self.universe.itemcode].dropna()
         print('Price returns have been calculated.')
 
     def _load_constraints(self):
@@ -313,6 +322,11 @@ class PortfolioAdvisor:
 
 if __name__ == '__main__':
     pa = PortfolioAdvisor()
-    pa.run(risk_profile=2, current_date='2021-02-08')
-    pa.run(risk_profile=2, current_date='2021-02-15')
+    pa.run(risk_profile=2, current_date='2020-02-01')
     print(pa.w)
+    pa.run(risk_profile=3, current_date='2020-02-01')
+    print(pa.w)
+    pa.run(risk_profile=4, current_date='2020-02-01')
+    print(pa.w)
+
+    pass

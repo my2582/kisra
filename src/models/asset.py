@@ -6,7 +6,7 @@ else:
     from .price import Price
 
 
-from src.models.load_data import Singleton, Balance, Instruments, PriceDB, SimulatableInstruments, Constraints, AdvisedPortfolios
+# from src.models.load_data import Singleton, Balance, Instruments, PriceDB, SimulatableInstruments, Constraints, AdvisedPortfolios
 
 class Asset:
     """

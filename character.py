@@ -134,12 +134,9 @@ class Character:
 
         # 추천 포트폴리오를 가져온다.
         advised_pf = AdvisedPortfolios.instance().data
-        print('advised_pf.shape is {}'.format(advised_pf.shape))
-        print('advised_pf is')
-        print(advised_pf)
+        risk_profile = score//len(self.options)
         current_date = self.options[-2]  # 날짜.
         current_date = datetime.strptime(current_date, '%Y-%m-%d').strftime('%Y-%m-%d')
-        risk_profile = score//len(self.options)
         
         username = self.options[-1]
         # 사용자명에서 숫자만 갖고온다. 그래서 A+숫자 형식의 userid를 만든다.
@@ -154,7 +151,7 @@ class Character:
             })
         
         print('self.options is {}'.format(self.options))
-        print('추천포트폴리오:')
+        print('추천포트폴리오(risk profile {}):'.format(risk_profile))
         print(df)
 
         new_units, prices = self.get_ordersheets(advised_pf, username, userid, current_date, risk_profile)
