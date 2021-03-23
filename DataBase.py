@@ -101,8 +101,8 @@ class databaseDF:
         return record
 
     def insert_detail(self, new_detail):
-        insert_query_dtl = 'INSERT INTO {0} (date, userid, name, asset_class, itemcode, itemname,' \
-                           'quantity, cost_price, cost_value, price, value, wt, group_by, original) values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'
+        insert_query_dtl = 'INSERT INTO {0} (itemcode, quantity, cost_price, price, cost_value, value' \
+                           'itemname, asset_class, date, userid, username, group_by, original, wt) values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'
 
         new_detail['quantity'] = new_detail['quantity'].values.astype(float)
         new_detail['cost_price'] = new_detail['cost_price'].values.astype(float)
