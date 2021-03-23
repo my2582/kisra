@@ -3,6 +3,7 @@ from src.models.load_data import Balance, Instruments, AdvisedPortfolios, PriceD
 from src.models.utils import get_current_port, get_advised_port, get_recommendation
 from DataBase import databaseDF
 from datetime import datetime
+import copy
 import re
 from src.models.portfolio import Portfolio
 
@@ -81,8 +82,8 @@ class Character:
         print('balance[0] is '.format(balance[0]))
         balance_date = balance[0][0]
 
-        price_db = PriceDB.instance().data
-        price_db.loc[price_db.date == balance_date]
+        self.price_db = PriceDB.instance().data
+        self.price_db.loc[self.price_db.date == balance_date]
 
         try:
             balance_date = datetime.strptime(
@@ -116,9 +117,9 @@ class Character:
         # old_cash = old_cash.rename(columns={'price_old':'price', 'wt_old':'wt'})
         old_tickers = assets.itemcode.tolist()
         old_quantities = assets.quantity.astype(int).tolist()
-        assets = assets.merge(price_db.loc[price_db.date == balance_date, ['itemcode', 'price']],
+        assets = assets.merge(self.price_db.loc[self.price_db.date == balance_date, ['itemcode', 'price']],
                     left_on='itemcode', right_on='itemcode', how='left', suffixes = ('', '_db'))
-        # assets.loc[:, 'price'] = assets['price'].fillna(assets['price_db'])
+        # assets.loc[:, 'price'] = assets['price'].fillna(assets['self.price_db'])
 
         old_prices = assets.price.tolist()
         cash_amounts = cash.value.tolist()
@@ -156,26 +157,26 @@ class Character:
 
         return (new_units, prices, remaining_cash)
 
-
     def predict(self, answers) -> object:
         # data = pd.read_pickle(os.getcwd()+'\\data\\processed\\'+self.file_name)
         data = pd.read_pickle('./data/processed/'+self.file_name)
 
-        score = 0
+        self.score = 0
         for idx, choice in enumerate(self.options[:-3]):
             print(choice)
             print(data[data['choice-id'] == choice])
             risk_value = data[data['choice-id'] == choice]['risk_pref_value'].values[0]
             print('risk_value : ', risk_value)
-            score += risk_value
+            self.score += risk_value
             answers[idx] = (answers[idx], risk_value)
         print('----------------answer------------------')
         print(answers)
         self.db.newUser(answers, self.options[-3])
 
+
         # 추천 포트폴리오를 가져온다.
         self.advised_pf = AdvisedPortfolios.instance().data
-        self.risk_profile = score//(len(self.options)-3)
+        self.risk_profile = self.score//(len(self.options)-3)
         self.current_date = self.options[-2]  # 날짜.
         self.current_date = datetime.strptime(self.current_date, '%Y-%m-%d').strftime('%Y-%m-%d')
         
@@ -183,24 +184,55 @@ class Character:
         # 사용자명에서 숫자만 갖고온다. 그래서 A+숫자 형식의 userid를 만든다.
         self.userid = 'A' + ('0'+re.findall('\d+', self.username)[0])[-2:] 
 
-        # c_date: 추천 포트폴리오DB에서 사용자가 입력한 날짜와 가장 가까운 날짜.
-        self.current_date = self.advised_pf.loc[self.advised_pf.date <= self.current_date, ['date']].max().date
-        print('The date we are looking for is {}'.format(self.current_date))
-        df = self.advised_pf.loc[(self.advised_pf.date==self.current_date) & (self.advised_pf.risk_profile==self.risk_profile), :]
-        df = df.loc[:, ['weights', 'itemname']].groupby(
-                'itemname').sum().reset_index()
+        def simulate_trades(self, first_trade=False, new_units=None, prices=None, remaining_cash=None):
+            if first_trade:
+                # 추천 포트폴리오DB에서 사용자가 입력한 날짜와 가장 가까운 날짜.
+                self.current_date = self.advised_pf.loc[self.advised_pf.date <= self.current_date, ['date']].max().date
+                print('The date we are looking for is {}'.format(self.current_date))
+                df = self.advised_pf.loc[(self.advised_pf.date==self.current_date) & (self.advised_pf.risk_profile==self.risk_profile), :]
+
+                first_advised_port = copy.deepcopy(df)
+                first_advised_port = first_advised_port.loc[:, ['weights', 'itemname']].groupby(
+                        'itemname').sum().reset_index()
         
-        print('self.options is {}'.format(self.options))
-        print('추천포트폴리오(risk profile {}):'.format(self.risk_profile))
-        print(df)
+                print('self.options is {}'.format(self.options))
+                print('첫 추천포트폴리오(risk profile {}):'.format(self.risk_profile))
+                print(first_advised_port)
 
-        new_units, prices, remaining_cash = self.get_ordersheets()
-        print('---new_units---')
-        print(new_units)
-        print('---prices----')
-        print(prices)
+                new_units, prices, remaining_cash = self.get_ordersheets()
+                print('---new_units---')
+                print(new_units)
+                print('---prices----')
+                print(prices)
 
-        
+                return first_advised_port, new_units, prices, remaining_cash
+            else:
+                dates = advised_pf.loc[(advised_pf.risk_profile==risk_profile) & (advised_pf.date > current_date), 'date'].unique()
+                every5day = dates[::5]
+                for dt in dates:
+                    balance = self.db.getDetail(userid=self.userid)
+                    balance_date = balance[0][0]
+                    print('dt {}, balance_date {}-type(balance):'.format(dt, balance_date, type(balance)))
+                    print(balance)
+                    try:
+                        balance_date = datetime.strptime(
+                            balance_date, '%Y-%m-%d %H:%M:%S %p').strftime('%Y-%m-%d')
+                    except:
+                        balance_date = datetime.strptime(
+                            balance_date, '%m/%d/%Y %H:%M:%S %p').strftime('%Y-%m-%d')
 
-        return self.scoring[score//(len(self.options) - 3)], df, score//(len(self.options) - 3), new_units, prices, remaining_cash 
+                    if dt is every5day:
+                        # 추천 포트폴리리와 현재 포트폴리오 비중차가 5% 넘게 나는 종목이 생기면 리밸런싱 (그러면 종가도 업데이트되는 셈)
+                        pass
+                    else:
+                        # 종가만 업데이트
+                        pass
+
+            return new_units, prices, remaining_cash
+
+
+        first_advised_port, new_units, prices, remaining_cash = simulate_trades(first_trade=True)
+        simulate_trades(first_trade=False, new_units=new_units, prices=prices, remaining_cash=remaining_cash)
+
+        return self.scoring[self.score//(len(self.options) - 3)], first_advised_port, self.score//(len(self.options) - 3), new_units, prices, remaining_cash 
 
