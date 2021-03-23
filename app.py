@@ -103,7 +103,7 @@ def show_content(users):
                         if check:
                             break
 
-                risk_avg, df, score = character.predict(answer)
+                risk_avg, df, score, new_units, prices, remaining_cash  = character.predict(answer)
                 result = '당신의 점수는 {0}이며 {1}형 투자자입니다. 당신에게 맞는 포트폴리오를 확인해 보세요'.format(
                     score, risk_avg)
                 pie = px.pie(df, names=df.iloc[:, 0], values=df.iloc[:, 1])

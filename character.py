@@ -194,7 +194,7 @@ class Character:
         print('추천포트폴리오(risk profile {}):'.format(self.risk_profile))
         print(df)
 
-        new_units, prices = self.get_ordersheets()
+        new_units, prices, remaining_cash = self.get_ordersheets()
         print('---new_units---')
         print(new_units)
         print('---prices----')
@@ -202,5 +202,5 @@ class Character:
 
         
 
-        return self.scoring[score//(len(self.options) - 3)], df, score//(len(self.options) - 3)
+        return self.scoring[score//(len(self.options) - 3)], df, score//(len(self.options) - 3), new_units, prices, remaining_cash 
 
