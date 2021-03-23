@@ -180,7 +180,7 @@ class Character:
         
         self.username = self.options[-1]
         # 사용자명에서 숫자만 갖고온다. 그래서 A+숫자 형식의 userid를 만든다.
-        self.userid = 'A' + ('0'+re.findall('\d+', username)[0])[-2:] 
+        self.userid = 'A' + ('0'+re.findall('\d+', self.username)[0])[-2:] 
 
         # c_date: 추천 포트폴리오DB에서 사용자가 입력한 날짜와 가장 가까운 날짜.
         self.current_date = self.advised_pf.loc[self.advised_pf.date <= self.current_date, ['date']].max().date
