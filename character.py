@@ -6,6 +6,7 @@ from datetime import datetime
 import copy
 import re
 from src.models.portfolio import Portfolio
+from src.models.load_data import Singleton, Balance
 
 class Character:
     def __init__(self, characters):
@@ -182,11 +183,18 @@ class Character:
         else:
             dates = self.advised_pf.loc[(self.advised_pf.risk_profile==self.risk_profile) & (self.advised_pf.date > self.current_date), 'date'].unique()
             every5day = dates[::5]
+            
+            bal = Balance.instance().data
+            bal_col = list(bal.columns)
+
             for dt in dates:
                 balance = self.db.getDetail(userid=self.userid)
                 balance_date = balance[0][0]
                 print('dt {}, balance_date {}-type(balance):'.format(dt, balance_date, type(balance)))
                 print(balance)
+                balance = pd.DataFrame(balance)
+                balance.columns = self.bal_col
+                
                 try:
                     balance_date = datetime.strptime(
                         balance_date, '%Y-%m-%d %H:%M:%S %p').strftime('%Y-%m-%d')
