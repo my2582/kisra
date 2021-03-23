@@ -212,7 +212,7 @@ class Character:
         return new_units, prices, remaining_cash
 
 
-    def predict(self, answers, current_date) -> object:
+    def predict(self, answers) -> object:
         # data = pd.read_pickle(os.getcwd()+'\\data\\processed\\'+self.file_name)
         data = pd.read_pickle('./data/processed/'+self.file_name)
 

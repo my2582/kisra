@@ -86,8 +86,8 @@ class databaseDF:
         record = self.query.getUserSelection(user)
         return record
 
-    def newUser(self, answer, money):
-        self.query.newUser(answer, money)
+    def newUser(self, answer, money, current_date=None):
+        self.query.newUser(answer, money, current_date)
         return
 
     def getDetail(self, userid):
