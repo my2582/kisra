@@ -101,7 +101,7 @@ class databaseDF:
         return record
 
     def insert_detail(self, new_detail):
-        insert_query_dtl = 'INSERT INTO {0} (itemcode, quantity, cost_price, price, cost_value, value' \
+        insert_query_dtl = 'INSERT INTO detail (itemcode, quantity, cost_price, price, cost_value, value' \
                            'itemname, asset_class, date, userid, username, group_by, original, wt) values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'
 
         new_detail['quantity'] = new_detail['quantity'].values.astype(float)
@@ -119,5 +119,5 @@ class databaseDF:
         print(temp)
         for i in range(len(new_detail)):
             temp = new_detail.iloc[i, :].values.tolist()
-            self.con.execute(insert_query_dtl.format('detail'), temp)
+            self.con.execute(insert_query_dtl, temp)
             self.conn.commit()
