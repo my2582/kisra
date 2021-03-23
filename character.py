@@ -231,8 +231,8 @@ class Character:
             return new_units, prices, remaining_cash
 
 
-        first_advised_port, new_units, prices, remaining_cash = simulate_trades(first_trade=True)
-        simulate_trades(first_trade=False, new_units=new_units, prices=prices, remaining_cash=remaining_cash)
+        first_advised_port, new_units, prices, remaining_cash = self.simulate_trades(first_trade=True)
+        self.simulate_trades(first_trade=False, new_units=new_units, prices=prices, remaining_cash=remaining_cash)
 
         return self.scoring[self.score//(len(self.options) - 3)], first_advised_port, self.score//(len(self.options) - 3), new_units, prices, remaining_cash 
 
