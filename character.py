@@ -193,7 +193,7 @@ class Character:
         print('추천포트폴리오(risk profile {}):'.format(self.risk_profile))
         print(df)
 
-        new_units, prices = self.get_ordersheets(self.advised_pf, self.username, self.userid, self.current_date, self.risk_profile)
+        new_units, prices = self.get_ordersheets()
         print('---new_units---')
         print(new_units)
         print('---prices----')
