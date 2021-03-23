@@ -180,7 +180,7 @@ class Character:
 
             return first_advised_port, new_units, prices, remaining_cash
         else:
-            dates = advised_pf.loc[(advised_pf.risk_profile==risk_profile) & (advised_pf.date > current_date), 'date'].unique()
+            dates = self.advised_pf.loc[(self.advised_pf.risk_profile==risk_profile) & (self.advised_pf.date > current_date), 'date'].unique()
             every5day = dates[::5]
             for dt in dates:
                 balance = self.db.getDetail(userid=self.userid)
