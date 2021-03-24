@@ -175,7 +175,7 @@ class Character:
         self.db.insert_detail(new_detail)
 
         # general 테이블에 기록
-        self.db.insert_detail(new_general)
+        self.db.insert_general(new_general)
 
         return (new_units, prices, remaining_cash)
 
