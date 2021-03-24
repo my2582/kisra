@@ -209,8 +209,7 @@ class Character:
             # 아직 어떤 타입으로 가져오는지 모름
             balance = self.db.getDetail(userid=self.userid)
             balance_date = balance[0][0]
-            print('dt {}, balance_date {}-type(balance):'.format(dt,
-                                                                    balance_date, type(balance)))
+            print('balance_date {}-type(balance):'.format(balance_date, type(balance)))
             print(balance)
 
             # 잔고를 df 형식으로 바꿈
@@ -260,6 +259,7 @@ class Character:
                 next_balance['date'] = next_date
                 all_the_nexts = pd.concat((all_the_nexts, next_balance))
 
+            all_the_nexts = all_the_nexts.reset_index(drop=True)
             print(all_the_nexts)
 
         return new_units, prices, remaining_cash
