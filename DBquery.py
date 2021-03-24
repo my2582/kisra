@@ -54,7 +54,7 @@ class query:
             dt = datetime.datetime.strptime('2021-02-01', '%Y-%m-%d')
             date = str(dt.month)+'/'+str(dt.day)+'/'+str(dt.year)+' 09:00:00 AM'
 
-        userid='A'+str(id)
+        userid='A' + ('00' + str(id))[-3:]
         query = "INSERT INTO userselection(userid, set_no, q_no, answer, risk_pref_value) values (%s, %s, %s, %s, %s)"
         for i in range(8):
             self.con.execute(query, [userid, float(1), float(i+1), float(answers[i][0]), float(answers[i][1])])
