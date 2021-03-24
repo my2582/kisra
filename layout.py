@@ -70,8 +70,8 @@ signup = [
         html.Label('3. 투자기간 중 감내 가능한 투자 손실액'),
         dcc.RadioItems(
             options=[
-                {'label': "감내불가(0%)", "value": "zero"},
-                {'label': "5%이하", "value": "five"},
+                {'label': "3%이하", "value": "zero"},
+                {'label': "6%이하", "value": "five"},
                 {'label': "10%이하", "value": "ten"},
                 {'label': "20%이하", "value": "twenty"},
                 {'label': "20%초과", "value": "over-twenty"},
