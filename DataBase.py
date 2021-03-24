@@ -54,6 +54,8 @@ class databaseDF:
 
         for i in range(len(general)):
             temp = general.iloc[i, :].values.tolist()
+            print('in general')
+            print(i, temp)
             self.con.execute(insert_query_gen.format('general'), temp)
             self.conn.commit()
 
