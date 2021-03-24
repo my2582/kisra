@@ -43,6 +43,7 @@ class databaseDF:
 
         insert_query_user = 'INSERT INTO {0} (userid, set_no, q_no, answer, risk_pref_value) values (%s, %s, %s, %s, %s)'
 
+        general['value'] = general['value'].values.astype(float)
         general['wt'] = general['wt'].values.astype(float)
 
         detail['quantity'] = detail['quantity'].values.astype(float)
