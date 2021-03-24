@@ -109,7 +109,7 @@ def show_content(users):
                 result = '당신의 점수는 {0}이며 {1}형 투자자입니다. 당신에게 맞는 포트폴리오를 확인해 보세요'.format(
                     score, risk_avg)
                 # 파이차트 (종목별)
-                pie = px.pie(df, names=df.loc[:, 'itemcode'], values=df.loc[:, 'weights'],
+                pie = px.pie(df, names=df.loc[:, 'itemname'], values=df.loc[:, 'weights'],
                              title="추천 포트폴리오", color_discrete_sequence=px.colors.qualitative.Set3)
 
                 print('-=-=-=-df.columns-=-=-=-=-')
