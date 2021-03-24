@@ -76,7 +76,7 @@ class Character:
         detail['date'] = pd.to_datetime(
             detail['date'], format='%Y-%m-%d').dt.strftime('%m/%d/%Y 4:0:00 PM').astype(str)
         detail['userid'] = self.userid
-        detail['username'] = self.username
+        detail['name'] = self.username
         detail['group_by'] = ''
         detail['original'] = 'N'
 
