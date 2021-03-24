@@ -1,5 +1,6 @@
 import dash
 import dash_html_components as html
+import pandas as pd
 from character import Character
 from dash.dependencies import Input, Output, State
 import plotly.express as px
