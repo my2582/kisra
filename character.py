@@ -230,7 +230,7 @@ class Character:
             for dt in dates:
                 # 최근 잔고가져오기
                 # 아직 어떤 타입으로 가져오는지 모름
-                balance = self.db.getDetail(userid=self.userid)
+                balance = self.db.getUserBalance(userid=self.userid)
                 balance_date = balance[0][0]
                 print('dt {}, balance_date {}-type(balance):'.format(dt,
                                                                      balance_date, type(balance)))

@@ -119,6 +119,9 @@ class databaseDF:
         print(new_detail.columns)
 
         col_order = ['itemcode', 'quantity', 'cost_price', 'price', 'cost_value', 'value', 'itemname', 'asset_class', 'date', 'userid', 'username', 'group_by', 'original', 'wt']
+        print('columns are reordered:')
+        print(new_detail.loc[:, col_order])
+
         for idx, row in new_detail.iterrows():
             temp = row[col_order].values.tolist()
             self.con.execute(insert_query_dtl, temp)
