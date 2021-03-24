@@ -52,7 +52,7 @@ class query:
             date = str(now.month)+'/'+str(now.day)+'/'+str(now.year)+' '+str(hour)+':'+str(now.minute)+':'+str(now.second)+' '+timezone 
         else:
             dt = datetime.datetime.strptime('2021-02-01', '%Y-%m-%d')
-            date = str(dt.month)+'/'+str(dt.day)+'/'+str(dt.year)+' 09:00:00 AM'
+            date = str(dt.month)+'/'+str(dt.day)+'/'+str(dt.year)+' 9:00:00 AM'
 
         userid='A' + ('00' + str(id))[-3:]
         query = "INSERT INTO userselection(userid, set_no, q_no, answer, risk_pref_value) values (%s, %s, %s, %s, %s)"
@@ -81,7 +81,7 @@ class query:
         return self.con.fetchall()
 
     def getUserBalance(self, userid):
-        query = "select distinct * from detail A where to_timestamp(A.date, 'mm/dd/yyyy HH:M1:SS AM') = (select max(to_timestamp(date, 'mm/dd/yyyy HH:M1:SS AM')) from detail) and userid=%s"
+        query = "select distinct * from detail A where to_timestamp(A.date, 'mm/dd/yyyy HH:M1:SS AM') = (select max(to_timestamp(date, 'mm/dd/yyyy HH:M1:SS AM')) from detail where userid=%s)"
         self.con.execute(query, [userid])
         self.conn.commit()
         return self.con.fetchall()

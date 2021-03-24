@@ -95,12 +95,12 @@ class databaseDF:
         userid = self.query.newUser(answer, money, current_date)
         return userid
 
-    def getDetail(self, userid):
-        record = self.query.getUserDetail(userid=userid)
-        print('-------------detail------------------')
-        print(userid)
-        print(record)
-        return record
+    # def getDetail(self, userid):
+    #     record = self.query.getUserDetail(userid=userid)
+    #     print('-------------detail------------------')
+    #     print(userid)
+    #     print(record)
+    #     return record
 
     def getUserBalance(self, userid):
         record = self.query.getUserBalance(userid=userid)

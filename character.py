@@ -88,7 +88,7 @@ class Character:
         return detail
 
     def get_ordersheets(self):
-        balance = self.db.getDetail(userid=self.userid)
+        balance = self.db.getUserBalance(userid=self.userid)
 
         print('balance[0] is '.format(balance[0]))
         balance_date = balance[0][0]
@@ -265,7 +265,7 @@ class Character:
                 next_date = datetime.strptime(dt, '%Y-%m-%d')
                 next_date = str(next_date.month)+'/'+str(next_date.day) + \
                     '/'+str(next_date.year)+' 4:00:00 PM'
-                next_balance = copy.deepcopy(next_balance)
+                next_balance = copy.deepcopy(balance)
                 next_balance.merge(holding_prices, left_on='itemcode', right_on='itemcode',
                                    how='left', suffixes=('_old', '')).drop('price_old', axis=1)
                 next_balance.loc[next_balance.itemcode ==

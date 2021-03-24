@@ -311,8 +311,7 @@ class PortfolioAdvisor:
         assert self.w is not None, "Optimization failed with these actual inputs: "
         print('Optimized weights have been estimated.')
 
-        # self.savefig()
-
+        self.savefig()
 
         # threshold보다 작은 비중을 추천받은 종목은 삭제한다.
         self.drop_trivial_weights(threshold=drop_wt_threshold, drop=True)
@@ -371,10 +370,11 @@ class PortfolioAdvisor:
 
 if __name__ == '__main__':
     pa=PortfolioAdvisor()
+    dates = AdvisedPortfolios.instance().data.date.unique()
     # dates = ['2019-12-31', '2020-01-31', '2020-02-28', '2020-03-31', '2020-04-30',
     #         '2020-05-29', '2020-06-30',  '2020-07-31',  '2020-08-31', '2020-09-30',
     #         '2020-10-30',  '2020-11-30', '2020-12-31', '2021-01-29','2021-02-26']
-    dates = ['2019-12-31']
+    # dates = ['2019-12-31']
     for dt in dates:
         pa.run(risk_profile=2, current_date=dt)
         print(pa.w)
