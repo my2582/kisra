@@ -71,6 +71,8 @@ def show_content(users):
             tags_id = [input_1, input_2, input_3, input_4, input_5, input_6, input_7, input_8, input_9,
                         input_10, input_11]
             character = Character(tags_id)
+            print('tags_id: {}'.format(tags_id))
+            assert app.layout.children[-1] is not None, "app.layout is none."
             output = html.Div([
                 html.Div(id='character-result')
             ], id='output-div')
