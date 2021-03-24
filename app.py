@@ -115,12 +115,12 @@ def show_content(users):
                 # 바 차트(자산군별)
                 asset_class = ['Fixed Income', 'Alternative', 'Cash', 'Equity']
                 df_ac = pd.DataFrame(asset_class, columns=['asset_class'])
-                df_by_asset_class = df.loc[:, ['wt', 'asset_class']].groupby(
-                    'asset_class').sum().sort_values('wt', ascending=False).reset_index()
+                df_by_asset_class = df.loc[:, ['weights', 'asset_class']].groupby(
+                    'asset_class').sum().sort_values('weights', ascending=False).reset_index()
                 df_by_asset_class = df_by_asset_class.merge(df_ac, left_on='asset_class', right_on='asset_class', how='right').sort_values(
-                    'wt', ascending=False).reset_index(drop=True)
-                bar_chart = px.bar(df_by_asset_class, y='wt', x='asset_class', title='자산군별 비중',
-                                   labels={'asset_class': '자산군', 'wt': '비중'},
+                    'weights', ascending=False).reset_index(drop=True)
+                bar_chart = px.bar(df_by_asset_class, y='weights', x='asset_class', title='자산군별 비중',
+                                   labels={'asset_class': '자산군', 'weights': '비중'},
                                    orientation='v', color="asset_class", color_continuous_scale='darkmint',
                                    template='plotly_dark')
                 output.children[0].children = result

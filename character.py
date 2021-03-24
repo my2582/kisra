@@ -220,12 +220,7 @@ class Character:
                     balance_date = datetime.strptime(
                         balance_date, '%m/%d/%Y %H:%M:%S %p').strftime('%Y-%m-%d')
 
-                if dt is every5day:
-                    # 추천 포트폴리리와 현재 포트폴리오 비중차가 5% 넘게 나는 종목이 생기면 리밸런싱 (그러면 종가도 업데이트되는 셈)
-                    pass
-                else:
-                    # 종가만 업데이트
-                    pass
+                # 매일 종가 업데이트
 
         return new_units, prices, remaining_cash
 
