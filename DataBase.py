@@ -4,9 +4,12 @@ from DBquery import query
 
 class databaseDF:
     def __init__(self):
-        self.dburl = os.environ['DATABASE_URL']
-        self.conn = psycopg2.connect(self.dburl, sslmode='require')
-        # self.conn = psycopg2.connect(host='127.0.0.1', dbname='postgres', user='postgres', password='kus410028@', port='5432', sslmode='prefer')
+        try:
+            self.dburl = os.environ['DATABASE_URL']
+            self.conn = psycopg2.connect(self.dburl, sslmode='require')
+        except:
+            self.conn = psycopg2.connect(host='127.0.0.1', dbname='postgres', user='postgres', password='alstn121!', port='5432', sslmode='prefer')
+            
         self.con = self.conn.cursor()
         self.query = query(self.conn, self.con)
 
@@ -27,6 +30,11 @@ class databaseDF:
             self.insertDefault(data)
             self.conn.commit()
 
+        self.con.execute("CREATE TABLE IF NOT EXISTS trade(date varchar(255), userid varchar(255), BS varchar(255), itemcode varchar(255), "
+                                    "itemname varchar(255), quantity float(24), price float(24), value float(24))")
+        self.conn.commit()
+
+
     def insertDefault(self, data):
         general, detail, user = data
         insert_query_gen = 'INSERT INTO {0} (date, userid, asset_class, value, wt) values (%s, %s, %s, %s, %s)'
@@ -34,6 +42,9 @@ class databaseDF:
                            'quantity, cost_price, cost_value, price, value, wt, group_by, original) values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'
 
         insert_query_user = 'INSERT INTO {0} (userid, set_no, q_no, answer, risk_pref_value) values (%s, %s, %s, %s, %s)'
+
+        general['value'] = general['value'].values.astype(float)
+        general['wt'] = general['wt'].values.astype(float)
 
         detail['quantity'] = detail['quantity'].values.astype(float)
         detail['cost_price'] = detail['cost_price'].values.astype(float)
@@ -46,6 +57,8 @@ class databaseDF:
 
         for i in range(len(general)):
             temp = general.iloc[i, :].values.tolist()
+            print('in general')
+            print(i, temp)
             self.con.execute(insert_query_gen.format('general'), temp)
             self.conn.commit()
 
@@ -78,6 +91,52 @@ class databaseDF:
         record = self.query.getUserSelection(user)
         return record
 
-    def newUser(self, answer, money):
-        self.query.newUser(answer, money)
-        return
+    def newUser(self, answer, money, current_date=None):
+        userid = self.query.newUser(answer, money, current_date)
+        return userid
+
+    def getDetail(self, userid):
+        record = self.query.getUserDetail(userid=userid)
+        print('-------------detail------------------')
+        print(userid)
+        print(record)
+        return record
+
+    def getUserBalance(self, userid):
+        record = self.query.getUserBalance(userid=userid)
+        print('-------------balance------------------')
+        print(userid)
+        print(record)
+        return record
+
+    def insert_detail(self, new_detail):
+        insert_query_dtl = 'INSERT INTO detail (itemcode, quantity, cost_price, price, cost_value, value, ' \
+                           'itemname, asset_class, date, userid, name, group_by, original, wt) values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'
+
+        new_detail['quantity'] = new_detail['quantity'].values.astype(float)
+        new_detail['cost_price'] = new_detail['cost_price'].values.astype(float)
+        new_detail['cost_value'] = new_detail['cost_value'].values.astype(float)
+        new_detail['price'] = new_detail['price'].values.astype(float)
+        new_detail['value'] = new_detail['value'].values.astype(float)
+        new_detail['wt'] = new_detail['wt'].values.astype(float)
+
+        print('new_detail.columns:')
+        print(new_detail.columns)
+
+        col_order = ['itemcode', 'quantity', 'cost_price', 'price', 'cost_value', 'value', 'itemname', 'asset_class', 'date', 'userid', 'name', 'group_by', 'original', 'wt']
+        print('columns are reordered:')
+        print(new_detail.loc[:, col_order])
+
+        for idx, row in new_detail.iterrows():
+            temp = row[col_order].values.tolist()
+            self.con.execute(insert_query_dtl, temp)
+            self.conn.commit()
+    
+    def insert_general(self, new_general):
+        insert_query_gen = 'INSERT INTO general (date, userid, asset_class, value, wt) values (%s, %s, %s, %s, %s)'
+
+        for idx, row in new_general.iterrows():
+            temp = row[['date', 'userid', 'asset_class', 'value', 'wt']].values.tolist()
+            self.con.execute(insert_query_gen, temp)
+            self.conn.commit()
+

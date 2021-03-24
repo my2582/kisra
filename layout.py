@@ -70,8 +70,8 @@ signup = [
         html.Label('3. 투자기간 중 감내 가능한 투자 손실액'),
         dcc.RadioItems(
             options=[
-                {'label': "감내불가(0%)", "value": "zero"},
-                {'label': "5%이하", "value": "five"},
+                {'label': "3%이하", "value": "zero"},
+                {'label': "6%이하", "value": "five"},
                 {'label': "10%이하", "value": "ten"},
                 {'label': "20%이하", "value": "twenty"},
                 {'label': "20%초과", "value": "over-twenty"},
@@ -159,7 +159,7 @@ signup = [
 
     html.Br(),
     html.Br(),
-    html.Button('Submit', id='submit-val', style={"background-color": "Yellow"}, n_clicks=0),
+    html.Button('가입 및 시뮬레이션', id='submit-val', style={"background-color": "Yellow"}, n_clicks=0),
     html.Div([
         html.Div(id='character-result')
     ], id='output-div')
@@ -171,7 +171,7 @@ analysis = [
         html.Label('이름'),
         dcc.Input(value='x', type='text', id='analysis-name'),
 
-        html.Label('날짜'),
+        html.Label('자문기준일'),
         dcc.Input(value='y', type='text', id='analysis-datetime')]
 
         , id='user-information-analysis'),
@@ -180,7 +180,7 @@ analysis = [
         id='predict-slider',
         min=0,
         max=16,
-        value=[0, 1],
+        value=[0, 16],
         marks={
             0: {'label': '12개월'},
             1: {'label': '11개월'},

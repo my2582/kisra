@@ -1,4 +1,4 @@
-﻿종목코드,종목명,가격,순자산,거래량,종목명,시총(억),거래소명,시장,자산군,투자자산,자산종류상세,퇴직연금 투자한도(70%)
+﻿종목코드,종목명,가격,순자산,거래량,거래대금(백만),시총(억),거래소명,시장,자산군,투자자산,자산종류상세,퇴직연금 투자한도(70%)
 itemcode,itemname,price,nav,volumne_sh,trading_amt_mln,market_cap_100m,exchange_nm,market,asset_class,instruments,exposure,dc_risky_asset
 C000001,현금,1,1,,,,,Domestic,Cash,Cash,Cash,1
 D000001,예금,1,1,,,,,Domestic,Cash,Deposit,Deposit,1
@@ -98,3 +98,5 @@ A130730,KOSEF 단기자금,100970,100968,211753,21380,486,KRX,Domestic,Fixed Inc
 A122260,KOSEF 통안채1년,101170,101173,193096,19536,475,KRX,Domestic,Fixed Income,ETF,ShortD,1
 A329750,TIGER 미국달러단기채권액티브,9645,,78822,760,378,KRX,USA,Alternative,ETF,Money,1
 A196230,KBSTAR 단기통안채,104325,104325,388477,40527,1847,KRX,Domestic,Fixed Income,ETF,Money,1
+A329650,KODEX TRF3070,10980,,37484,411,239.21,KRX,Domestic,Alternative,ETF,Balanced,1
+A237370,KODEX 배당성장채권혼합,11775,,26965,140,211,KRX,Domestic,Alternative,ETF,Balanced,1

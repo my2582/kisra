@@ -1,5 +1,6 @@
 import dash
 import dash_html_components as html
+import pandas as pd
 from character import Character
 from dash.dependencies import Input, Output, State
 import plotly.express as px
@@ -10,11 +11,15 @@ from user import User
 import numpy as np
 from datetime import timedelta, datetime
 import plotly.graph_objects as go
+from DataBase import databaseDF
+from src.models.load_data import AdvisedPortfolios, Singleton
 
 sheet = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
-app = dash.Dash(__name__, external_stylesheets=sheet, suppress_callback_exceptions=True)
+app = dash.Dash(__name__, external_stylesheets=sheet,
+                suppress_callback_exceptions=True)
 server = app.server
 user = User()
+
 
 def show_content(users):
     # app = self.app
@@ -23,6 +28,13 @@ def show_content(users):
     origin = tab
     user = users
     app.layout = origin
+
+    # db = databaseDF()
+    # advised_pf = AdvisedPortfolios.instance().data
+    # print('type(advised_pf)'.format(type(advised_pf)))
+    # print('Here is your advised_pf:')
+    # print(advised_pf.tail(3))
+    # db.insert_advised_pf(advised_pf)
 
     @app.callback(
         Output(layout.output_id, 'children'),
@@ -33,6 +45,7 @@ def show_content(users):
             app.layout.children[-1] = html.Div(layout.signup)
             userList = user.userList()
             layout.signup[1].children[1].options = userList + ['x']
+
             return html.Div(layout.signup)
 
         if tab_input == 'analysis':
@@ -64,12 +77,12 @@ def show_content(users):
         State('name', 'value')
     )
     def page1_result(n_clicks, input_1, input_2, input_3, input_4,
-                    input_5, input_6, input_7, input_8, input_9, input_10,
-                    input_11):
+                     input_5, input_6, input_7, input_8, input_9, input_10,
+                     input_11):
 
         if 0 < n_clicks:
             tags_id = [input_1, input_2, input_3, input_4, input_5, input_6, input_7, input_8, input_9,
-                        input_10, input_11]
+                       input_10, input_11]
             character = Character(tags_id)
             print('tags_id: {}'.format(tags_id))
             assert app.layout.children[-1] is not None, "app.layout is none."
@@ -92,15 +105,39 @@ def show_content(users):
                         if check:
                             break
 
-                risk_avg, df, score = character.predict(answer)
-                result = '당신의 점수는 {0}이며 {1}형 투자자입니다. 당신에게 맞는 포트폴리오를 확인해 보세요'.format(score, risk_avg)
-                pie = px.pie(df, names=df.columns[-1], values=df.columns[0])
+                risk_avg, df, by_assetclass, score, new_units, prices, remaining_cash = character.predict(
+                    answer)
+                result = '당신의 점수는 {0}이며 {1}형 투자자입니다. 당신에게 맞는 포트폴리오를 확인해 보세요'.format(
+                    score, risk_avg)
+                # 파이차트 (종목별)
+                pie = px.pie(df, names=df.loc[:, 'itemname'], values=df.loc[:, 'weights'],
+                             title="추천 포트폴리오", color_discrete_sequence=px.colors.qualitative.Set3)
+
+                print('-=-=-=-df.columns-=-=-=-=-')
+                print(df.columns)
+
+                # 바 차트(자산군별)
+                bar_chart = px.bar(by_assetclass, y='weights', x='asset_class', title='자산군별 비중',
+                                   labels={'asset_class': '자산군', 'weights': '비중'},
+                                   orientation='v', color="asset_class", color_continuous_scale='darkmint',
+                                   template='plotly_dark')
                 output.children[0].children = result
+
+
+
                 if len(output.children) < 3:
                     fig = dcc.Graph(id='pie-chart')
                     fig.figure = pie
                     fig.figure.layout.paper_bgcolor = style['pie_chart_style']['backgroundColor']
+
+                    fig_bar = dcc.Graph(id='bar-chart')
+                    fig_bar.figure=bar_chart
+                    fig_bar.figure.layout.paper_bgcolor = style['pie_chart_style']['backgroundColor']
                     output.children.append(fig)
+                    output.children.append(fig_bar)
+
+
+
                 output.style = style['pie_chart_style']
                 return output
 
@@ -121,7 +158,7 @@ def show_content(users):
             Output('invest-terms', 'value'),
             Output('age-check', 'value'),
             Output('self-understand-degree', 'value')
-         ],
+        ],
         Input({'type': 'users-dropdown'}, 'value')
     )
     def selected(username):
@@ -134,8 +171,9 @@ def show_content(users):
         values = []
         idx = 0
         for i in range(1, len(for_selected.children), 3):
-            values.append(for_selected.children[i].options[int(outputs[idx][0]-1)]['value'])
-            idx+=1
+            values.append(
+                for_selected.children[i].options[int(outputs[idx][0]-1)]['value'])
+            idx += 1
         print('-------------values-------------')
         print(values)
         return values
@@ -143,39 +181,47 @@ def show_content(users):
     def page2_result(content):
         if type(content) == str:
             return dcc.ConfirmDialog(
-                    id='confirm',
-                    message=content
-                )
+                id='confirm',
+                message=content
+            )
 
         before, after = content
         table_header = [
-            html.Thead(html.Tr([html.Th("시점"), html.Th("현금성"), html.Th("주식"), html.Th("채권"), html.Th("대체"), html.Th('상세정보')]))
+            html.Thead(html.Tr([html.Th("시점"), html.Th("현금성"), html.Th(
+                "주식"), html.Th("채권"), html.Th("대체"), html.Th('상세정보')]))
         ]
 
         row1 = html.Tr([html.Td("현재"), html.Td(before[before['asset_class'] == '현금성']['value'].iloc[0]),
-                        html.Td(before[before['asset_class'] == '주식']['value'].iloc[0]),
-                        html.Td(before[before['asset_class'] == '채권']['value'].iloc[0]),
-                        html.Td(before[before['asset_class'] == '대체']['value'].iloc[0]),
+                        html.Td(before[before['asset_class']
+                                       == '주식']['value'].iloc[0]),
+                        html.Td(before[before['asset_class']
+                                       == '채권']['value'].iloc[0]),
+                        html.Td(before[before['asset_class']
+                                       == '대체']['value'].iloc[0]),
                         html.Td(html.Div([html.Button('상세정보', id='detail-info-button'),
-                                dbc.Modal(
-                                    [
-                                        dbc.ModalHeader("상세정보"),
-                                        dbc.ModalBody("A small modal.", id='record'),
-                                        dbc.ModalFooter(
-                                            dbc.Button("Close", id="close-detail-info", className="ml-auto")
-                                        ),
-                                    ],
-                                    id="modal-detail-info",
-                                    size="sm"
-                                )]))])
+                                          dbc.Modal(
+                            [
+                                dbc.ModalHeader("상세정보"),
+                                dbc.ModalBody(
+                                    "A small modal.", id='record'),
+                                dbc.ModalFooter(
+                                    dbc.Button(
+                                        "Close", id="close-detail-info", className="ml-auto")
+                                ),
+                            ],
+                            id="modal-detail-info",
+                            size="sm"
+                        )]))])
 
         row2 = html.Tr([html.Td("미래"), html.Td(before[before['asset_class'] == '현금성']['value'].iloc[0]),
-                        html.Td(before[before['asset_class'] == '주식']['value'].iloc[0]),
-                        html.Td(before[before['asset_class'] == '채권']['value'].iloc[0]),
-                        html.Td(before[before['asset_class'] == '대체']['value'].iloc[0]),
+                        html.Td(before[before['asset_class']
+                                       == '주식']['value'].iloc[0]),
+                        html.Td(before[before['asset_class']
+                                       == '채권']['value'].iloc[0]),
+                        html.Td(before[before['asset_class']
+                                       == '대체']['value'].iloc[0]),
                         html.Td('')],
-                        style={'background-color': '#FFA500'})
-
+                       style={'background-color': '#FFA500'})
 
         # if not content[-1]:
         #     row2.style['background-color'] = '#ddd'
@@ -196,27 +242,31 @@ def show_content(users):
 
     def page3Layout(result, from_date, allowable):
         chart, table = result
-        pie = px.pie(chart, names=chart['asset_class'].tolist(), values=chart['wt'].tolist())
+        pie = px.pie(
+            chart, names=chart['asset_class'].tolist(), values=chart['wt'].tolist())
         fig = dcc.Graph(id='pie-chart-page3')
         fig.figure = pie
 
         table_header = [
-            html.Thead(html.Tr([html.Th("종목명"), html.Th("평가액"), html.Th("비중"), html.Th("비고")]))
+            html.Thead(html.Tr([html.Th("종목명"), html.Th(
+                "평가액"), html.Th("비중"), html.Th("비고")]))
         ]
         informations = table.loc[:, ['itemname', 'value', 'wt', 'asset_class']]
         informations.loc[:, 'wt'] = informations.loc[:, 'wt']*100
-        sumOfInfo = [html.Td('계'), html.Td(sum(informations['value'])), html.Td(round(sum(informations['wt']))), html.Td('')]
+        sumOfInfo = [html.Td('계'), html.Td(sum(informations['value'])), html.Td(
+            round(sum(informations['wt']))), html.Td('')]
         informations = informations.values.tolist()
         table_row = list()
         for row in informations:
             temp = [html.Td(data) for data in row]
             table_row.extend([html.Tr(temp)])
         table_row.extend([html.Tr(sumOfInfo)])
-        table_result = html.Div(dbc.Table(table_header + [html.Tbody(table_row)], bordered=True))
+        table_result = html.Div(
+            dbc.Table(table_header + [html.Tbody(table_row)], bordered=True))
 
         x_axis = [from_date]
         now = from_date
-        while now<allowable:
+        while now < allowable:
             now += timedelta(days=30)
             x_axis.append(now)
         y_axis = np.random.randn(2, len(x_axis)).tolist()
@@ -225,18 +275,19 @@ def show_content(users):
 
         fig_2 = dcc.Graph(id='line-chart')
         fig_line = go.Figure()
-        fig_line.add_trace(go.Scatter(x=x_axis, y=y_axis[0], mode='lines+markers', name='before'))
-        fig_line.add_trace(go.Scatter(x=x_axis, y=y_axis[1], mode='lines+markers', name='after'))
+        fig_line.add_trace(go.Scatter(
+            x=x_axis, y=y_axis[0], mode='lines+markers', name='before'))
+        fig_line.add_trace(go.Scatter(
+            x=x_axis, y=y_axis[1], mode='lines+markers', name='after'))
         fig_2.figure = fig_line
 
         return html.Div([fig,
-                            table_result,
-                            fig_2])
-
+                         table_result,
+                         fig_2])
 
     @app.callback(
         [Output('output-pos', 'children'),
-        Output('analysis-datetime', 'value')],
+         Output('analysis-datetime', 'value')],
         Input('predict-slider', 'value'),
         Input('analysis-name', 'value')
     )
@@ -270,7 +321,8 @@ def show_content(users):
             temp = [html.Td(data) for data in row]
             table_row.extend([html.Tr(temp)])
 
-        result = html.Div(dbc.Table(table_header + [html.Tbody(table_row)], bordered=True))
+        result = html.Div(
+            dbc.Table(table_header + [html.Tbody(table_row)], bordered=True))
         if open or not close:
             return not is_open, result
         return is_open, result
@@ -291,7 +343,7 @@ def show_content(users):
     @app.callback(
         Output('detail-info-output', 'children'),
         [Input('default-predict-date', 'date'),
-        Input({'type': 'filter-dropdown'}, 'value')]
+         Input({'type': 'filter-dropdown'}, 'value')]
     )
     def page3OutputResult(pDate, userchoice):
         try:

@@ -30,7 +30,7 @@ class query:
         self.conn.commit()
         return self.con.fetchall()
 
-    def newUser(self, answers, money):
+    def newUser(self, answers, money, current_date=None):
         query = "select distinct userid from userselection"
         self.con.execute(query)
         self.conn.commit()
@@ -48,23 +48,40 @@ class query:
         if now.hour<10:
             type_hour = '0'+str(now.hour)
 
-        date = str(now.month)+'/'+str(now.day)+'/'+str(now.year)+' '+str(hour)+':'+str(now.minute)+':'+str(now.second)+' '+timezone
+        if current_date is None:
+            date = str(now.month)+'/'+str(now.day)+'/'+str(now.year)+' '+str(hour)+':'+str(now.minute)+':'+str(now.second)+' '+timezone 
+        else:
+            dt = datetime.datetime.strptime('2021-02-01', '%Y-%m-%d')
+            date = str(dt.month)+'/'+str(dt.day)+'/'+str(dt.year)+' 09:00:00 AM'
 
+        userid='A' + ('00' + str(id))[-3:]
         query = "INSERT INTO userselection(userid, set_no, q_no, answer, risk_pref_value) values (%s, %s, %s, %s, %s)"
         for i in range(8):
-            self.con.execute(query, ['A'+str(id), float(1), float(i+1), float(answers[i][0]), float(answers[i][1])])
+            self.con.execute(query, [userid, float(1), float(i+1), float(answers[i][0]), float(answers[i][1])])
             self.conn.commit()
 
         query = "INSERT INTO detail (date, userid, name, asset_class, itemcode, itemname, quantity, cost_price, cost_value, price, value, wt, group_by, original) " \
                 "values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
 
-        self.con.execute(query, [date, 'A'+str(id), '투자자'+str(id), '현금성', 'C000001', '현금', float(money), float(1), float(money),
+        self.con.execute(query, [date, userid, '투자자'+str(id), '현금성', 'C000001', '현금', float(money), float(1), float(money),
                                  float(1), float(money), float(1),
                                  str(now.year)+str(now.month)+str(now.day)+type_hour+':'+str(now.minute)+'현금성', 'Y'])
         self.conn.commit()
 
         query = "INSERT INTO general(date, userid, asset_class, value, wt) values (%s, %s, %s, %s, %s)"
-        self.con.execute(query, [date, 'A'+str(id), '현금성', float(money), float(1)])
+        self.con.execute(query, [date, userid, '현금성', float(money), float(1)])
         self.conn.commit()
 
-        return
+        return userid
+
+    def getUserDetail(self, userid):
+        query = "select * from detail where userid=%s and date=(select max(date) from detail where userid=%s)"
+        self.con.execute(query, [userid, userid])
+        self.conn.commit()
+        return self.con.fetchall()
+
+    def getUserBalance(self, userid):
+        query = "select distinct * from detail A where to_timestamp(A.date, 'mm/dd/yyyy HH:M1:SS AM') = (select max(to_timestamp(date, 'mm/dd/yyyy HH:M1:SS AM')) from detail) and userid=%s"
+        self.con.execute(query, [userid])
+        self.conn.commit()
+        return self.con.fetchall()
