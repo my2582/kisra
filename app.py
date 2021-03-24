@@ -121,6 +121,9 @@ def show_content(users):
                                    orientation='v', color="asset_class", color_continuous_scale='darkmint',
                                    template='plotly_dark')
                 output.children[0].children = result
+
+
+
                 if len(output.children) < 3:
                     fig = dcc.Graph(id='pie-chart')
                     fig.figure = pie
@@ -131,6 +134,9 @@ def show_content(users):
                     fig_bar.figure.layout.paper_bgcolor = style['pie_chart_style']['backgroundColor']
                     output.children.append(fig)
                     output.children.append(fig_bar)
+
+
+
                 output.style = style['pie_chart_style']
                 return output
 
