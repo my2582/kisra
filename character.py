@@ -202,21 +202,15 @@ class Character:
                 self.advised_pf.date > self.current_date), 'date'].unique()
             every5day = dates[::5]
 
-            bal = Balance.instance().data
-            bal_col = list(bal.columns)
-
+  
             # 최근 잔고 가져오기
             # 아직 어떤 타입으로 가져오는지 모름
-            balance = self.db.getUserBalance(userid=self.userid)
-            balance_date = balance[0][0]
-            print(
-                'balance_date {}-type(balance) is {}:'.format(balance_date, type(balance)))
-            print(balance)
+            balance = self.db.getUserBalance(userid=self.userid)       
+            balance = pd.DataFrame(balance, columns=['date', 'userid', 'name', 'asset_class', 'itemcode', 'itemname',
+                                                 'quantity', 'cost_price', 'cost_value', 'price', 'value', 'wt', 'group_by', 'original'])
 
-            # 잔고를 df 형식으로 바꿈
-            balance = pd.DataFrame(balance)
-            balance.columns = bal_col
-            print('after pd.DataFrame, balance is')
+            balance_date = balance[0][0]
+            print('here- balance.columns is {}:'.format(balance.columns))
             print(balance)
 
             next_balance = copy.deepcopy(balance)
@@ -228,14 +222,10 @@ class Character:
                 # 최근 잔고가져오기
                 # 아직 어떤 타입으로 가져오는지 모름
                 balance = self.db.getUserBalance(userid=self.userid)
-                balance_date = balance[0][0]
-                print('dt {}, balance_date {}-type(balance):'.format(dt,
-                                                                     balance_date, type(balance)))
-                print(balance)
-
                 # df로 타입을 바꿈
-                balance = pd.DataFrame(balance)
-                balance.columns = bal_col
+                balance = pd.DataFrame(balance, columns=['date', 'userid', 'name', 'asset_class', 'itemcode', 'itemname',
+                                                    'quantity', 'cost_price', 'cost_value', 'price', 'value', 'wt', 'group_by', 'original'])
+
                 print('after pd.DataFrame, balance is')
                 print(balance)
 
@@ -262,6 +252,8 @@ class Character:
                 next_balance.loc[next_balance.itemcode ==
                                  'C000001', 'price'] = 1
                 next_balance['date'] = next_date
+
+                print('next_balance.columns are {}'.format(next_balance.columns))
                 self.db.insert_detail(next_balance)
 
                 all_the_nexts = pd.concat((all_the_nexts, next_balance))
