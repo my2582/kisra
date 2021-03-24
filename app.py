@@ -112,6 +112,9 @@ def show_content(users):
                 pie = px.pie(df, names=df.iloc[:, 0], values=df.iloc[:, 1],
                              title="추천 포트폴리오", color_discrete_sequence=px.colors.qualitative.Set3)
 
+                print('-=-=-=-df.columns-=-=-=-=-')
+                print(df.columns)
+
                 # 바 차트(자산군별)
                 asset_class = ['Fixed Income', 'Alternative', 'Cash', 'Equity']
                 df_ac = pd.DataFrame(asset_class, columns=['asset_class'])

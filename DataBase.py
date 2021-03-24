@@ -97,6 +97,13 @@ class databaseDF:
         print(record)
         return record
 
+    def getUserBalance(self, userid):
+        record = self.query.getUserBalance(userid=userid)
+        print('-------------balance------------------')
+        print(userid)
+        print(record)
+        return record
+
     def insert_detail(self, new_detail):
         insert_query_dtl = 'INSERT INTO detail (itemcode, quantity, cost_price, price, cost_value, value, ' \
                            'itemname, asset_class, date, userid, name, group_by, original, wt) values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'
