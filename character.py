@@ -208,7 +208,7 @@ class Character:
         else:
             dates = self.advised_pf.loc[(self.advised_pf.risk_profile == self.risk_profile) & (
                 self.advised_pf.date > self.current_date), 'date'].unique()
-            every5day = dates[::5]
+            every20day = dates[::20]
 
   
             # 최근 잔고 가져오기
@@ -226,6 +226,25 @@ class Character:
             price_db = PriceDB.instance().data
 
             for dt in dates:
+                ## 리밸런싱 주기가 왔으면 ##
+                if dt in every20day:
+                    ## 리밸런싱 후 다음 날짜로
+                    self.current_date = self.advised_pf.loc[self.advised_pf.date <= self.current_date, [
+                        'date']].max().date
+                    print('The date we are looking for is {}'.format(self.current_date))
+                    df = self.advised_pf.loc[(self.advised_pf.date == self.current_date) & (
+                        self.advised_pf.risk_profile == self.risk_profile), :]
+
+                    print('리밸런싱 포트폴리오(risk profile {}):'.format(self.risk_profile))
+                    print(df)
+                    print('---new_units---')
+                    print(new_units)
+                    print('---prices----')
+                    print(prices)
+
+                    new_units, prices, remaining_cash = self.get_ordersheets()
+                    continue
+
                 # 최근 잔고가져오기
                 # 아직 어떤 타입으로 가져오는지 모름
                 balance = self.db.getUserBalance(userid=self.userid)
