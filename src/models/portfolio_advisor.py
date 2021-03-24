@@ -3,6 +3,7 @@ import pandas as pd
 
 import riskfolio.ConstraintsFunctions as cf
 import riskfolio.Portfolio as pf
+import riskfolio.Reports as rp
 import datetime
 
 if __name__ == '__main__':
@@ -54,7 +55,7 @@ class PortfolioAdvisor:
     def run(self, risk_profile=None, current_date=None, non_tradables=None, drop_wt_threshold=0.005,
             model='Classic', rm='CDaR', method_mu='hist', method_cov='oas',
             decay=0.97, allow_short=False, alpha=0.05):
-        r""" 
+        r"""
         최적화 모델을 실행한다(즉, 최적화를 한다).
         risk_profile과 current_date값을 바꿔가면서 반복적으로 실행하면 self.weights에 추천 포트폴리오가 누적되어 저장된다.
         """
@@ -174,7 +175,8 @@ class PortfolioAdvisor:
         # 동일 추적지수를 갖는 ETF에서는 거래량 1위만 선정
         # self.most_liquid_names = self.universe.loc[:, ['itemcode', 'itemname', 'tracking_code', 'trading_amt_mln']].groupby(
         #     ['tracking_code'])[['itemcode', 'itemname', 'trading_amt_mln']].max().itemcode
-        most_liquid_idx = self.universe.loc[:, ['itemcode', 'itemname', 'tracking_code', 'trading_amt_mln']].groupby(['tracking_code'])['trading_amt_mln'].transform(max) == self.universe['trading_amt_mln']
+        most_liquid_idx = self.universe.loc[:, ['itemcode', 'itemname', 'tracking_code', 'trading_amt_mln']].groupby(
+            ['tracking_code'])['trading_amt_mln'].transform(max) == self.universe['trading_amt_mln']
         # self.universe = self.universe.set_index('itemcode', drop=True).loc[self.most_liquid_names]
         self.universe = self.universe.loc[most_liquid_idx]
 
@@ -193,7 +195,7 @@ class PortfolioAdvisor:
         # Make `df_rt`, a matrix of log returns of all eligible **instruments** in the universe with:
         # - Columns: itemcode
         # - Rows: date
-        
+
         # 아래 코드에
         # .loc[:, self.universe.itemcode] 를 붙이는 이유는
         # self.universe의 itemcode 순서와 df_rt의 컬럼(=itemcode) 순서를 맞추기 위해서이다.
@@ -279,6 +281,11 @@ class PortfolioAdvisor:
         self.add_instruments_info()
         self.w = self.w.sort_values(by='weights', ascending=False)
 
+        returns = self.port.returns
+        print('MAD '.format(rf.MAD(returns)))
+        print('CVR {}'.fotmat(rf.CVaR_Hist(returns)))
+        print('MDD {}'.format(rf.MDD_Abs(returns)))
+
         return self.w
 
     def drop_trivial_weights(self, threshold=0.005, drop=True):
@@ -292,26 +299,26 @@ class PortfolioAdvisor:
             False면 0%로 설정하고 삭제하지는 않는다.
         """
         if drop:
-            self.w = self.w.drop(
+            self.w=self.w.drop(
                 self.w.loc[np.abs(self.w.weights) < 0.005, 'weights'].index)
         else:
-            self.w.loc[np.abs(self.w.weights) < threshold, 'weights'] = 0
+            self.w.loc[np.abs(self.w.weights) < threshold, 'weights']=0
 
     def add_instruments_info(self):
         r"""
         ETF추적지수나 종목명 정보를 종목코드에 추가해서 반환한다.
         """
-        self.w = pd.merge(self.w, self.universe.loc[:, [
+        self.w=pd.merge(self.w, self.universe.loc[:, [
                           'itemcode', 'tracking_code', 'itemname']], left_index=True, right_on='itemcode', how='left')
-        self.w = self.w[['weights', 'tracking_code', 'itemcode',
+        self.w=self.w[['weights', 'tracking_code', 'itemcode',
                          'itemname']].set_index('itemcode', drop=True)
 
     def get_it_neat(self, threshold=0.0495):
         r"""
         threshold보다 작은 비중으로 추천된 종목들의 비중을 합산하여 Others라는 이름의 비중 1개로 바꿔 df를 리턴한다.
         """
-        small_wt = self.w[self.w.weights < threshold].weights.sum()
-        w_others = pd.DataFrame.from_dict(
+        small_wt=self.w[self.w.weights < threshold].weights.sum()
+        w_others=pd.DataFrame.from_dict(
             {'OTHERS': [self.w[self.w.weights < 0.0495].weights.sum(),
                         'Others', 'Others']},
             orient='index',
@@ -321,7 +328,7 @@ class PortfolioAdvisor:
 
 
 if __name__ == '__main__':
-    pa = PortfolioAdvisor()
+    pa=PortfolioAdvisor()
     pa.run(risk_profile=2, current_date='2021-02-01')
     print(pa.w)
     pa.run(risk_profile=3, current_date='2021-02-01')

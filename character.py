@@ -256,11 +256,19 @@ class Character:
                 print('next_balance.columns are {}'.format(next_balance.columns))
                 self.db.insert_detail(next_balance)
 
-                all_the_nexts = pd.concat((all_the_nexts, next_balance))
+                new_general = next_balance.loc[:, ['wt', 'value', 'asset_class']].groupby(
+                        'asset_class').sum().sort_values('wt', ascending=False).reset_index()
+                new_general['userid'] = next_balance.userid[0]
+                new_general['date'] = next_balance.date[0]
 
-            all_the_nexts = all_the_nexts.reset_index(drop=True)
+                # general 테이블에 기록
+                self.db.insert_general(new_general)
 
-            print(all_the_nexts)
+                # all_the_nexts = pd.concat((all_the_nexts, next_balance))
+
+            # all_the_nexts = all_the_nexts.reset_index(drop=True)
+
+            # print(all_the_nexts)
             # detail 테이블에 기록
             # self.db.insert_detail(all_the_nexts)
 
