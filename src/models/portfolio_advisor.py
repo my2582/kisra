@@ -5,8 +5,11 @@ import riskfolio.ConstraintsFunctions as cf
 import riskfolio.Portfolio as pf
 import riskfolio.Reports as rp
 import riskfolio.RiskFunctions as rf
+import riskfolio.PlotFunctions as plf
+
 import datetime
 import pickle as pl
+import matplotlib.pyplot as plt
 
 if __name__ == '__main__':
     from utils import get_asset_classes
@@ -217,6 +220,39 @@ class PortfolioAdvisor:
         print('Portfolio constraints have been set in matrice A and B such that Aw>=B for a risk profile number {}.'.format(
             self._risk_profile))
 
+    def savefig(self):
+        returns = self.port.returns
+
+        model='Classic'
+        
+        # 포트폴리오 수익률과 비중 저장
+        with open('returns-{}_{}.pkl'.format(self.risk_profile, self.current_date), 'wb') as f:
+            pl.dump(returns, f)
+        
+        with open('w-{}_{}.pkl'.format(self.risk_profile, self.current_date), 'wb') as f:
+            pl.dump(self.w, f)
+
+        # Efficient fronter 저장
+        points = 50 # Number of points of the frontier
+        frontier = self.port.efficient_frontier(model=model, rm=self.rm, points=points, rf=self.rf, hist=True)
+
+        label = 'Max-return Portfolio' if self.risk_profile == 4 else 'Min-risk Portfolio'
+        mu = self.port.mu # Expected returns
+        cov = self.port.cov # Covariance matrix
+
+        fig1, ax1 = plt.subplots()
+
+        ax1 = plf.plot_frontier(w_frontier=frontier, mu=mu, cov=cov, returns=returns, rm=self.rm,
+                            rf=self.rf, alpha=0.05, cmap='viridis', w=self.w, label=label,
+                            marker='*', s=16, c='r', height=6, width=10, ax=ax1)
+
+        fig1.savefig('ef-{}_{}.png'.format(self.risk_profile, self.current_date))
+
+        fig2, ax2 = plt.subplots(nrows=1, ncols=1)
+        # Plotting efficient frontier composition
+        ax2 = plf.plot_frontier_area(w_frontier=frontier, cmap="tab20", height=6, width=10, ax=None)
+        fig2.savefig('ef_area-{}_{}.png'.format(self.risk_profile, self.current_date))
+
     def _optimize(self, drop_wt_threshold=0.005, model='Classic', rm='CDaR', method_mu='hist', method_cov='oas', decay=0.97, allow_short=False, alpha=0.05):
         r"""
         Riskfolio 패키지를 이용하여 최적화한다. Riskfolio는 내부적으로 최근 사용층을 넓혀가고 있는 cvxpy를 이용한다.
@@ -275,12 +311,8 @@ class PortfolioAdvisor:
         assert self.w is not None, "Optimization failed with these actual inputs: "
         print('Optimized weights have been estimated.')
 
-        returns = self.port.returns
-        with open('returns-riskprofile-{}.pkl'.format(self.risk_profile), 'wb') as f:
-            pl.dump(returns, f)
-        
-        with open('w-riskprofile-{}.pkl'.format(self.risk_profile), 'wb') as f:
-            pl.dump(self.w, f)
+        # self.savefig()
+
 
         # threshold보다 작은 비중을 추천받은 종목은 삭제한다.
         self.drop_trivial_weights(threshold=drop_wt_threshold, drop=True)
@@ -339,11 +371,16 @@ class PortfolioAdvisor:
 
 if __name__ == '__main__':
     pa=PortfolioAdvisor()
-    pa.run(risk_profile=2, current_date='2021-02-01')
-    print(pa.w)
-    pa.run(risk_profile=3, current_date='2021-02-01')
-    print(pa.w)
-    pa.run(risk_profile=4, current_date='2021-02-01')
-    print(pa.w)
+    # dates = ['2019-12-31', '2020-01-31', '2020-02-28', '2020-03-31', '2020-04-30',
+    #         '2020-05-29', '2020-06-30',  '2020-07-31',  '2020-08-31', '2020-09-30',
+    #         '2020-10-30',  '2020-11-30', '2020-12-31', '2021-01-29','2021-02-26']
+    dates = ['2019-12-31']
+    for dt in dates:
+        pa.run(risk_profile=2, current_date=dt)
+        print(pa.w)
+        pa.run(risk_profile=3, current_date=dt)
+        print(pa.w)
+        pa.run(risk_profile=4, current_date=dt)
+        print(pa.w)
 
     pass
