@@ -104,25 +104,19 @@ def show_content(users):
                         if check:
                             break
 
-                risk_avg, df, df_asset_class, score, new_units, prices, remaining_cash = character.predict(
+                risk_avg, df, by_assetclass, score, new_units, prices, remaining_cash = character.predict(
                     answer)
                 result = '당신의 점수는 {0}이며 {1}형 투자자입니다. 당신에게 맞는 포트폴리오를 확인해 보세요'.format(
                     score, risk_avg)
                 # 파이차트 (종목별)
-                pie = px.pie(df, names=df.iloc[:, 0], values=df.iloc[:, 1],
+                pie = px.pie(df, names=df.loc[:, 'itemcode'], values=df.loc[:, 'weights'],
                              title="추천 포트폴리오", color_discrete_sequence=px.colors.qualitative.Set3)
 
                 print('-=-=-=-df.columns-=-=-=-=-')
                 print(df.columns)
 
                 # 바 차트(자산군별)
-                asset_class = ['Fixed Income', 'Alternative', 'Cash', 'Equity']
-                df_ac = pd.DataFrame(asset_class, columns=['asset_class'])
-                df_by_asset_class = df.loc[:, ['weights', 'asset_class']].groupby(
-                    'asset_class').sum().sort_values('weights', ascending=False).reset_index()
-                df_by_asset_class = df_by_asset_class.merge(df_ac, left_on='asset_class', right_on='asset_class', how='right').sort_values(
-                    'weights', ascending=False).reset_index(drop=True)
-                bar_chart = px.bar(df_by_asset_class, y='weights', x='asset_class', title='자산군별 비중',
+                bar_chart = px.bar(by_assetclass, y='weights', x='asset_class', title='자산군별 비중',
                                    labels={'asset_class': '자산군', 'weights': '비중'},
                                    orientation='v', color="asset_class", color_continuous_scale='darkmint',
                                    template='plotly_dark')

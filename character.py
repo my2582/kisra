@@ -259,7 +259,10 @@ class Character:
                 all_the_nexts = pd.concat((all_the_nexts, next_balance))
 
             all_the_nexts = all_the_nexts.reset_index(drop=True)
+
             print(all_the_nexts)
+            # detail 테이블에 기록
+            self.db.insert_detail(all_the_nexts)
 
         return new_units, prices, remaining_cash
 
