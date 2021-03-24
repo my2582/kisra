@@ -4,7 +4,9 @@ import pandas as pd
 import riskfolio.ConstraintsFunctions as cf
 import riskfolio.Portfolio as pf
 import riskfolio.Reports as rp
+import riskfolio.RiskFunctions as rf
 import datetime
+import pickle as pl
 
 if __name__ == '__main__':
     from utils import get_asset_classes
@@ -273,6 +275,13 @@ class PortfolioAdvisor:
         assert self.w is not None, "Optimization failed with these actual inputs: "
         print('Optimized weights have been estimated.')
 
+        returns = self.port.returns
+        with open('returns-riskprofile-{}.pkl'.format(self.risk_profile), 'wb') as f:
+            pl.dump(returns, f)
+        
+        with open('w-riskprofile-{}.pkl'.format(self.risk_profile), 'wb') as f:
+            pl.dump(self.w, f)
+
         # threshold보다 작은 비중을 추천받은 종목은 삭제한다.
         self.drop_trivial_weights(threshold=drop_wt_threshold, drop=True)
         print('Weights < {} are dropped.'.format(drop_wt_threshold))
@@ -281,10 +290,11 @@ class PortfolioAdvisor:
         self.add_instruments_info()
         self.w = self.w.sort_values(by='weights', ascending=False)
 
-        returns = self.port.returns
-        print('MAD '.format(rf.MAD(returns)))
-        print('CVR {}'.fotmat(rf.CVaR_Hist(returns)))
-        print('MDD {}'.format(rf.MDD_Abs(returns)))
+        # returns = self.port.returns.T
+        # print('MAD '.format(rf.MAD(returns)))
+        # print('CVR {}'.fotmat(rf.CVaR_Hist(returns)))
+        # print('MDD {}'.format(rf.MDD_Abs(returns)))
+
 
         return self.w
 
