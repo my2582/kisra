@@ -118,10 +118,10 @@ class databaseDF:
         print('new_detail.columns:')
         print(new_detail.columns)
 
-        temp = new_detail.iloc[0, :].values.tolist()
+        col_order = ['itemcode', 'quantity', 'cost_price', 'price', 'cost_value', 'value', 'itemname', 'asset_class', 'date', 'userid', 'username', 'group_by', 'original', 'wt']
         print('values:')
         print(temp)
         for i in range(len(new_detail)):
-            temp = new_detail.iloc[i, :].values.tolist()
+            temp = new_detail.iloc[i, col_order].values.tolist()
             self.con.execute(insert_query_dtl, temp)
             self.conn.commit()

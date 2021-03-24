@@ -64,6 +64,7 @@ class Character:
             'quantity': remaining_cash,
             'cost_price': 1,
             'cost_value': remaining_cash,
+            'price': 1,
             'value': remaining_cash,
             'itemname': '현금',
             'asset_class': 'Cash'
@@ -167,7 +168,7 @@ class Character:
 
         col_order = ['itemcode', 'quantity', 'cost_price', 'price', 'cost_value', 'value', 'itemname', 'asset_class', 'date', 'userid', 'username', 'group_by', 'original', 'wt']
         new_detail = new_detail.loc[:, col_order]
-        
+
         # detail 테이블에 기록
         self.db.insert_detail(new_detail)
 
