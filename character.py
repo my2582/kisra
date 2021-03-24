@@ -166,7 +166,7 @@ class Character:
         # 리밸런싱을 실행하기 위한 주문내역을 detail 테이블에 넣기 위하여 df 로 받음.
         new_detail = self.get_detail(new_units, prices, remaining_cash)
 
-        col_order = ['itemcode', 'quantity', 'cost_price', 'price', 'cost_value', 'value', 'itemname', 'asset_class', 'date', 'userid', 'username', 'group_by', 'original', 'wt']
+        col_order = ['itemcode', 'quantity', 'cost_price', 'price', 'cost_value', 'value', 'itemname', 'asset_class', 'date', 'userid', 'username', 'group_by', 'principal', 'wt']
         new_detail = new_detail.loc[:, col_order]
 
         # detail 테이블에 기록
