@@ -250,6 +250,7 @@ class Character:
 
         self.userid = self.db.newUser(
             answers, money=self.options[-3], current_date=self.current_date)
+        print('### userid is {} #####'.format(self.userid))
 
         # 추천 포트폴리오를 가져온다.
         self.advised_pf = AdvisedPortfolios.instance().data
