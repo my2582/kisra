@@ -182,8 +182,8 @@ class Character:
             first_advised_port = copy.deepcopy(df)
             first_advised_port = first_advised_port.loc[:, ['weights', 'itemname']].groupby(
                 'itemname').sum().reset_index()
-            by_assetclass = df.loc[:, ['wt', 'asset_class']].groupby(
-                'asset_class').sum().sort_values('wt', ascending=False).reset_index()
+            by_assetclass = df.loc[:, ['weights', 'asset_class']].groupby(
+                'asset_class').sum().sort_values('weights', ascending=False).reset_index()
 
             print('self.options is {}'.format(self.options))
             print('첫 추천포트폴리오(risk profile {}):'.format(self.risk_profile))
