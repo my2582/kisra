@@ -1,6 +1,5 @@
 import dash
 import dash_html_components as html
-import pandas as pd
 from character import Character
 from dash.dependencies import Input, Output, State
 import plotly.express as px
@@ -11,8 +10,7 @@ from user import User
 import numpy as np
 from datetime import timedelta, datetime
 import plotly.graph_objects as go
-from DataBase import databaseDF
-from src.models.load_data import AdvisedPortfolios, Singleton
+
 
 sheet = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 app = dash.Dash(__name__, external_stylesheets=sheet,
@@ -89,7 +87,7 @@ def show_content(users):
             output = html.Div([
                 html.Div(id='character-result')
             ], id='output-div')
-
+            fig = px.imshow('./data/processed/reports/figures/ef-2_2020-07-31.png')
             if character.empty_check():
 
                 answer = []
@@ -139,6 +137,7 @@ def show_content(users):
 
 
                 output.style = style['pie_chart_style']
+                output.children.append(dcc.Graph(id="fig-image", figure=fig))
                 return output
 
             warning = '비어있는 항목이 있습니다! 전부 체크해 주세요'
@@ -146,6 +145,7 @@ def show_content(users):
                 output.children = output.children[:-1]
             output.children[0].children = warning
             output.style = style['pie_chart_style']
+            output.children.append(dcc.Graph(id="fig-image", figure=fig))
             return output
 
     @app.callback(
