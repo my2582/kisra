@@ -166,8 +166,16 @@ class Character:
         # 리밸런싱을 실행하기 위한 주문내역을 detail 테이블에 넣기 위하여 df 로 받음.
         new_detail = self.get_detail(new_units, prices, remaining_cash)
 
+        new_general = new_detail.loc[:, ['wt', 'value', 'asset_class']].groupby(
+                'asset_class').sum().sort_values('wt', ascending=False).reset_index()
+        new_general['userid'] = new_detail.userid[0]
+        new_general['date'] = new_detail.date[0]
+
         # detail 테이블에 기록
         self.db.insert_detail(new_detail)
+
+        # general 테이블에 기록
+        self.db.insert_detail(new_general)
 
         return (new_units, prices, remaining_cash)
 
@@ -286,8 +294,6 @@ class Character:
         self.risk_profile = self.score//(len(self.options)-3)
 
         self.username = self.options[-1]
-        # 사용자명에서 숫자만 갖고온다. 그래서 A+숫자 형식의 userid를 만든다.
-        # self.userid = 'A' + ('0'+re.findall('\d+', self.username)[0])[-2:]
 
         first_advised_port, by_asset_class, new_units, prices, remaining_cash = self.simulate_trades(
             first_trade=True)

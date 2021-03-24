@@ -126,3 +126,12 @@ class databaseDF:
             temp = row[col_order].values.tolist()
             self.con.execute(insert_query_dtl, temp)
             self.conn.commit()
+    
+    def insert_general(self, new_general):
+        insert_query_gen = 'INSERT INTO general (date, userid, asset_class, value, wt) values (%s, %s, %s, %s, %s)'
+
+        for idx, row in new_general.iterrows():
+            temp = row[['date', 'userid', 'asset_class', 'value', 'wt']].values.tolist()
+            self.con.execute(insert_query_gen, temp)
+            self.conn.commit()
+
