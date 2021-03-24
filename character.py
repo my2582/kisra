@@ -209,7 +209,6 @@ class Character:
             balance = pd.DataFrame(balance, columns=['date', 'userid', 'name', 'asset_class', 'itemcode', 'itemname',
                                                  'quantity', 'cost_price', 'cost_value', 'price', 'value', 'wt', 'group_by', 'original'])
 
-            balance_date = balance[0][0]
             print('here- balance.columns is {}:'.format(balance.columns))
             print(balance)
 
@@ -228,13 +227,6 @@ class Character:
 
                 print('after pd.DataFrame, balance is')
                 print(balance)
-
-                # try:
-                #     balance_date = datetime.strptime(
-                #         balance_date, '%Y-%m-%d %H:%M:%S %p').strftime('%Y-%m-%d')
-                # except:
-                #     balance_date = datetime.strptime(
-                #         balance_date, '%m/%d/%Y %H:%M:%S %p').strftime('%Y-%m-%d')
 
                 # 매일 종가 업데이트
 
