@@ -79,3 +79,9 @@ class query:
         self.con.execute(query, [userid, userid])
         self.conn.commit()
         return self.con.fetchall()
+
+    def getUserBalance(self, userid):
+        query = "select distinct * from detail A where to_timestamp(A.date, 'mm/dd/yyyy HH:M1:SS AM') = (select max(to_timestamp(date, 'mm/dd/yyyy HH:M1:SS AM')) from detail) and userid=%s"
+        self.con.execute(query, [userid])
+        self.conn.commit()
+        return self.con.fetchall()

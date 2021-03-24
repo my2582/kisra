@@ -197,7 +197,6 @@ class Character:
 
             return first_advised_port, by_assetclass, new_units, prices, remaining_cash
         else:
-
             dates = self.advised_pf.loc[(self.advised_pf.risk_profile == self.risk_profile) & (
                 self.advised_pf.date > self.current_date), 'date'].unique()
             every5day = dates[::5]
@@ -207,9 +206,9 @@ class Character:
             
             # 최근 잔고 가져오기
             # 아직 어떤 타입으로 가져오는지 모름
-            balance = self.db.getDetail(userid=self.userid)
+            balance = self.db.getUserBalance(userid=self.userid)
             balance_date = balance[0][0]
-            print('balance_date {}-type(balance):'.format(balance_date, type(balance)))
+            print('balance_date {}-type(balance) is {}:'.format(balance_date, type(balance)))
             print(balance)
 
             # 잔고를 df 형식으로 바꿈
