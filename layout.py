@@ -182,6 +182,7 @@ analysis = [
 
         , id='user-information-analysis'),
 
+    html.Br(),
     dcc.RangeSlider(
         id='predict-slider',
         min=0,
