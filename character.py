@@ -384,13 +384,19 @@ class Character:
                 print('내일 날짜 {}'.format(next_date))
                 prices_dt = price_db.loc[price_db.date == next_date, [
                     'price', 'itemcode']].reset_index(drop=True)
+
+                balance = balance.set_index('itemcode')
+                prices_dt = prices_dt.set_index('itemcode')
+
+                next_balance = balance.merge(prices_dt.price, left_index=True, right_index=True, how='left', suffixes=('_old', '')).drop(['price_old'], axis=1)
+
                 # next_balance = next_balance.merge(prices_dt, left_on='itemcode', right_on='itemcode',
                 #                    how='left', suffixes=('_old', '')).drop('price_old', axis=1)
-                next_balance = next_balance.merge(prices_dt, left_on='itemcode', right_on='itemcode',
-                    how='left', suffixes=('_x', '_y'))
+                # next_balance = next_balance.merge(prices_dt, left_on='itemcode', right_on='itemcode',
+                #     how='left', suffixes=('_x', '_y'))
                 print('next_date: {}'.format(next_date))
                 print('다음 날 잔고-merge 이후')
-                print(next_balance.loc[:, ['date','userid','itemcode','price_x', 'price_y']])
+                print(next_balance.loc[:, ['date','userid','itemcode','price']])
                 # holding_itemcodes = balance.itemcode.to_list()
                 # holding_prices = prices_dt[prices_dt.itemcode.isin(
                 #     holding_itemcodes)]
