@@ -137,7 +137,7 @@ def show_content(users):
                     output.children.append(fig)
                     output.children.append(fig_bar)
 
-                print('-----------fig---------------')
+                print('------------fig---------------')
                 # fig_show = html.Img(class_='picture-show', src="./reports/figures/report-4_2021-02-26.png")
                 # href = html.A('Download readMe.pdf', download='./reports/figures/report-4_2021-02-26.png', href='/readMe.pdf')
                 # output.children.append(href)
