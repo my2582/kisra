@@ -139,7 +139,7 @@ def show_content(users):
 
 
                 output.style = style['pie_chart_style']
-                print('-----------fig----------------')
+                print('-----------fig---------------')
                 output.children.append(dcc.Graph(id="fig-image", figure=fig_rpt))
                 return output
 
