@@ -405,7 +405,6 @@ class Character:
                 next_date = datetime.strptime(next_date, '%Y-%m-%d')
                 next_date = str(next_date.month)+'/'+str(next_date.day) + \
                     '/'+str(next_date.year)+' 4:00:00 PM'
-                next_balance = copy.deepcopy(balance)
                 next_balance['date'] = next_date
                 next_balance.loc[next_balance.itemcode ==
                                  'C000001', 'price'] = 1
