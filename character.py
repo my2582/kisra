@@ -357,7 +357,7 @@ class Character:
                     print('---prices----')
                     print(prices)
 
-                    new_units, prices, remaining_cash = self.get_ordersheets(tag='Rebalanced')
+                    new_units, prices, remaining_cash = self.get_ordersheets(tag='Rebal')
 
                     continue
 
