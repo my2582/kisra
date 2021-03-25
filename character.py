@@ -339,7 +339,7 @@ class Character:
 
             price_db = PriceDB.instance().data
 
-            for dt in dates:
+            for idx, dt in enumerate(dates):
                 ## 리밸런싱 주기가 왔으면 ##
                 if dt in every20day:
                     ## 리밸런싱 후 다음 날짜로
@@ -373,7 +373,9 @@ class Character:
 
                 # 매일 종가 업데이트
 
-                prices_dt = price_db.loc[price_db.date == dt, [
+                if idx+1 > dates.shape[0]:
+                    break
+                prices_dt = price_db.loc[price_db.date == dt.iloc[idx+1,:], [
                     'price', 'itemcode']].reset_index(drop=True)
                 holding_itemcodes = balance.itemcode.to_list()
                 holding_prices = prices_dt[prices_dt.itemcode.isin(
