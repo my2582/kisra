@@ -137,8 +137,8 @@ def show_content(users):
 
                 print('-----------fig---------------')
                 # fig_show = html.Img(class_='picture-show', src="./reports/figures/report-4_2021-02-26.png")
-                href = html.A('Download readMe.pdf', download='./reports/figures/report-4_2021-02-26.png', href='/readMe.pdf')
-                output.children.append(href)
+                # href = html.A('Download readMe.pdf', download='./reports/figures/report-4_2021-02-26.png', href='/readMe.pdf')
+                # output.children.append(href)
                 output.style = style['pie_chart_style']
                 return output
 
