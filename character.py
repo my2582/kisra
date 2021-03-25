@@ -382,7 +382,7 @@ class Character:
                     holding_itemcodes)]
                 print('holding_prices:')
                 print(holding_prices)
-                next_date = datetime.strptime(dt, '%Y-%m-%d')
+                next_date = datetime.strptime(dates[idx+1], '%Y-%m-%d')
                 next_date = str(next_date.month)+'/'+str(next_date.day) + \
                     '/'+str(next_date.year)+' 4:00:00 PM'
                 next_balance = copy.deepcopy(balance)
