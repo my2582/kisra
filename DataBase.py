@@ -141,5 +141,5 @@ class databaseDF:
             self.conn.commit()
 
     def getMaxDate(self, userid):
-        return query.getUserBalance(userid)
+        return self.query.getUserBalance(userid)
 
