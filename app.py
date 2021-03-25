@@ -139,7 +139,9 @@ def show_content(users):
 
 
                 print('-----------fig---------------')
+                fig_show = html.Img(class_='picture-show', src="./reports/figures/report-4_2021-02-26.png")
                 # output.children.append(html.Div(dcc.Graph(id="fig-image", figure=fig_rpt)))
+                output.children.append(fig_show)
                 output.style = style['pie_chart_style']
                 return output
 
