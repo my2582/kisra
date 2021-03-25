@@ -350,9 +350,8 @@ class Character:
 
 
                     new_units, prices, remaining_cash = self.get_ordersheets(tag='Rebal')
-                    
+
                     print('리밸런싱 포트폴리오(risk profile {}):'.format(self.risk_profile))
-                    print(df)
                     print('---new_units---')
                     print(new_units)
                     print('---prices----')
@@ -379,19 +378,21 @@ class Character:
                 next_date = dates[idx+1]
 
                 print('다음 날 잔고-merge 이전')
-                print(next_balance)
+                print(next_balance.loc[:, ['date','userid','itemcode','price','wt','original']])
 
                 print('현재 날짜 {}'.format(self.current_date))
                 print('내일 날짜 {}'.format(next_date))
                 prices_dt = price_db.loc[price_db.date == next_date, [
                     'price', 'itemcode']].reset_index(drop=True)
+                # next_balance = next_balance.merge(prices_dt, left_on='itemcode', right_on='itemcode',
+                #                    how='left', suffixes=('_old', '')).drop('price_old', axis=1)
                 next_balance = next_balance.merge(prices_dt, left_on='itemcode', right_on='itemcode',
-                                   how='left', suffixes=('_old', '')).drop('price_old', axis=1)
+                    how='left', suffixes=('_old', '_new'))
                 print('next_date: {}'.format(next_date))
                 print('price_dt')
                 print(prices_dt)
                 print('다음 날 잔고-merge 이후')
-                print(next_balance)
+                print(next_balance.loc[:, ['date','userid','itemcode','price_old', 'price_new','wt','original']])
                 # holding_itemcodes = balance.itemcode.to_list()
                 # holding_prices = prices_dt[prices_dt.itemcode.isin(
                 #     holding_itemcodes)]
