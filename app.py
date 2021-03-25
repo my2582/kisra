@@ -89,7 +89,7 @@ def show_content(users):
             output = html.Div([
                 html.Div(id='character-result')
             ], id='output-div')
-            fig_rpt = go.Figure(go.Image(z=io.imread('./reports/figures/report-4_2021-02-26.png')))
+            fig_rpt = px.imshow(io.imread('./reports/figures/report-4_2021-02-26.png'))
             if character.empty_check():
 
                 answer = []
@@ -135,8 +135,6 @@ def show_content(users):
                     fig_bar.figure.layout.paper_bgcolor = style['pie_chart_style']['backgroundColor']
                     output.children.append(fig)
                     output.children.append(fig_bar)
-
-
 
                 print('-----------fig---------------')
                 # fig_show = html.Img(class_='picture-show', src="./reports/figures/report-4_2021-02-26.png")
