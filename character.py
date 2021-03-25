@@ -373,13 +373,18 @@ class Character:
 
                 # 매일 종가 업데이트
 
-                if idx+1 > dates.shape[0]:
+                if idx+1 >= dates.shape[0]:
                     break
+
+                print('현재 날짜 {}'.format(self.current_date))
+                print('내일 날짜 {}'.format(dates[idx+1]))
                 prices_dt = price_db.loc[price_db.date == dates[idx+1], [
                     'price', 'itemcode']].reset_index(drop=True)
                 holding_itemcodes = balance.itemcode.to_list()
                 holding_prices = prices_dt[prices_dt.itemcode.isin(
                     holding_itemcodes)]
+                print('holding_prices:')
+                print(holding_prices)
                 next_date = datetime.strptime(dt, '%Y-%m-%d')
                 next_date = str(next_date.month)+'/'+str(next_date.day) + \
                     '/'+str(next_date.year)+' 4:00:00 PM'
@@ -392,8 +397,10 @@ class Character:
 
                 # 종목별 평가액 업데이트
                 next_balance['value'] = next_balance['price']*next_balance['quantity']
+                print('next_balance.price')
+                print(next_balance.price)
 
-                print('next_balance.columns are {}'.format(next_balance.columns))
+                # print('next_balance.columns are {}'.format(next_balance.columns))
                 self.db.insert_detail(next_balance)
 
                 new_general = next_balance.loc[:, ['wt', 'value', 'asset_class']].groupby(

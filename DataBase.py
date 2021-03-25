@@ -120,11 +120,8 @@ class databaseDF:
         new_detail['value'] = new_detail['value'].values.astype(float)
         new_detail['wt'] = new_detail['wt'].values.astype(float)
 
-        print('new_detail.columns:')
-        print(new_detail.columns)
 
         col_order = ['itemcode', 'quantity', 'cost_price', 'price', 'cost_value', 'value', 'itemname', 'asset_class', 'date', 'userid', 'name', 'group_by', 'original', 'wt']
-        print('columns are reordered:')
         print(new_detail.loc[:, col_order])
 
         for idx, row in new_detail.iterrows():
