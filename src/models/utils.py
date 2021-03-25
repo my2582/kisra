@@ -82,7 +82,7 @@ def get_current_port(userid, latest_balance=None):
     return balance, latest_date
 
 
-def get_advised_port(risk_profile, df_advised_ports=None):
+def get_advised_port(risk_profile, df_advised_ports=None, current_date=None):
     r"""
     로보 포트폴리오 데이터(data)에서 risk_profile에 맞는 포트폴리오를
     추천 가능한 가장 최근일 기준으로 반환한다.
@@ -105,8 +105,14 @@ def get_advised_port(risk_profile, df_advised_ports=None):
     else:
         df = AdvisedPortfolios.instance().data
 
-    advised_pf = df.loc[(df.risk_profile == risk_profile) & (
-        df.date == df.groupby(by='risk_profile')['date'].max()[risk_profile])]
+    if current_date is None:
+        # 가장 최신의 추천 포트폴리오를 가져온다.
+        advised_pf = df.loc[(df.risk_profile == risk_profile) & (
+            df.date == df.groupby(by='risk_profile')['date'].max()[risk_profile])]
+    else:
+        # 정해진 날짜(current_date)의 추천 포트폴리오를 가져온다.
+        advised_pf = df.loc[(df.risk_profile == risk_profile) & (
+                    df.date == current_date), :]
     advised_pf = advised_pf.rename(columns={'weights': 'wt'})
 
     advised_pf = advised_pf.drop(['risk_profile'], axis=1)

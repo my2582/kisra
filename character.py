@@ -345,9 +345,12 @@ class Character:
                 ## 리밸런싱 주기가 왔으면 ##
                 if dt in every20day:
                     ## 리밸런싱 후 다음 날짜로
-                    df = self.advised_pf.loc[(self.advised_pf.date == self.current_date) & (
-                        self.advised_pf.risk_profile == self.risk_profile), :]
+                    # df = self.advised_pf.loc[(self.advised_pf.date == self.current_date) & (
+                    #     self.advised_pf.risk_profile == self.risk_profile), :]
 
+
+                    new_units, prices, remaining_cash = self.get_ordersheets(tag='Rebal')
+                    
                     print('리밸런싱 포트폴리오(risk profile {}):'.format(self.risk_profile))
                     print(df)
                     print('---new_units---')
@@ -355,7 +358,6 @@ class Character:
                     print('---prices----')
                     print(prices)
 
-                    new_units, prices, remaining_cash = self.get_ordersheets(tag='Rebal')
 
                     continue
 
@@ -376,12 +378,20 @@ class Character:
                 
                 next_date = dates[idx+1]
 
+                print('다음 날 잔고-merge 이전')
+                print(next_balance)
+
                 print('현재 날짜 {}'.format(self.current_date))
                 print('내일 날짜 {}'.format(next_date))
                 prices_dt = price_db.loc[price_db.date == next_date, [
                     'price', 'itemcode']].reset_index(drop=True)
                 next_balance = next_balance.merge(prices_dt, left_on='itemcode', right_on='itemcode',
                                    how='left', suffixes=('_old', '')).drop('price_old', axis=1)
+                print('next_date: {}'.format(next_date))
+                print('price_dt')
+                print(prices_dt)
+                print('다음 날 잔고-merge 이후')
+                print(next_balance)
                 # holding_itemcodes = balance.itemcode.to_list()
                 # holding_prices = prices_dt[prices_dt.itemcode.isin(
                 #     holding_itemcodes)]

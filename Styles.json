@@ -17,7 +17,7 @@
   },
 
 "pie_chart_style" : {
-  "backgroundColor": "#FF8300",
+  "backgroundColor": "#3b3b38",
   "textAlign": "center",
   "font-size": "2rem",
   "height":"800px"
