@@ -262,8 +262,9 @@ class Character:
         new_wt = (old_new.loc[(old_new.itemcode != 'CASH') & (
             old_new.itemcode != 'DEPOSIT'), 'wt_new']*100).tolist()
 
+        price_cur = self.price_db.loc[self.price_db.date == balance_date, ['itemcode', 'price']]
         for ticker in new_tickers:
-            p.add_asset(Asset(ticker=ticker, price=assets.loc[assets.itemcode==ticker, 'price_db']))
+            p.add_asset(Asset(ticker=ticker, price=price_cur.loc[price_cur.itemcode==ticker, 'price_db']))
 
         target_asset_alloc = dict(zip(new_tickers, new_wt))
 
