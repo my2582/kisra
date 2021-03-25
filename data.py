@@ -50,7 +50,7 @@ class Data:
 
         baseline = self.detail_data[self.detail_data[self.columns[2]] == name]
         standard_date = self.db.getDate(user_id, date)
-
+        print('standard_date : ', standard_date)
         answer = self.pre_data[(self.pre_data['date'] == standard_date)&(self.pre_data['userid'] == user_id)]
 
         return answer, baseline[baseline[self.columns[0]] == standard_date]
