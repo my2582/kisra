@@ -10,6 +10,7 @@ from user import User
 import numpy as np
 from datetime import timedelta, datetime
 import plotly.graph_objects as go
+from skimage import io
 
 
 sheet = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
@@ -87,7 +88,7 @@ def show_content(users):
             output = html.Div([
                 html.Div(id='character-result')
             ], id='output-div')
-            fig = px.imshow('./data/processed/reports/figures/ef-2_2020-07-31.png')
+            fig = px.imshow(io.imread('./reports/figures/report-4_2021-02-26.png'))
             if character.empty_check():
 
                 answer = []
@@ -145,7 +146,6 @@ def show_content(users):
                 output.children = output.children[:-1]
             output.children[0].children = warning
             output.style = style['pie_chart_style']
-            output.children.append(dcc.Graph(id="fig-image", figure=fig))
             return output
 
     @app.callback(
