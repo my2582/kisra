@@ -289,13 +289,15 @@ def show_content(users):
 
     @app.callback(
         [Output('output-pos', 'children'),
-         Output('analysis-datetime', 'value')],
+         Output('max-date', 'children')],
         Input('predict-slider', 'value'),
         Input('analysis-name', 'value')
     )
     def show_prediction(select, name):
         user.name = name
         date = user.getStartDate()
+        print('----------------date----------------')
+        print(date)
         user.date = date
         select = changePeriod(select)
         result = user.closeData(select)
