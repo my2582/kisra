@@ -89,7 +89,6 @@ def show_content(users):
             output = html.Div([
                 html.Div(id='character-result')
             ], id='output-div')
-            fig_rpt = px.imshow(io.imread('./reports/figures/report-4_2021-02-26.png'))
             if character.empty_check():
 
                 answer = []
@@ -138,7 +137,6 @@ def show_content(users):
 
                 print('-----------fig---------------')
                 # fig_show = html.Img(class_='picture-show', src="./reports/figures/report-4_2021-02-26.png")
-                output.children.append(html.Div(dcc.Graph(id="fig-image", figure=fig_rpt)))
                 output.style = style['pie_chart_style']
                 return output
 
@@ -274,17 +272,16 @@ def show_content(users):
         y_axis[0].sort()
         y_axis[1].sort()
 
-        fig_2 = dcc.Graph(id='line-chart')
-        fig_line = go.Figure()
-        fig_line.add_trace(go.Scatter(
-            x=x_axis, y=y_axis[0], mode='lines+markers', name='before'))
-        fig_line.add_trace(go.Scatter(
-            x=x_axis, y=y_axis[1], mode='lines+markers', name='after'))
-        fig_2.figure = fig_line
+        # fig_2 = dcc.Graph(id='line-chart')
+        # fig_line = go.Figure()
+        # fig_line.add_trace(go.Scatter(
+        #     x=x_axis, y=y_axis[0], mode='lines+markers', name='before'))
+        # fig_line.add_trace(go.Scatter(
+        #     x=x_axis, y=y_axis[1], mode='lines+markers', name='after'))
+        # fig_2.figure = fig_line
 
         return html.Div([fig,
-                         table_result,
-                         fig_2])
+                         table_result])
 
     @app.callback(
         [Output('output-pos', 'children'),
