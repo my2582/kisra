@@ -297,7 +297,7 @@ def show_content(users):
     def show_prediction(select, name):
         user.name = name
         date = user.getStartDate()
-        print('----------------date----------------')
+        print('-----------------date----------------')
         print(date)
         user.date = date
         select = changePeriod(select)
