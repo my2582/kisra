@@ -396,7 +396,7 @@ class Character:
                 #     how='left', suffixes=('_x', '_y'))
                 print('next_date: {}'.format(next_date))
                 print('다음 날 잔고-merge 이후')
-                print(next_balance.loc[:, ['date','userid','itemcode','price']])
+                print(next_balance])
                 # holding_itemcodes = balance.itemcode.to_list()
                 # holding_prices = prices_dt[prices_dt.itemcode.isin(
                 #     holding_itemcodes)]
