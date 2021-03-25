@@ -291,7 +291,7 @@ def show_content(users):
         [Output('output-pos', 'children'),
          Output('max-date', 'children')],
         Input('predict-slider', 'value'),
-        Input('analysis-name', 'value')
+        Input({'type': 'filter-dropdown'}, 'value')
     )
     def show_prediction(select, name):
         user.name = name
