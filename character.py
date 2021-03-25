@@ -7,6 +7,12 @@ import copy
 import re
 from src.models.portfolio import Portfolio
 from src.models.load_data import Singleton, Balance
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
+from matplotlib import cm
+import scipy.stats as st
+import riskfolio.RiskFunctions as rk
 
 
 class Character:
@@ -86,6 +92,110 @@ class Character:
         detail = detail.reset_index(drop=True)
 
         return detail
+
+    def plot_hist(self, returns, w, alpha=0.05, bins=50, height=6, width=10, ax=None):
+        r"""
+        Create a histogram of portfolio returns with the risk measures.
+
+        Parameters
+        ----------
+        returns : DataFrame
+            Assets returns.
+        w : DataFrame of shape (n_assets, 1)
+            Portfolio weights.
+        alpha : float, optional
+            Significante level of VaR, CVaR and EVaR. The default is 0.05.
+        bins : float, optional
+            Number of bins of the histogram. The default is 50.
+        height : float, optional
+            Height of the image in inches. The default is 6.
+        width : float, optional
+            Width of the image in inches. The default is 10.
+        ax : matplotlib axis, optional
+            If provided, plot on this axis. The default is None.
+
+        Raises
+        ------
+        ValueError
+            When the value cannot be calculated.
+
+        Returns
+        -------
+        ax : matplotlib axis.
+            Returns the Axes object with the plot for further tweaking.
+
+        Example
+        -------
+        ::
+
+            ax = plf.plot_hist(returns=Y, w=w1, alpha=0.05, bins=50, height=6,
+                            width=10, ax=None)
+
+        .. image:: images/Histogram.png
+
+        Source: https://riskfolio-lib.readthedocs.io/en/latest/_modules/PlotFunctions.html#plot_series
+
+        """
+
+        if not isinstance(returns, pd.DataFrame):
+            raise ValueError("returns must be a DataFrame")
+
+        if not isinstance(w, pd.DataFrame):
+            raise ValueError("w must be a DataFrame")
+
+        if w.shape[1] > 1 and w.shape[0] == 0:
+            w = w.T
+        elif w.shape[1] > 1 and w.shape[0] > 0:
+            raise ValueError("w must be a  DataFrame")
+
+        if returns.shape[1] != w.shape[0]:
+            a1 = str(returns.shape)
+            a2 = str(w.shape)
+            raise ValueError("shapes " + a1 + " and " + a2 + " not aligned")
+
+        if ax is None:
+            ax = plt.gca()
+            fig = plt.gcf()
+            fig.set_figwidth(width)
+            fig.set_figheight(height)
+
+        a = np.array(returns, ndmin=2) @ np.array(w, ndmin=2)
+        ax.set_title("Portfolio Returns Histogram")
+        n, bins1, patches = ax.hist(
+            a, bins, density=1, edgecolor="skyblue", color="skyblue", alpha=0.5
+        )
+        mu = np.mean(a)
+        sigma = np.std(a, axis=0, ddof=1).item()
+        risk = [
+            mu,
+            mu - sigma,
+            mu - rk.MAD(a),
+            -rk.VaR_Hist(a, alpha),
+            -rk.CVaR_Hist(a, alpha),
+            -rk.EVaR_Hist(a, alpha)[0],
+            -rk.WR(a),
+        ]
+        label = [
+            "Mean: " + "{0:.2%}".format(risk[0]),
+            "Mean - Std. Dev.("
+            + "{0:.2%}".format(-risk[1] + mu)
+            + "): "
+            + "{0:.2%}".format(risk[1]),
+            "Mean - MAD("
+            + "{0:.2%}".format(-risk[2] + mu)
+            + "): "
+            + "{0:.2%}".format(risk[2]),
+            "{0:.2%}".format((1 - alpha)) + " Confidence VaR: " + "{0:.2%}".format(risk[3]),
+            "{0:.2%}".format((1 - alpha))
+            + " Confidence CVaR: "
+            + "{0:.2%}".format(risk[4]),
+            "{0:.2%}".format((1 - alpha))
+            + " Confidence EVaR: "
+            + "{0:.2%}".format(risk[5]),
+            "Worst Realization: " + "{0:.2%}".format(risk[6]),
+        ]
+        
+        return label, fig
 
     def get_ordersheets(self, tag=None):
         balance = self.db.getUserBalance(userid=self.userid)
