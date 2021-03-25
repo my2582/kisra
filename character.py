@@ -264,7 +264,7 @@ class Character:
 
         price_cur = self.price_db.loc[self.price_db.date == balance_date, ['itemcode', 'price']]
         for ticker in new_tickers:
-            p.add_asset(Asset(ticker=ticker, price=price_cur.loc[price_cur.itemcode==ticker, 'price_db']))
+            p.add_asset(Asset(ticker=ticker, price=price_cur.loc[price_cur.itemcode==ticker, 'price']))
 
         target_asset_alloc = dict(zip(new_tickers, new_wt))
 
