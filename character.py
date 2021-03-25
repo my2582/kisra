@@ -389,7 +389,7 @@ class Character:
                     '/'+str(next_date.year)+' 4:00:00 PM'
                 next_balance = copy.deepcopy(balance)
                 next_balance['date'] = next_date
-                next_balance.merge(prices_dt.loc['itemcode', 'price'], left_on='itemcode', right_on='itemcode',
+                next_balance.merge(prices_dt, left_on='itemcode', right_on='itemcode',
                                    how='left', suffixes=('_old', '')).drop('price_old', axis=1)
                 next_balance.loc[next_balance.itemcode ==
                                  'C000001', 'price'] = 1
