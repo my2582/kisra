@@ -375,7 +375,7 @@ class Character:
 
                 if idx+1 > dates.shape[0]:
                     break
-                prices_dt = price_db.loc[price_db.date == dates.iloc[idx+1,:], [
+                prices_dt = price_db.loc[price_db.date == dates[idx+1], [
                     'price', 'itemcode']].reset_index(drop=True)
                 holding_itemcodes = balance.itemcode.to_list()
                 holding_prices = prices_dt[prices_dt.itemcode.isin(
