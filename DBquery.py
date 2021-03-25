@@ -85,6 +85,5 @@ class query:
                 "where to_timestamp(A.date, 'mm/dd/yyyy HH:M1:SS AM') = (select max(to_timestamp(B.date, 'mm/dd/yyyy HH:M1:SS AM')) from detail B group by B.userid " \
                 "having B.userid=%s) and A.userid=%s"
         self.con.execute(query, [userid, userid])
-        self.con.execute(query, [userid])
         self.conn.commit()
         return self.con.fetchall()
