@@ -8,7 +8,7 @@ class query:
         self.con = con
 
     def findDate(self, table, date, userid):
-        query = "select * from {0} where to_timestamp(%s,  'mm/dd/yyyy HH:M1:SS AM') > to_timestamp(date, 'mm/dd/yyyy HH:M1:SS AM') and userid=%s"
+        query = "select distinct * from {0} where to_timestamp(%s,  'mm/dd/yyyy HH:M1:SS AM') > to_timestamp(date, 'mm/dd/yyyy HH:M1:SS AM') and userid=%s"
         self.con.execute(query.format(table), [date, userid])
         self.conn.commit()
         return self.con.fetchall()
@@ -18,14 +18,14 @@ class query:
         standard, start, end = dates
         standard = standard[:6]+'2021'+standard[8:]
         print(standard)
-        query = "select * from {0} where to_timestamp(%s, 'mm/dd/yyyy HH:M1:SS AM') - interval %s <= to_timestamp(date, 'mm/dd/yyyy HH:M1:SS AM') " \
+        query = "select distinct * from {0} where to_timestamp(%s, 'mm/dd/yyyy HH:M1:SS AM') - interval %s <= to_timestamp(date, 'mm/dd/yyyy HH:M1:SS AM') " \
                 "and to_timestamp(date, 'mm/dd/yyyy HH:M1:SS AM') <= to_timestamp(%s, 'mm/dd/yyyy HH:M1:SS AM') - interval %s and userid=%s"
         self.con.execute(query.format(table),  [standard, str(start)+' days', standard, str(end) +' days', user])
         self.conn.commit()
         return DataFrame(np.array(self.con.fetchall()))
 
     def getUserSelection(self, user):
-        query = "select answer from userselection where userid=%s"
+        query = "select distinct answer from userselection where userid=%s"
         self.con.execute(query, [user])
         self.conn.commit()
         return self.con.fetchall()
@@ -75,7 +75,7 @@ class query:
         return userid
 
     def getUserDetail(self, userid):
-        query = "select * from detail A where A.userid=%s and A.date=(select max(date) from detail where userid=%s)"
+        query = "select distinct * from detail A where A.userid=%s and A.date=(select max(date) from detail where userid=%s)"
         self.con.execute(query, [userid, userid])
         self.conn.commit()
         return self.con.fetchall()
