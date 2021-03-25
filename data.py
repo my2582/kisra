@@ -20,8 +20,8 @@ class Data:
     def specificDate(self, name):
         print('------------------name------------------------------')
         print(name)
-        print(self.detail_data[(self.detail_data[self.columns[-1]] == 'Y') & (self.detail_data[self.columns[2]] == name)]['date'].values)
-        return self.detail_data[(self.detail_data[self.columns[-1]] == 'Y') & (self.detail_data[self.columns[2]] == name)]['date'].values[0]
+        date = self.db.getMaxDate(self.check_name(name))
+        return date[-1][0]
 
     def defaults(self):
         background = self.detail_data[self.detail_data[self.columns[-1]] == 'Y']

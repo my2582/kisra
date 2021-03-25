@@ -169,10 +169,16 @@ signup = [
 analysis = [
     html.Div([
         html.Label('이름'),
-        dcc.Input(value='x', type='text', id='analysis-name'),
+        dcc.Dropdown(
+            id={
+                'type': 'filter-dropdown'
+            },
+            options=[],
+
+            value='x'),
 
         html.Label('자문기준일'),
-        dcc.Input(value='y', type='text', id='analysis-datetime')]
+        html.Div(id='max-date')]
 
         , id='user-information-analysis'),
 

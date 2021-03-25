@@ -140,3 +140,6 @@ class databaseDF:
             self.con.execute(insert_query_gen, temp)
             self.conn.commit()
 
+    def getMaxDate(self, userid):
+        return query.getUserBalance(userid)
+

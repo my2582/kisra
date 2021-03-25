@@ -49,8 +49,9 @@ def show_content(users):
 
         if tab_input == 'analysis':
             app.layout.children[-1] = html.Div(layout.analysis)
-            layout.analysis[0].children[1].value, layout.analysis[0].children[3].value = \
-                user.name, user.date
+            userList = user.userList()
+            layout.analysis[0].children[1].options = userList
+            layout.analysis[0].children[3].value = user.date
             return html.Div(layout.analysis)
 
         if tab_input == 'info':
