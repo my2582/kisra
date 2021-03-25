@@ -244,7 +244,7 @@ tab = html.Div([
     dcc.Tabs(id=input_id, value='signup', children=[
         dcc.Tab(label='가입', value='signup', style=tab_style, selected_style=tab_selected_style),
         dcc.Tab(label='RA자문', value='analysis', style=tab_style, selected_style=tab_selected_style),
-        dcc.Tab(label='투자내역', value='info', style=tab_style, selected_style=tab_selected_style)
+        dcc.Tab(label='투자현황', value='info', style=tab_style, selected_style=tab_selected_style)
     ], style=tabs_styles),
     html.Div(id=output_id)
 ])

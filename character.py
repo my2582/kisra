@@ -295,11 +295,12 @@ class Character:
 
     def simulate_trades(self, first_trade=False, new_units=None, prices=None, remaining_cash=None):
         if first_trade:
-            df = self.advised_pf.loc[(self.advised_pf.date == self.current_date) & (
-                self.advised_pf.risk_profile == self.risk_profile), :]
             # 추천 포트폴리오DB에서 사용자가 입력한 날짜와 가장 가까운 날짜.
             self.current_date = self.advised_pf.loc[self.advised_pf.date <= self.current_date, [
                 'date']].max().date
+            df = self.advised_pf.loc[(self.advised_pf.date == self.current_date) & (
+                self.advised_pf.risk_profile == self.risk_profile), :]
+
             print('The date we are looking for is {}'.format(self.current_date))
 
             first_advised_port = copy.deepcopy(df)
@@ -335,7 +336,7 @@ class Character:
             # print(balance)
 
             next_balance = copy.deepcopy(balance)
-            all_the_nexts = pd.DataFrame(columns=next_balance.columns)
+            # all_the_nexts = pd.DataFrame(columns=next_balance.columns)
 
             price_db = PriceDB.instance().data
 
@@ -379,18 +380,18 @@ class Character:
                 print('내일 날짜 {}'.format(next_date))
                 prices_dt = price_db.loc[price_db.date == next_date, [
                     'price', 'itemcode']].reset_index(drop=True)
+                next_balance = next_balance.merge(prices_dt, left_on='itemcode', right_on='itemcode',
+                                   how='left', suffixes=('_old', '')).drop('price_old', axis=1)
                 # holding_itemcodes = balance.itemcode.to_list()
                 # holding_prices = prices_dt[prices_dt.itemcode.isin(
                 #     holding_itemcodes)]
                 # print('holding_prices:')
                 # print(holding_prices)
-                next_date = datetime.strptime(dates[idx+1], '%Y-%m-%d')
+                next_date = datetime.strptime(next_date, '%Y-%m-%d')
                 next_date = str(next_date.month)+'/'+str(next_date.day) + \
                     '/'+str(next_date.year)+' 4:00:00 PM'
                 next_balance = copy.deepcopy(balance)
                 next_balance['date'] = next_date
-                next_balance.merge(prices_dt, left_on='itemcode', right_on='itemcode',
-                                   how='left', suffixes=('_old', '')).drop('price_old', axis=1)
                 next_balance.loc[next_balance.itemcode ==
                                  'C000001', 'price'] = 1
 
