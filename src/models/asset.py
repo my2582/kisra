@@ -31,9 +31,9 @@ class Asset:
         self._ticker = ticker
         self._quantity = quantity
 
-        if price is None:
-            price_db = PriceDB.instance().data
-            price = price_db.loc[(price_db.date==price_db.loc[price_db.itemcode==ticker, 'date'].max()) & (price_db.itemcode==ticker), 'price'].values[0]
+        # if price is None:
+        price_db = PriceDB.instance().data
+        price = price_db.loc[(price_db.date==price_db.loc[price_db.itemcode==ticker, 'date'].max()) & (price_db.itemcode==ticker), 'price'].values[0]
         self._price = Price(price, 'KRW')
 
     @property
