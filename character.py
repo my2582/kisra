@@ -87,7 +87,7 @@ class Character:
 
         return detail
 
-    def get_ordersheets(self):
+    def get_ordersheets(self, tag=None):
         balance = self.db.getUserBalance(userid=self.userid)
 
         print('balance[0] is '.format(balance[0]))
@@ -166,10 +166,13 @@ class Character:
         # 리밸런싱을 실행하기 위한 주문내역을 detail 테이블에 넣기 위하여 df 로 받음.
         new_detail = self.get_detail(new_units, prices, remaining_cash)
 
+        new_detail['original'] = tag if tag is not None else 'N'
+
         new_general = new_detail.loc[:, ['wt', 'value', 'asset_class']].groupby(
                 'asset_class').sum().sort_values('wt', ascending=False).reset_index()
         new_general['userid'] = new_detail.userid[0]
         new_general['date'] = new_detail.date[0]
+
 
         # detail 테이블에 기록
         self.db.insert_detail(new_detail)
@@ -180,13 +183,13 @@ class Character:
         return (new_units, prices, remaining_cash)
 
     def simulate_trades(self, first_trade=False, new_units=None, prices=None, remaining_cash=None):
+        df = self.advised_pf.loc[(self.advised_pf.date == self.current_date) & (
+            self.advised_pf.risk_profile == self.risk_profile), :]
         if first_trade:
             # 추천 포트폴리오DB에서 사용자가 입력한 날짜와 가장 가까운 날짜.
             self.current_date = self.advised_pf.loc[self.advised_pf.date <= self.current_date, [
                 'date']].max().date
             print('The date we are looking for is {}'.format(self.current_date))
-            df = self.advised_pf.loc[(self.advised_pf.date == self.current_date) & (
-                self.advised_pf.risk_profile == self.risk_profile), :]
 
             first_advised_port = copy.deepcopy(df)
             first_advised_port = first_advised_port.loc[:, ['weights', 'itemname']].groupby(
@@ -208,7 +211,7 @@ class Character:
         else:
             dates = self.advised_pf.loc[(self.advised_pf.risk_profile == self.risk_profile) & (
                 self.advised_pf.date > self.current_date), 'date'].unique()
-            every20day = dates[::20]
+            every20day = dates[20::20]
 
   
             # 최근 잔고 가져오기
@@ -229,6 +232,7 @@ class Character:
                 ## 리밸런싱 주기가 왔으면 ##
                 if dt in every20day:
                     ## 리밸런싱 후 다음 날짜로
+                    self.current_date = dt  # 현재 날짜기준으로 리밸런싱
                     self.current_date = self.advised_pf.loc[self.advised_pf.date <= self.current_date, [
                         'date']].max().date
                     print('The date we are looking for is {}'.format(self.current_date))
@@ -242,7 +246,8 @@ class Character:
                     print('---prices----')
                     print(prices)
 
-                    new_units, prices, remaining_cash = self.get_ordersheets()
+                    new_units, prices, remaining_cash = self.get_ordersheets(tag='Rebalanced')
+
                     continue
 
                 # 최근 잔고가져오기
