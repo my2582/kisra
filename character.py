@@ -340,13 +340,10 @@ class Character:
             price_db = PriceDB.instance().data
 
             for idx, dt in enumerate(dates):
+                self.current_date = dt  # 현재 날짜기준으로 리밸런싱
                 ## 리밸런싱 주기가 왔으면 ##
                 if dt in every20day:
                     ## 리밸런싱 후 다음 날짜로
-                    self.current_date = dt  # 현재 날짜기준으로 리밸런싱
-                    self.current_date = self.advised_pf.loc[self.advised_pf.date <= self.current_date, [
-                        'date']].max().date
-                    print('The date we are looking for is {}'.format(self.current_date))
                     df = self.advised_pf.loc[(self.advised_pf.date == self.current_date) & (
                         self.advised_pf.risk_profile == self.risk_profile), :]
 
