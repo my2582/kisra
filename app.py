@@ -88,7 +88,7 @@ def show_content(users):
             output = html.Div([
                 html.Div(id='character-result')
             ], id='output-div')
-            fig = go.Figure(go.Image(z = io.imread('./reports/figures/report-4_2021-02-26.png')))
+            fig = go.Figure(go.Image(z=io.imread('./reports/figures/report-4_2021-02-26.png')))
             if character.empty_check():
 
                 answer = []
