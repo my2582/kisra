@@ -1,6 +1,5 @@
 import dash
 import dash_html_components as html
-import pandas as pd
 from character import Character
 from dash.dependencies import Input, Output, State
 import plotly.express as px
@@ -52,8 +51,9 @@ def show_content(users):
 
         if tab_input == 'analysis':
             app.layout.children[-1] = html.Div(layout.analysis)
-            layout.analysis[0].children[1].value, layout.analysis[0].children[3].value = \
-                user.name, user.date
+            userList = user.userList()
+            layout.analysis[0].children[1].options = userList
+            layout.analysis[0].children[3].value = user.date
             return html.Div(layout.analysis)
 
         if tab_input == 'info':
@@ -137,8 +137,10 @@ def show_content(users):
                     output.children.append(fig)
                     output.children.append(fig_bar)
 
-
-
+                print('-----------fig---------------')
+                # fig_show = html.Img(class_='picture-show', src="./reports/figures/report-4_2021-02-26.png")
+                # href = html.A('Download readMe.pdf', download='./reports/figures/report-4_2021-02-26.png', href='/readMe.pdf')
+                # output.children.append(href)
                 output.style = style['pie_chart_style']
                 output.children.append(dcc.Graph(id="fig-image", figure=fig_rpt))
                 return output
@@ -275,27 +277,28 @@ def show_content(users):
         y_axis[0].sort()
         y_axis[1].sort()
 
-        fig_2 = dcc.Graph(id='line-chart')
-        fig_line = go.Figure()
-        fig_line.add_trace(go.Scatter(
-            x=x_axis, y=y_axis[0], mode='lines+markers', name='before'))
-        fig_line.add_trace(go.Scatter(
-            x=x_axis, y=y_axis[1], mode='lines+markers', name='after'))
-        fig_2.figure = fig_line
+        # fig_2 = dcc.Graph(id='line-chart')
+        # fig_line = go.Figure()
+        # fig_line.add_trace(go.Scatter(
+        #     x=x_axis, y=y_axis[0], mode='lines+markers', name='before'))
+        # fig_line.add_trace(go.Scatter(
+        #     x=x_axis, y=y_axis[1], mode='lines+markers', name='after'))
+        # fig_2.figure = fig_line
 
         return html.Div([fig,
-                         table_result,
-                         fig_2])
+                         table_result])
 
     @app.callback(
         [Output('output-pos', 'children'),
-         Output('analysis-datetime', 'value')],
+         Output('max-date', 'children')],
         Input('predict-slider', 'value'),
-        Input('analysis-name', 'value')
+        Input({'type': 'filter-dropdown'}, 'value')
     )
     def show_prediction(select, name):
         user.name = name
         date = user.getStartDate()
+        print('----------------date----------------')
+        print(date)
         user.date = date
         select = changePeriod(select)
         result = user.closeData(select)
