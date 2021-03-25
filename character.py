@@ -7,6 +7,12 @@ import copy
 import re
 from src.models.portfolio import Portfolio
 from src.models.load_data import Singleton, Balance
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
+from matplotlib import cm
+import scipy.stats as st
+import riskfolio.RiskFunctions as rk
 
 
 class Character:
@@ -87,8 +93,112 @@ class Character:
 
         return detail
 
-    def get_ordersheets(self):
-        balance = self.db.getDetail(userid=self.userid)
+    def plot_hist(self, returns, w, alpha=0.05, bins=50, height=6, width=10, ax=None):
+        r"""
+        Create a histogram of portfolio returns with the risk measures.
+
+        Parameters
+        ----------
+        returns : DataFrame
+            Assets returns.
+        w : DataFrame of shape (n_assets, 1)
+            Portfolio weights.
+        alpha : float, optional
+            Significante level of VaR, CVaR and EVaR. The default is 0.05.
+        bins : float, optional
+            Number of bins of the histogram. The default is 50.
+        height : float, optional
+            Height of the image in inches. The default is 6.
+        width : float, optional
+            Width of the image in inches. The default is 10.
+        ax : matplotlib axis, optional
+            If provided, plot on this axis. The default is None.
+
+        Raises
+        ------
+        ValueError
+            When the value cannot be calculated.
+
+        Returns
+        -------
+        ax : matplotlib axis.
+            Returns the Axes object with the plot for further tweaking.
+
+        Example
+        -------
+        ::
+
+            ax = plf.plot_hist(returns=Y, w=w1, alpha=0.05, bins=50, height=6,
+                            width=10, ax=None)
+
+        .. image:: images/Histogram.png
+
+        Source: https://riskfolio-lib.readthedocs.io/en/latest/_modules/PlotFunctions.html#plot_series
+
+        """
+
+        if not isinstance(returns, pd.DataFrame):
+            raise ValueError("returns must be a DataFrame")
+
+        if not isinstance(w, pd.DataFrame):
+            raise ValueError("w must be a DataFrame")
+
+        if w.shape[1] > 1 and w.shape[0] == 0:
+            w = w.T
+        elif w.shape[1] > 1 and w.shape[0] > 0:
+            raise ValueError("w must be a  DataFrame")
+
+        if returns.shape[1] != w.shape[0]:
+            a1 = str(returns.shape)
+            a2 = str(w.shape)
+            raise ValueError("shapes " + a1 + " and " + a2 + " not aligned")
+
+        if ax is None:
+            ax = plt.gca()
+            fig = plt.gcf()
+            fig.set_figwidth(width)
+            fig.set_figheight(height)
+
+        a = np.array(returns, ndmin=2) @ np.array(w, ndmin=2)
+        ax.set_title("Portfolio Returns Histogram")
+        n, bins1, patches = ax.hist(
+            a, bins, density=1, edgecolor="skyblue", color="skyblue", alpha=0.5
+        )
+        mu = np.mean(a)
+        sigma = np.std(a, axis=0, ddof=1).item()
+        risk = [
+            mu,
+            mu - sigma,
+            mu - rk.MAD(a),
+            -rk.VaR_Hist(a, alpha),
+            -rk.CVaR_Hist(a, alpha),
+            -rk.EVaR_Hist(a, alpha)[0],
+            -rk.WR(a),
+        ]
+        label = [
+            "Mean: " + "{0:.2%}".format(risk[0]),
+            "Mean - Std. Dev.("
+            + "{0:.2%}".format(-risk[1] + mu)
+            + "): "
+            + "{0:.2%}".format(risk[1]),
+            "Mean - MAD("
+            + "{0:.2%}".format(-risk[2] + mu)
+            + "): "
+            + "{0:.2%}".format(risk[2]),
+            "{0:.2%}".format((1 - alpha)) + " Confidence VaR: " + "{0:.2%}".format(risk[3]),
+            "{0:.2%}".format((1 - alpha))
+            + " Confidence CVaR: "
+            + "{0:.2%}".format(risk[4]),
+            "{0:.2%}".format((1 - alpha))
+            + " Confidence EVaR: "
+            + "{0:.2%}".format(risk[5]),
+            "Worst Realization: " + "{0:.2%}".format(risk[6]),
+        ]
+        
+        return label, fig
+
+    def get_ordersheets(self, tag=None):
+        balance = self.db.getUserBalance(userid=self.userid)
 
         print('balance[0] is '.format(balance[0]))
         balance_date = balance[0][0]
@@ -166,10 +276,14 @@ class Character:
         # 리밸런싱을 실행하기 위한 주문내역을 detail 테이블에 넣기 위하여 df 로 받음.
         new_detail = self.get_detail(new_units, prices, remaining_cash)
 
+        print('********리밸런싱 태그 달림********{}'.format(tag))
+        new_detail['original'] = tag if tag is not None else 'N'
+
         new_general = new_detail.loc[:, ['wt', 'value', 'asset_class']].groupby(
                 'asset_class').sum().sort_values('wt', ascending=False).reset_index()
         new_general['userid'] = new_detail.userid[0]
         new_general['date'] = new_detail.date[0]
+
 
         # detail 테이블에 기록
         self.db.insert_detail(new_detail)
@@ -181,12 +295,12 @@ class Character:
 
     def simulate_trades(self, first_trade=False, new_units=None, prices=None, remaining_cash=None):
         if first_trade:
+            df = self.advised_pf.loc[(self.advised_pf.date == self.current_date) & (
+                self.advised_pf.risk_profile == self.risk_profile), :]
             # 추천 포트폴리오DB에서 사용자가 입력한 날짜와 가장 가까운 날짜.
             self.current_date = self.advised_pf.loc[self.advised_pf.date <= self.current_date, [
                 'date']].max().date
             print('The date we are looking for is {}'.format(self.current_date))
-            df = self.advised_pf.loc[(self.advised_pf.date == self.current_date) & (
-                self.advised_pf.risk_profile == self.risk_profile), :]
 
             first_advised_port = copy.deepcopy(df)
             first_advised_port = first_advised_port.loc[:, ['weights', 'itemname']].groupby(
@@ -194,21 +308,21 @@ class Character:
             by_assetclass = df.loc[:, ['weights', 'asset_class']].groupby(
                 'asset_class').sum().sort_values('weights', ascending=False).reset_index()
 
-            print('self.options is {}'.format(self.options))
-            print('첫 추천포트폴리오(risk profile {}):'.format(self.risk_profile))
-            print(first_advised_port)
+            # print('self.options is {}'.format(self.options))
+            # print('첫 추천포트폴리오(risk profile {}):'.format(self.risk_profile))
+            # print(first_advised_port)
 
             new_units, prices, remaining_cash = self.get_ordersheets()
-            print('---new_units---')
-            print(new_units)
-            print('---prices----')
-            print(prices)
+            # print('---new_units---')
+            # print(new_units)
+            # print('---prices----')
+            # print(prices)
 
             return first_advised_port, by_assetclass, new_units, prices, remaining_cash
         else:
             dates = self.advised_pf.loc[(self.advised_pf.risk_profile == self.risk_profile) & (
                 self.advised_pf.date > self.current_date), 'date'].unique()
-            every20day = dates[::20]
+            every20day = dates[20::20]
 
   
             # 최근 잔고 가져오기
@@ -217,18 +331,19 @@ class Character:
             balance = pd.DataFrame(balance, columns=['date', 'userid', 'name', 'asset_class', 'itemcode', 'itemname',
                                                  'quantity', 'cost_price', 'cost_value', 'price', 'value', 'wt', 'group_by', 'original'])
 
-            print('here- balance.columns is {}:'.format(balance.columns))
-            print(balance)
+            # print('here- balance.columns is {}:'.format(balance.columns))
+            # print(balance)
 
             next_balance = copy.deepcopy(balance)
             all_the_nexts = pd.DataFrame(columns=next_balance.columns)
 
             price_db = PriceDB.instance().data
 
-            for dt in dates:
+            for idx, dt in enumerate(dates):
                 ## 리밸런싱 주기가 왔으면 ##
                 if dt in every20day:
                     ## 리밸런싱 후 다음 날짜로
+                    self.current_date = dt  # 현재 날짜기준으로 리밸런싱
                     self.current_date = self.advised_pf.loc[self.advised_pf.date <= self.current_date, [
                         'date']].max().date
                     print('The date we are looking for is {}'.format(self.current_date))
@@ -242,7 +357,8 @@ class Character:
                     print('---prices----')
                     print(prices)
 
-                    new_units, prices, remaining_cash = self.get_ordersheets()
+                    new_units, prices, remaining_cash = self.get_ordersheets(tag='Rebal')
+
                     continue
 
                 # 최근 잔고가져오기
@@ -257,22 +373,34 @@ class Character:
 
                 # 매일 종가 업데이트
 
-                prices_dt = price_db.loc[price_db.date == dt, [
+                if idx+1 >= dates.shape[0]:
+                    break
+
+                print('현재 날짜 {}'.format(self.current_date))
+                print('내일 날짜 {}'.format(dates[idx+1]))
+                prices_dt = price_db.loc[price_db.date == dates[idx+1], [
                     'price', 'itemcode']].reset_index(drop=True)
                 holding_itemcodes = balance.itemcode.to_list()
                 holding_prices = prices_dt[prices_dt.itemcode.isin(
                     holding_itemcodes)]
+                print('holding_prices:')
+                print(holding_prices)
                 next_date = datetime.strptime(dt, '%Y-%m-%d')
                 next_date = str(next_date.month)+'/'+str(next_date.day) + \
                     '/'+str(next_date.year)+' 4:00:00 PM'
-                next_balance = copy.deepcopy(next_balance)
+                next_balance = copy.deepcopy(balance)
                 next_balance.merge(holding_prices, left_on='itemcode', right_on='itemcode',
                                    how='left', suffixes=('_old', '')).drop('price_old', axis=1)
                 next_balance.loc[next_balance.itemcode ==
                                  'C000001', 'price'] = 1
                 next_balance['date'] = next_date
 
-                print('next_balance.columns are {}'.format(next_balance.columns))
+                # 종목별 평가액 업데이트
+                next_balance['value'] = next_balance['price']*next_balance['quantity']
+                print('next_balance.price')
+                print(next_balance.price)
+
+                # print('next_balance.columns are {}'.format(next_balance.columns))
                 self.db.insert_detail(next_balance)
 
                 new_general = next_balance.loc[:, ['wt', 'value', 'asset_class']].groupby(
@@ -322,8 +450,7 @@ class Character:
 
         self.username = self.options[-1]
 
-        first_advised_port, by_asset_class, new_units, prices, remaining_cash = self.simulate_trades(
-            first_trade=True)
+        first_advised_port, by_asset_class, new_units, prices, remaining_cash = self.simulate_trades(first_trade=True)
         self.simulate_trades(first_trade=False, new_units=new_units,
                              prices=prices, remaining_cash=remaining_cash)
 

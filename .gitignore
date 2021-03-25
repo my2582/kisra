@@ -99,3 +99,6 @@ target/
 
 # PowerPoint temporary
 ~$*.ppt*
+
+# big files
+bigfiles/

@@ -18,7 +18,7 @@ class databaseDF:
         self.conn.commit()
         self.con.execute("CREATE TABLE IF NOT EXISTS detail(date varchar(255), userid varchar(255), name varchar(255), asset_class varchar(255), itemcode varchar(255), "
                                   "itemname varchar(255), quantity float(24), cost_price float(24), cost_value float(24), price float(24), value float(24), "
-                                  "wt float(24), group_by varchar(255), original varchar(5))")
+                                  "wt float(24), group_by varchar(255), original varchar(15))")
         self.conn.commit()
         self.con.execute("CREATE TABLE IF NOT EXISTS userselection(userid varchar(255), set_no float(24), q_no float(24), answer float(24), risk_pref_value float(24))")
         self.conn.commit()
@@ -95,12 +95,12 @@ class databaseDF:
         userid = self.query.newUser(answer, money, current_date)
         return userid
 
-    def getDetail(self, userid):
-        record = self.query.getUserDetail(userid=userid)
-        print('-------------detail------------------')
-        print(userid)
-        print(record)
-        return record
+    # def getDetail(self, userid):
+    #     record = self.query.getUserDetail(userid=userid)
+    #     print('-------------detail------------------')
+    #     print(userid)
+    #     print(record)
+    #     return record
 
     def getUserBalance(self, userid):
         record = self.query.getUserBalance(userid=userid)
@@ -120,11 +120,8 @@ class databaseDF:
         new_detail['value'] = new_detail['value'].values.astype(float)
         new_detail['wt'] = new_detail['wt'].values.astype(float)
 
-        print('new_detail.columns:')
-        print(new_detail.columns)
 
         col_order = ['itemcode', 'quantity', 'cost_price', 'price', 'cost_value', 'value', 'itemname', 'asset_class', 'date', 'userid', 'name', 'group_by', 'original', 'wt']
-        print('columns are reordered:')
         print(new_detail.loc[:, col_order])
 
         for idx, row in new_detail.iterrows():
