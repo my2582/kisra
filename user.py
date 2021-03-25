@@ -13,7 +13,7 @@ class User:
         general, detail = self.data.returnPage3Data(self.name, date)
         print('---------------------general-----------------------')
         print(general)
-        print('--------------------detail----------------------------')
+        print('--------------------detail-----------------------------')
         print(detail)
         return self.fullCond(general), detail
 
