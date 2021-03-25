@@ -13,6 +13,8 @@ from datetime import timedelta, datetime
 import plotly.graph_objects as go
 from DataBase import databaseDF
 from src.models.load_data import AdvisedPortfolios, Singleton
+from skimage import io
+
 
 sheet = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 app = dash.Dash(__name__, external_stylesheets=sheet,
