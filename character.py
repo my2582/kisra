@@ -372,25 +372,27 @@ class Character:
 
                 if idx+1 >= dates.shape[0]:
                     break
+                
+                next_date = dates[idx+1]
 
                 print('현재 날짜 {}'.format(self.current_date))
-                print('내일 날짜 {}'.format(dates[idx+1]))
-                prices_dt = price_db.loc[price_db.date == dates[idx+1], [
+                print('내일 날짜 {}'.format(next_date))
+                prices_dt = price_db.loc[price_db.date == next_date, [
                     'price', 'itemcode']].reset_index(drop=True)
-                holding_itemcodes = balance.itemcode.to_list()
-                holding_prices = prices_dt[prices_dt.itemcode.isin(
-                    holding_itemcodes)]
-                print('holding_prices:')
-                print(holding_prices)
+                # holding_itemcodes = balance.itemcode.to_list()
+                # holding_prices = prices_dt[prices_dt.itemcode.isin(
+                #     holding_itemcodes)]
+                # print('holding_prices:')
+                # print(holding_prices)
                 next_date = datetime.strptime(dates[idx+1], '%Y-%m-%d')
                 next_date = str(next_date.month)+'/'+str(next_date.day) + \
                     '/'+str(next_date.year)+' 4:00:00 PM'
                 next_balance = copy.deepcopy(balance)
-                next_balance.merge(holding_prices, left_on='itemcode', right_on='itemcode',
+                next_balance['date'] = next_date
+                next_balance.merge(prices_dt.loc['itemcode', 'price'], left_on='itemcode', right_on='itemcode',
                                    how='left', suffixes=('_old', '')).drop('price_old', axis=1)
                 next_balance.loc[next_balance.itemcode ==
                                  'C000001', 'price'] = 1
-                next_balance['date'] = next_date
 
                 # 종목별 평가액 업데이트
                 next_balance['value'] = next_balance['price']*next_balance['quantity']
