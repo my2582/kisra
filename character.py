@@ -13,6 +13,7 @@ import matplotlib.dates as mdates
 from matplotlib import cm
 import scipy.stats as st
 import riskfolio.RiskFunctions as rk
+from src.models.asset import Asset
 
 
 class Character:
@@ -204,7 +205,8 @@ class Character:
         balance_date = balance[0][0]
 
         self.price_db = PriceDB.instance().data
-        self.price_db.loc[self.price_db.date == balance_date]
+        # self.price_db.loc[self.price_db.date == balance_date]
+        # self.price_db.loc[self.price_db.date == self.current_date]
 
         try:
             balance_date = datetime.strptime(
@@ -259,6 +261,9 @@ class Character:
         # 단위가 %이므로 100을 곱한다.
         new_wt = (old_new.loc[(old_new.itemcode != 'CASH') & (
             old_new.itemcode != 'DEPOSIT'), 'wt_new']*100).tolist()
+
+        for ticker in new_tickers:
+            p.add_asset(Asset(ticker=ticker, price=assets.loc[assets.itemcode==ticker, 'price_db']))
 
         target_asset_alloc = dict(zip(new_tickers, new_wt))
 
@@ -341,7 +346,7 @@ class Character:
             price_db = PriceDB.instance().data
 
             for idx, dt in enumerate(dates):
-                self.current_date = dt  # 현재 날짜기준으로 리밸런싱
+                # self.current_date = dt  # 현재 날짜기준으로 리밸런싱
                 ## 리밸런싱 주기가 왔으면 ##
                 if dt in every20day:
                     ## 리밸런싱 후 다음 날짜로
@@ -375,7 +380,8 @@ class Character:
                 if idx+1 >= dates.shape[0]:
                     break
                 
-                next_date = dates[idx+1]
+                # next_date = dates[idx+1]
+                next_date = dt
 
                 print('다음 날 잔고-merge 이전')
                 print(next_balance.loc[:, ['date','userid','itemcode','price','wt','original']])
@@ -389,6 +395,9 @@ class Character:
                 prices_dt = prices_dt.set_index('itemcode')
 
                 next_balance = balance.merge(prices_dt.price, left_index=True, right_index=True, how='left', suffixes=('_old', '')).drop(['price_old'], axis=1)
+                
+                # itemcode 컬럼 다시 가져오기
+                next_balance = next_balance.reset_index()
 
                 # next_balance = next_balance.merge(prices_dt, left_on='itemcode', right_on='itemcode',
                 #                    how='left', suffixes=('_old', '')).drop('price_old', axis=1)
@@ -406,8 +415,7 @@ class Character:
                 next_date = str(next_date.month)+'/'+str(next_date.day) + \
                     '/'+str(next_date.year)+' 4:00:00 PM'
                 next_balance['date'] = next_date
-                next_balance.loc[next_balance.itemcode ==
-                                 'C000001', 'price'] = 1
+                next_balance.loc[next_balance.itemcode =='C000001', 'price'] = 1
 
                 # 종목별 평가액 업데이트
                 next_balance['value'] = next_balance['price']*next_balance['quantity']
