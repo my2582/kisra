@@ -89,7 +89,7 @@ def show_content(users):
             output = html.Div([
                 html.Div(id='character-result')
             ], id='output-div')
-            fig_rpt = go.Figure(go.Image(z=io.imread('./reports/figures/report-4_2021-02-26.png')))
+            # fig_rpt = go.Figure(go.Image(z=io.imread('./reports/figures/report-4_2021-02-26.png')))
             if character.empty_check():
 
                 answer = []
@@ -138,9 +138,9 @@ def show_content(users):
 
 
 
-                output.style = style['pie_chart_style']
                 print('-----------fig---------------')
-                output.children.append(dcc.Graph(id="fig-image", figure=fig_rpt))
+                # output.children.append(html.Div(dcc.Graph(id="fig-image", figure=fig_rpt)))
+                output.style = style['pie_chart_style']
                 return output
 
             warning = '비어있는 항목이 있습니다! 전부 체크해 주세요'
