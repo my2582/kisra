@@ -166,6 +166,7 @@ class Character:
         # 리밸런싱을 실행하기 위한 주문내역을 detail 테이블에 넣기 위하여 df 로 받음.
         new_detail = self.get_detail(new_units, prices, remaining_cash)
 
+        print('********리밸런싱 태그 달림********{}'.format(tag))
         new_detail['original'] = tag if tag is not None else 'N'
 
         new_general = new_detail.loc[:, ['wt', 'value', 'asset_class']].groupby(
@@ -183,9 +184,9 @@ class Character:
         return (new_units, prices, remaining_cash)
 
     def simulate_trades(self, first_trade=False, new_units=None, prices=None, remaining_cash=None):
-        df = self.advised_pf.loc[(self.advised_pf.date == self.current_date) & (
-            self.advised_pf.risk_profile == self.risk_profile), :]
         if first_trade:
+            df = self.advised_pf.loc[(self.advised_pf.date == self.current_date) & (
+                self.advised_pf.risk_profile == self.risk_profile), :]
             # 추천 포트폴리오DB에서 사용자가 입력한 날짜와 가장 가까운 날짜.
             self.current_date = self.advised_pf.loc[self.advised_pf.date <= self.current_date, [
                 'date']].max().date
@@ -197,15 +198,15 @@ class Character:
             by_assetclass = df.loc[:, ['weights', 'asset_class']].groupby(
                 'asset_class').sum().sort_values('weights', ascending=False).reset_index()
 
-            print('self.options is {}'.format(self.options))
-            print('첫 추천포트폴리오(risk profile {}):'.format(self.risk_profile))
-            print(first_advised_port)
+            # print('self.options is {}'.format(self.options))
+            # print('첫 추천포트폴리오(risk profile {}):'.format(self.risk_profile))
+            # print(first_advised_port)
 
             new_units, prices, remaining_cash = self.get_ordersheets()
-            print('---new_units---')
-            print(new_units)
-            print('---prices----')
-            print(prices)
+            # print('---new_units---')
+            # print(new_units)
+            # print('---prices----')
+            # print(prices)
 
             return first_advised_port, by_assetclass, new_units, prices, remaining_cash
         else:
@@ -220,8 +221,8 @@ class Character:
             balance = pd.DataFrame(balance, columns=['date', 'userid', 'name', 'asset_class', 'itemcode', 'itemname',
                                                  'quantity', 'cost_price', 'cost_value', 'price', 'value', 'wt', 'group_by', 'original'])
 
-            print('here- balance.columns is {}:'.format(balance.columns))
-            print(balance)
+            # print('here- balance.columns is {}:'.format(balance.columns))
+            # print(balance)
 
             next_balance = copy.deepcopy(balance)
             all_the_nexts = pd.DataFrame(columns=next_balance.columns)
@@ -277,6 +278,9 @@ class Character:
                                  'C000001', 'price'] = 1
                 next_balance['date'] = next_date
 
+                # 종목별 평가액 업데이트
+                next_balance['value'] = next_balance['price']*next_balance['quantity']
+
                 print('next_balance.columns are {}'.format(next_balance.columns))
                 self.db.insert_detail(next_balance)
 
@@ -327,8 +331,7 @@ class Character:
 
         self.username = self.options[-1]
 
-        first_advised_port, by_asset_class, new_units, prices, remaining_cash = self.simulate_trades(
-            first_trade=True)
+        first_advised_port, by_asset_class, new_units, prices, remaining_cash = self.simulate_trades(first_trade=True)
         self.simulate_trades(first_trade=False, new_units=new_units,
                              prices=prices, remaining_cash=remaining_cash)
 

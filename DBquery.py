@@ -83,7 +83,7 @@ class query:
     def getUserBalance(self, userid):
         query = "select distinct * from detail A " \
                 "where to_timestamp(A.date, 'mm/dd/yyyy HH:M1:SS AM') = (select max(to_timestamp(B.date, 'mm/dd/yyyy HH:M1:SS AM')) from detail B group by B.userid " \
-                "having B.userid=%s) and A.userid=%s"
+                "having B.userid=%s) and A.userid=%s and A.wt > 0.0"
         self.con.execute(query, [userid, userid])
         self.conn.commit()
         return self.con.fetchall()
