@@ -93,6 +93,8 @@ def show_content(users):
             ], id='output-div')
             if character.empty_check():
                 fig_rpt = go.Figure(go.Image(z=io.imread('./reports/figures/report-4_2021-02-26.png')))
+                fig_rpt2 = go.Figure(go.Image(z=io.imread('./reports/figures/ef_area-4_2021-02-26.png')))
+                fig_rpt3 = go.Figure(go.Image(z=io.imread('./reports/figures/ef-4_2021-02-26.png')))
                 answer = []
                 for_selected = layout.signup[3]
                 for id in tags_id:
@@ -143,6 +145,8 @@ def show_content(users):
                 # output.children.append(href)
                 output.style = style['pie_chart_style']
                 output.children.append(dcc.Graph(id="fig-image", figure=fig_rpt))
+                output.children.append(dcc.Graph(id="fig2-image", figure=fig_rpt2))
+                output.children.append(dcc.Graph(id="fig3-image", figure=fig_rpt3))
                 return output
 
             warning = '비어있는 항목이 있습니다! 전부 체크해 주세요'
