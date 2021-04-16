@@ -92,9 +92,9 @@ def show_content(users):
                 html.Div(id='character-result')
             ], id='output-div')
             if character.empty_check():
-                fig_rpt = go.Figure(go.Image(z=io.imread('./reports/figures/report-4_2021-02-26.png')))
-                fig_rpt2 = go.Figure(go.Image(z=io.imread('./reports/figures/ef_area-4_2021-02-26.png')))
-                fig_rpt3 = go.Figure(go.Image(z=io.imread('./reports/figures/ef-4_2021-02-26.png')))
+                fig_rpt = go.Figure(go.Image(dx=400, dy=1200, z=io.imread('./reports/figures/report-4_2021-02-26.png')))
+                fig_rpt2 = go.Figure(go.Image(dx=600, dy=1200, z=io.imread('./reports/figures/ef_area-4_2021-02-26.png')))
+                fig_rpt3 = go.Figure(go.Image(dx=400, dy=400, z=io.imread('./reports/figures/ef-4_2021-02-26.png')))
                 answer = []
                 for_selected = layout.signup[3]
                 for id in tags_id:
