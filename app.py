@@ -92,9 +92,9 @@ def show_content(users):
                 html.Div(id='character-result')
             ], id='output-div')
             if character.empty_check():
-                fig_rpt = go.Figure(go.Image(z=io.imread('./reports/figures/report-2_2021-02-26.png')))
-                fig_rpt2 = go.Figure(go.Image(z=io.imread('./reports/figures/ef_area-2_2021-02-26.png')))
-                fig_rpt3 = go.Figure(go.Image(z=io.imread('./reports/figures/ef-2_2021-02-26.png')))
+                fig_rpt = go.Figure(go.Image(z=io.imread('./reports/figures/report-3_2021-02-26.png')))
+                fig_rpt2 = go.Figure(go.Image(z=io.imread('./reports/figures/ef_area-3_2021-02-26.png')))
+                fig_rpt3 = go.Figure(go.Image(z=io.imread('./reports/figures/ef-3_2021-02-26.png')))
                 answer = []
                 for_selected = layout.signup[3]
                 for id in tags_id:
@@ -144,12 +144,12 @@ def show_content(users):
                 # href = html.A('Download readMe.pdf', download='./reports/figures/report-4_2021-02-26.png', href='/readMe.pdf')
                 # output.children.append(href)
                 output.style = style['pie_chart_style']
-                fig_rpt.layout.width = 400
-                fig_rpt2.layout.width = 400
-                fig_rpt3.layout.width = 400
-                output.children.append(dcc.Graph(id="fig-image", figure=fig_rpt))
-                output.children.append(dcc.Graph(id="fig2-image", figure=fig_rpt2))
-                output.children.append(dcc.Graph(id="fig3-image", figure=fig_rpt3))
+                config = {"toImageButtonOptions": {"width": 400, "height": 1200}}
+                config2 = {"toImageButtonOptions": {"width": 600, "height": 400}}
+                config3 = {"toImageButtonOptions": {"width": 400, "height": 400}}
+                output.children.append(dcc.Graph(id="fig-image", figure=fig_rpt, config=config))
+                output.children.append(dcc.Graph(id="fig2-image", figure=fig_rpt2, config=config2))
+                output.children.append(dcc.Graph(id="fig3-image", figure=fig_rpt3, config=config3))
                 return output
 
             warning = '비어있는 항목이 있습니다! 전부 체크해 주세요'
