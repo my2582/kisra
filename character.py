@@ -299,31 +299,51 @@ class Character:
 
         return (new_units, prices, remaining_cash)
 
+    def calculate_ordersheet(self, port, trading_amt):
+        return None
+
     def simulate_trades(self, first_trade=False, new_units=None, prices=None, remaining_cash=None):
         if first_trade:
             # 추천 포트폴리오DB에서 사용자가 입력한 날짜와 가장 가까운 날짜.
+
             self.current_date = self.advised_pf.loc[self.advised_pf.date <= self.current_date, [
                 'date']].max().date
-            df = self.advised_pf.loc[(self.advised_pf.date == self.current_date) & (
-                self.advised_pf.risk_profile == self.risk_profile), :]
 
-            print('The date we are looking for is {}'.format(self.current_date))
+            # new_port: self.current_date 기준 추천 포트폴리오
+            new_port = self.advised_pf.loc[(self.advised_pf.date==self.current_date) & (self.advised_pf.risk_profile==self.risk_profile), :]
 
-            first_advised_port = copy.deepcopy(df)
-            first_advised_port = first_advised_port.loc[:, ['weights', 'itemname']].groupby(
-                'itemname').sum().reset_index()
-            by_assetclass = df.loc[:, ['weights', 'asset_class']].groupby(
-                'asset_class').sum().sort_values('weights', ascending=False).reset_index()
+            # 최근 잔고 가져오기
+            # 아직 어떤 타입으로 가져오는지 모름
+            balance = self.db.getUserBalance(userid=self.userid)       
+            balance = pd.DataFrame(balance, columns=['date', 'userid', 'name', 'asset_class', 'itemcode', 'itemname',
+                                                 'quantity', 'cost_price', 'cost_value', 'price', 'value', 'wt', 'group_by', 'original'])
 
-            # print('self.options is {}'.format(self.options))
-            # print('첫 추천포트폴리오(risk profile {}):'.format(self.risk_profile))
-            # print(first_advised_port)
+            # 비중 정보만 있는 port를 trading_amt 금액만큼 산다고 할 때, 종목별 수량과 잔액 구하기
+            new_units, remaining_cash = self.calculate_ordersheet(port = new_port, trading_amt = balance.value.sum())
 
-            new_units, prices, remaining_cash = self.get_ordersheets()
-            # print('---new_units---')
-            # print(new_units)
-            # print('---prices----')
-            # print(prices)
+            # 매매하고 detail 테이블에 넣기 위한 매매결과를 dataframe 리턴받음
+            detail = self.get_detail(new_units, prices, remaining_cash)
+
+            # df = self.advised_pf.loc[(self.advised_pf.date == self.current_date) & (
+            #     self.advised_pf.risk_profile == self.risk_profile), :]
+
+            # print('The date we are looking for is {}'.format(self.current_date))
+
+            # first_advised_port = copy.deepcopy(df)
+            # first_advised_port = first_advised_port.loc[:, ['weights', 'itemname']].groupby(
+            #     'itemname').sum().reset_index()
+            # by_assetclass = df.loc[:, ['weights', 'asset_class']].groupby(
+            #     'asset_class').sum().sort_values('weights', ascending=False).reset_index()
+
+            # # print('self.options is {}'.format(self.options))
+            # # print('첫 추천포트폴리오(risk profile {}):'.format(self.risk_profile))
+            # # print(first_advised_port)
+
+            # new_units, prices, remaining_cash = self.get_ordersheets()
+            # # print('---new_units---')
+            # # print(new_units)
+            # # print('---prices----')
+            # # print(prices)
 
             return first_advised_port, by_assetclass, new_units, prices, remaining_cash
         else:
