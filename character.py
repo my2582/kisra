@@ -331,116 +331,144 @@ class Character:
                 self.advised_pf.date > self.current_date), 'date'].unique()
             every20day = dates[20::20]
 
-  
-            # 최근 잔고 가져오기
-            # 아직 어떤 타입으로 가져오는지 모름
-            balance = self.db.getUserBalance(userid=self.userid)       
-            balance = pd.DataFrame(balance, columns=['date', 'userid', 'name', 'asset_class', 'itemcode', 'itemname',
-                                                 'quantity', 'cost_price', 'cost_value', 'price', 'value', 'wt', 'group_by', 'original'])
-
-            # print('here- balance.columns is {}:'.format(balance.columns))
-            # print(balance)
-
-            next_balance = copy.deepcopy(balance)
-            # all_the_nexts = pd.DataFrame(columns=next_balance.columns)
-
             price_db = PriceDB.instance().data
 
-            for idx, dt in enumerate(dates):
-                # self.current_date = dt  # 현재 날짜기준으로 리밸런싱
-                ## 리밸런싱 주기가 왔으면 ##
-                if dt in every20day:
-                    ## 리밸런싱 후 다음 날짜로
-                    # df = self.advised_pf.loc[(self.advised_pf.date == self.current_date) & (
-                    #     self.advised_pf.risk_profile == self.risk_profile), :]
+            # 최근 잔고 가져오기
+            # 아직 어떤 타입으로 가져오는지 모름
+            detail = self.db.getUserBalance(userid=self.userid)       
+            detail = pd.DataFrame(detail, columns=['date', 'userid', 'name', 'asset_class', 'itemcode', 'itemname',
+                                                 'quantity', 'cost_price', 'cost_value', 'price', 'value', 'wt', 'group_by', 'original'])
 
+            next_detail = copy.deepcopy(detail)   # 현재 잔고를 일단 다음 단계 잔고로 복사해 두고
+            all_the_nexts = pd.DataFrame(columns=next_detail.columns)
+            for dt in dates:
+                prices_dt = price_db.loc[price_db.date==dt, ['price', 'itemcode']].reset_index(drop=True)
+                holding_itemcodes = detail.itemcode.to_list()
+                holding_prices = prices_dt[prices_dt.itemcode.isin(holding_itemcodes)]
+                next_date = datetime.strptime(dt, '%Y-%m-%d')
+                next_date = str(next_date.month)+'/'+str(next_date.day)+'/'+str(next_date.year)+' 09:00:00 AM'
+                next_detail = copy.deepcopy(next_detail)
+                next_detail.merge(holding_prices, left_on='itemcode', right_on='itemcode', how='left', suffixes=('_old', '')).drop('price_old', axis=1)
+                next_detail.loc[next_detail.itemcode=='C000001', 'price'] = 1
+                next_detail['date'] = next_date
+                all_the_nexts = pd.concat((all_the_nexts, next_detail))
 
-                    new_units, prices, remaining_cash = self.get_ordersheets(tag='Rebal')
-
-                    print('리밸런싱 포트폴리오(risk profile {}):'.format(self.risk_profile))
-                    print('---new_units---')
-                    print(new_units)
-                    print('---prices----')
-                    print(prices)
-
-
-                    continue
-
-                # 최근 잔고가져오기
-                # 아직 어떤 타입으로 가져오는지 모름
-                balance = self.db.getUserBalance(userid=self.userid)
-                # df로 타입을 바꿈
-                balance = pd.DataFrame(balance, columns=['date', 'userid', 'name', 'asset_class', 'itemcode', 'itemname',
-                                                    'quantity', 'cost_price', 'cost_value', 'price', 'value', 'wt', 'group_by', 'original'])
-
-                print('after pd.DataFrame, balance is')
-                print(balance)
-
-                # 매일 종가 업데이트
-
-                if idx+1 >= dates.shape[0]:
-                    break
-                
-                # next_date = dates[idx+1]
-                next_date = dt
-
-                print('다음 날 잔고-merge 이전')
-                print(next_balance.loc[:, ['date','userid','itemcode','price','wt','original']])
-
-                print('현재 날짜 {}'.format(self.current_date))
-                print('내일 날짜 {}'.format(next_date))
-                prices_dt = price_db.loc[price_db.date == next_date, [
-                    'price', 'itemcode']].reset_index(drop=True)
-
-                balance = balance.set_index('itemcode')
-                prices_dt = prices_dt.set_index('itemcode')
-
-                next_balance = balance.merge(prices_dt.price, left_index=True, right_index=True, how='left', suffixes=('_old', '')).drop(['price_old'], axis=1)
-                
-                # itemcode 컬럼 다시 가져오기
-                next_balance = next_balance.reset_index()
-
-                # next_balance = next_balance.merge(prices_dt, left_on='itemcode', right_on='itemcode',
-                #                    how='left', suffixes=('_old', '')).drop('price_old', axis=1)
-                # next_balance = next_balance.merge(prices_dt, left_on='itemcode', right_on='itemcode',
-                #     how='left', suffixes=('_x', '_y'))
-                print('next_date: {}'.format(next_date))
-                print('다음 날 잔고-merge 이후')
-                print(next_balance)
-                # holding_itemcodes = balance.itemcode.to_list()
-                # holding_prices = prices_dt[prices_dt.itemcode.isin(
-                #     holding_itemcodes)]
-                # print('holding_prices:')
-                # print(holding_prices)
-                next_date = datetime.strptime(next_date, '%Y-%m-%d')
-                next_date = str(next_date.month)+'/'+str(next_date.day) + \
-                    '/'+str(next_date.year)+' 4:00:00 PM'
-                next_balance['date'] = next_date
-                next_balance.loc[next_balance.itemcode =='C000001', 'price'] = 1
-
-                # 종목별 평가액 업데이트
-                next_balance['value'] = next_balance['price']*next_balance['quantity']
-                print('next_balance.price')
-                print(next_balance.price)
-
-                # print('next_balance.columns are {}'.format(next_balance.columns))
-                self.db.insert_detail(next_balance)
-
-                new_general = next_balance.loc[:, ['wt', 'value', 'asset_class']].groupby(
-                        'asset_class').sum().sort_values('wt', ascending=False).reset_index()
-                new_general['userid'] = next_balance.userid[0]
-                new_general['date'] = next_balance.date[0]
-
-                # general 테이블에 기록
-                self.db.insert_general(new_general)
-
-                # all_the_nexts = pd.concat((all_the_nexts, next_balance))
-
-            # all_the_nexts = all_the_nexts.reset_index(drop=True)
-
-            # print(all_the_nexts)
+            all_the_nexts = all_the_nexts.reset_index(drop=True)
+            print(all_the_nexts)
+            
             # detail 테이블에 기록
-            # self.db.insert_detail(all_the_nexts)
+            self.db.insert_detail(all_the_nexts)
+
+  
+            # # 최근 잔고 가져오기
+            # # 아직 어떤 타입으로 가져오는지 모름
+            # balance = self.db.getUserBalance(userid=self.userid)       
+            # balance = pd.DataFrame(balance, columns=['date', 'userid', 'name', 'asset_class', 'itemcode', 'itemname',
+            #                                      'quantity', 'cost_price', 'cost_value', 'price', 'value', 'wt', 'group_by', 'original'])
+
+            # # print('here- balance.columns is {}:'.format(balance.columns))
+            # # print(balance)
+
+            # next_balance = copy.deepcopy(balance)
+            # # all_the_nexts = pd.DataFrame(columns=next_balance.columns)
+
+            # price_db = PriceDB.instance().data
+
+            # for idx, dt in enumerate(dates):
+            #     # self.current_date = dt  # 현재 날짜기준으로 리밸런싱
+            #     ## 리밸런싱 주기가 왔으면 ##
+            #     if dt in every20day:
+            #         ## 리밸런싱 후 다음 날짜로
+            #         # df = self.advised_pf.loc[(self.advised_pf.date == self.current_date) & (
+            #         #     self.advised_pf.risk_profile == self.risk_profile), :]
+
+
+            #         new_units, prices, remaining_cash = self.get_ordersheets(tag='Rebal')
+
+            #         print('리밸런싱 포트폴리오(risk profile {}):'.format(self.risk_profile))
+            #         print('---new_units---')
+            #         print(new_units)
+            #         print('---prices----')
+            #         print(prices)
+
+
+            #         continue
+
+            #     # 최근 잔고가져오기
+            #     # 아직 어떤 타입으로 가져오는지 모름
+            #     balance = self.db.getUserBalance(userid=self.userid)
+            #     # df로 타입을 바꿈
+            #     balance = pd.DataFrame(balance, columns=['date', 'userid', 'name', 'asset_class', 'itemcode', 'itemname',
+            #                                         'quantity', 'cost_price', 'cost_value', 'price', 'value', 'wt', 'group_by', 'original'])
+
+            #     print('after pd.DataFrame, balance is')
+            #     print(balance)
+
+            #     # 매일 종가 업데이트
+
+            #     if idx+1 >= dates.shape[0]:
+            #         break
+                
+            #     # next_date = dates[idx+1]
+            #     next_date = dt
+
+            #     print('다음 날 잔고-merge 이전')
+            #     print(next_balance.loc[:, ['date','userid','itemcode','price','wt','original']])
+
+            #     print('현재 날짜 {}'.format(self.current_date))
+            #     print('내일 날짜 {}'.format(next_date))
+            #     prices_dt = price_db.loc[price_db.date == next_date, [
+            #         'price', 'itemcode']].reset_index(drop=True)
+
+            #     balance = balance.set_index('itemcode')
+            #     prices_dt = prices_dt.set_index('itemcode')
+
+            #     next_balance = balance.merge(prices_dt.price, left_index=True, right_index=True, how='left', suffixes=('_old', '')).drop(['price_old'], axis=1)
+                
+            #     # itemcode 컬럼 다시 가져오기
+            #     next_balance = next_balance.reset_index()
+
+            #     # next_balance = next_balance.merge(prices_dt, left_on='itemcode', right_on='itemcode',
+            #     #                    how='left', suffixes=('_old', '')).drop('price_old', axis=1)
+            #     # next_balance = next_balance.merge(prices_dt, left_on='itemcode', right_on='itemcode',
+            #     #     how='left', suffixes=('_x', '_y'))
+            #     print('next_date: {}'.format(next_date))
+            #     print('다음 날 잔고-merge 이후')
+            #     print(next_balance)
+            #     # holding_itemcodes = balance.itemcode.to_list()
+            #     # holding_prices = prices_dt[prices_dt.itemcode.isin(
+            #     #     holding_itemcodes)]
+            #     # print('holding_prices:')
+            #     # print(holding_prices)
+            #     next_date = datetime.strptime(next_date, '%Y-%m-%d')
+            #     next_date = str(next_date.month)+'/'+str(next_date.day) + \
+            #         '/'+str(next_date.year)+' 4:00:00 PM'
+            #     next_balance['date'] = next_date
+            #     next_balance.loc[next_balance.itemcode =='C000001', 'price'] = 1
+
+            #     # 종목별 평가액 업데이트
+            #     next_balance['value'] = next_balance['price']*next_balance['quantity']
+            #     print('next_balance.price')
+            #     print(next_balance.price)
+
+            #     # print('next_balance.columns are {}'.format(next_balance.columns))
+            #     self.db.insert_detail(next_balance)
+
+            #     new_general = next_balance.loc[:, ['wt', 'value', 'asset_class']].groupby(
+            #             'asset_class').sum().sort_values('wt', ascending=False).reset_index()
+            #     new_general['userid'] = next_balance.userid[0]
+            #     new_general['date'] = next_balance.date[0]
+
+            #     # general 테이블에 기록
+            #     self.db.insert_general(new_general)
+
+            #     # all_the_nexts = pd.concat((all_the_nexts, next_balance))
+
+            # # all_the_nexts = all_the_nexts.reset_index(drop=True)
+
+            # # print(all_the_nexts)
+            # # detail 테이블에 기록
+            # # self.db.insert_detail(all_the_nexts)
 
         return new_units, prices, remaining_cash
 
