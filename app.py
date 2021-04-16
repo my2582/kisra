@@ -144,9 +144,12 @@ def show_content(users):
                 # href = html.A('Download readMe.pdf', download='./reports/figures/report-4_2021-02-26.png', href='/readMe.pdf')
                 # output.children.append(href)
                 output.style = style['pie_chart_style']
-                output.children.append(dcc.Graph(id="fig-image", figure=fig_rpt, config={'autosizable':False}))
-                output.children.append(dcc.Graph(id="fig2-image", figure=fig_rpt2, config={'autosizable':False}))
-                output.children.append(dcc.Graph(id="fig3-image", figure=fig_rpt3, config={'autosizable':False}))
+                fig_rpt['layout'] = {'width':400}
+                fig_rpt2['layout'] = {'width':400}
+                fig_rpt3['layout'] = {'width':400}
+                output.children.append(dcc.Graph(id="fig-image", figure=fig_rpt))
+                output.children.append(dcc.Graph(id="fig2-image", figure=fig_rpt2))
+                output.children.append(dcc.Graph(id="fig3-image", figure=fig_rpt3))
                 return output
 
             warning = '비어있는 항목이 있습니다! 전부 체크해 주세요'
