@@ -144,9 +144,9 @@ def show_content(users):
                 # href = html.A('Download readMe.pdf', download='./reports/figures/report-4_2021-02-26.png', href='/readMe.pdf')
                 # output.children.append(href)
                 output.style = style['pie_chart_style']
-                fig_rpt['layout'].update(width=400, height=1200, autosize=False)
-                fig_rpt2['layout'].update(width=600, height=1200, autosize=False)
-                fig_rpt3['layout'].update(width=400, height=1200, autosize=False)
+                fig_rpt['layout'].update(width=1008, height=2592, autosize=False)
+                fig_rpt2['layout'].update(width=1000, height=600, autosize=False)
+                fig_rpt3['layout'].update(width=640, height=480, autosize=False)
                 output.children.append(dcc.Graph(id="fig-image", figure=fig_rpt))
                 output.children.append(dcc.Graph(id="fig2-image", figure=fig_rpt2))
                 output.children.append(dcc.Graph(id="fig3-image", figure=fig_rpt3))
