@@ -89,7 +89,7 @@ def show_content(users):
             # Constants
             img_width = width
             img_height = height
-            scale_factor = 1
+            scale_factor = 0.5
 
             # Add invisible scatter trace.
             # This trace is added to help the autoresize logic work.
@@ -137,9 +137,6 @@ def show_content(users):
                 margin={"l": 0, "r": 0, "t": 0, "b": 0},
             )
 
-            # Disable the autosize on double click because it adds unwanted margins around the image
-            # More detail: https://plotly.com/python/configuration-options/
-            fig.show(config={'doubleClick': 'reset'})
             return fig
 
         if 0 < n_clicks:
@@ -158,7 +155,7 @@ def show_content(users):
                 # fig_rpt = go.Figure().add_layout_image(source='./reports/figures/report-4_2021-02-26.png')
                 # fig_rpt2 = go.Figure().add_layout_image(source='./reports/figures/ef_area-4_2021-02-26.png')
                 # fig_rpt3 = go.Figure().add_layout_image(source='./reports/figures/ef-4_2021-02-26.png')
-                fig_rpt = get_fig(source='./reports/figures/report-4_2021-02-26.png', width=1008, height=2592)
+                fig_rpt = get_fig(source='https://github.com/my2582/mlpp/blob/master/simple_kalman.jpeg', width=1008, height=2592)
                 fig_rpt2 = get_fig(source='./reports/figures/ef_area-4_2021-02-26.png', width=1000, height=600)
                 fig_rpt3 = get_fig(source='./reports/figures/ef-4_2021-02-26.png', width=640, height=480)
                 answer = []
