@@ -92,9 +92,12 @@ def show_content(users):
                 html.Div(id='character-result')
             ], id='output-div')
             if character.empty_check():
-                fig_rpt = go.Figure(go.Image(dx=1008, dy=2592, z=io.imread('./reports/figures/report-4_2021-02-26.png')))
-                fig_rpt2 = go.Figure(go.Image(dx=1000, dy=600, z=io.imread('./reports/figures/ef_area-4_2021-02-26.png')))
-                fig_rpt3 = go.Figure(go.Image(dx=640, dy=480, z=io.imread('./reports/figures/ef-4_2021-02-26.png')))
+                # fig_rpt = go.Figure(go.Image(dx=1008, dy=2592, z=io.imread('./reports/figures/report-4_2021-02-26.png')))
+                # fig_rpt2 = go.Figure(go.Image(dx=1000, dy=600, z=io.imread('./reports/figures/ef_area-4_2021-02-26.png')))
+                # fig_rpt3 = go.Figure(go.Image(dx=640, dy=480, z=io.imread('./reports/figures/ef-4_2021-02-26.png')))
+                fig_rpt = go.Figure().add_layout_image(source='./reports/figures/report-4_2021-02-26.png')
+                fig_rpt2 = go.Figure().add_layout_image(source='./reports/figures/ef_area-4_2021-02-26.png')
+                fig_rpt3 = go.Figure().add_layout_image(source='./reports/figures/ef-4_2021-02-26.png')
                 answer = []
                 for_selected = layout.signup[3]
                 for id in tags_id:
@@ -144,9 +147,9 @@ def show_content(users):
                 # href = html.A('Download readMe.pdf', download='./reports/figures/report-4_2021-02-26.png', href='/readMe.pdf')
                 # output.children.append(href)
                 output.style = style['pie_chart_style']
-                fig_rpt['layout'].update(width=1008, height=2592, autosize=False)
-                fig_rpt2['layout'].update(width=1000, height=600, autosize=False)
-                fig_rpt3['layout'].update(width=640, height=480, autosize=False)
+                # fig_rpt['layout'].update(width=1008, height=2592, autosize=False)
+                # fig_rpt2['layout'].update(width=1000, height=600, autosize=False)
+                # fig_rpt3['layout'].update(width=640, height=480, autosize=False)
                 output.children.append(dcc.Graph(id="fig-image", figure=fig_rpt))
                 output.children.append(dcc.Graph(id="fig2-image", figure=fig_rpt2))
                 output.children.append(dcc.Graph(id="fig3-image", figure=fig_rpt3))
