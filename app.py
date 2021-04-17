@@ -155,7 +155,7 @@ def show_content(users):
                 # fig_rpt = go.Figure().add_layout_image(source='./reports/figures/report-4_2021-02-26.png')
                 # fig_rpt2 = go.Figure().add_layout_image(source='./reports/figures/ef_area-4_2021-02-26.png')
                 # fig_rpt3 = go.Figure().add_layout_image(source='./reports/figures/ef-4_2021-02-26.png')
-                fig_rpt = get_fig(source='https://github.com/my2582/mlpp/blob/master/simple_kalman.jpeg', width=1008, height=2592)
+                fig_rpt = get_fig(source='https://raw.githubusercontent.com/michaelbabyn/plot_data/master/bridge.jpg', width=1008, height=2592)
                 fig_rpt2 = get_fig(source='./reports/figures/ef_area-4_2021-02-26.png', width=1000, height=600)
                 fig_rpt3 = get_fig(source='./reports/figures/ef-4_2021-02-26.png', width=640, height=480)
                 answer = []
