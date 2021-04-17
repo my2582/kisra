@@ -82,6 +82,63 @@ def show_content(users):
                      input_5, input_6, input_7, input_8, input_9, input_10,
                      input_11):
 
+        def get_fig(source, width, height):
+            # Create figure
+            fig = go.Figure()
+
+            # Constants
+            img_width = width
+            img_height = height
+            scale_factor = 0.5
+
+            # Add invisible scatter trace.
+            # This trace is added to help the autoresize logic work.
+            fig.add_trace(
+                go.Scatter(
+                    x=[0, img_width * scale_factor],
+                    y=[0, img_height * scale_factor],
+                    mode="markers",
+                    marker_opacity=0
+                )
+            )
+
+            # Configure axes
+            fig.update_xaxes(
+                visible=False,
+                range=[0, img_width * scale_factor]
+            )
+
+            fig.update_yaxes(
+                visible=False,
+                range=[0, img_height * scale_factor],
+                # the scaleanchor attribute ensures that the aspect ratio stays constant
+                scaleanchor="x"
+            )
+
+            # Add image
+            fig.add_layout_image(
+                dict(
+                    x=0,
+                    sizex=img_width * scale_factor,
+                    y=img_height * scale_factor,
+                    sizey=img_height * scale_factor,
+                    xref="x",
+                    yref="y",
+                    opacity=1.0,
+                    layer="below",
+                    sizing="stretch",
+                    source=source)
+            )
+
+            # Configure other layout
+            fig.update_layout(
+                width=img_width * scale_factor,
+                height=img_height * scale_factor,
+                margin={"l": 0, "r": 0, "t": 0, "b": 0},
+            )
+
+            return fig
+
         if 0 < n_clicks:
             tags_id = [input_1, input_2, input_3, input_4, input_5, input_6, input_7, input_8, input_9,
                        input_10, input_11]
@@ -92,9 +149,15 @@ def show_content(users):
                 html.Div(id='character-result')
             ], id='output-div')
             if character.empty_check():
-                fig_rpt = go.Figure(go.Image(z=io.imread('./reports/figures/report-2_2021-02-26.png')))
-                fig_rpt2 = go.Figure(go.Image(z=io.imread('./reports/figures/ef_area-2_2021-02-26.png')))
-                fig_rpt3 = go.Figure(go.Image(z=io.imread('./reports/figures/ef-2_2021-02-26.png')))
+                # fig_rpt = go.Figure(go.Image(dx=1008, dy=2592, z=io.imread('./reports/figures/report-4_2021-02-26.png')))
+                # fig_rpt2 = go.Figure(go.Image(dx=1000, dy=600, z=io.imread('./reports/figures/ef_area-4_2021-02-26.png')))
+                # fig_rpt3 = go.Figure(go.Image(dx=640, dy=480, z=io.imread('./reports/figures/ef-4_2021-02-26.png')))
+                # fig_rpt = go.Figure().add_layout_image(source='./reports/figures/report-4_2021-02-26.png')
+                # fig_rpt2 = go.Figure().add_layout_image(source='./reports/figures/ef_area-4_2021-02-26.png')
+                # fig_rpt3 = go.Figure().add_layout_image(source='./reports/figures/ef-4_2021-02-26.png')
+                fig_rpt = get_fig(source='https://raw.githubusercontent.com/michaelbabyn/plot_data/master/bridge.jpg', width=1008, height=2592)
+                fig_rpt2 = get_fig(source='./reports/figures/ef_area-4_2021-02-26.png', width=1000, height=600)
+                fig_rpt3 = get_fig(source='./reports/figures/ef-4_2021-02-26.png', width=640, height=480)
                 answer = []
                 for_selected = layout.signup[3]
                 for id in tags_id:
@@ -144,12 +207,12 @@ def show_content(users):
                 # href = html.A('Download readMe.pdf', download='./reports/figures/report-4_2021-02-26.png', href='/readMe.pdf')
                 # output.children.append(href)
                 output.style = style['pie_chart_style']
-                fig_rpt.layout.width = 400
-                fig_rpt2.layout.width = 400
-                fig_rpt3.layout.width = 400
-                output.children.append(dcc.Graph(id="fig-image", figure=fig_rpt))
-                output.children.append(dcc.Graph(id="fig2-image", figure=fig_rpt2))
-                output.children.append(dcc.Graph(id="fig3-image", figure=fig_rpt3))
+                # fig_rpt['layout'].update(width=1008, height=2592, autosize=False)
+                # fig_rpt2['layout'].update(width=1000, height=600, autosize=False)
+                # fig_rpt3['layout'].update(width=640, height=480, autosize=False)
+                output.children.append(dcc.Graph(id="fig-image", figure=fig_rpt, config={'doubleClick': 'reset'}))
+                output.children.append(dcc.Graph(id="fig2-image", figure=fig_rpt2, config={'doubleClick': 'reset'}))
+                output.children.append(dcc.Graph(id="fig3-image", figure=fig_rpt3, config={'doubleClick': 'reset'}))
                 return output
 
             warning = '비어있는 항목이 있습니다! 전부 체크해 주세요'
