@@ -375,7 +375,7 @@ if __name__ == '__main__':
     #          '2020-05-29', '2020-06-30',  '2020-07-31',  '2020-08-31', '2020-09-30',
     #          '2020-10-30',  '2020-11-30', '2020-12-31', '2021-01-29','2021-02-26', '2021-03-19']
     #dates = ['2021-02-26']
-    dates = pd.bdate_range('2019-07-01', '2019-12-31', freq='B').strftime('%Y-%m-%d').to_list()
+    dates = pd.bdate_range('2021-01-01', '2021-03-19', freq='B').strftime('%Y-%m-%d').to_list()
     for dt in dates:
         pa.run(risk_profile=2, current_date=dt)
         print(pa.w)
