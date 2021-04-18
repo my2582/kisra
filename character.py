@@ -304,10 +304,6 @@ class Character:
 
     def simulate_trades(self, first_trade=False, new_units=None, prices=None, remaining_cash=None):
         if first_trade:
-            dates = self.advised_pf.loc[(self.advised_pf.risk_profile == self.risk_profile) & (
-                self.advised_pf.date > self.current_date), 'date'].unique()
-            every20day = dates[20::20]
-
             price_db = PriceDB.instance().data
 
             # 최근 잔고 가져오기
