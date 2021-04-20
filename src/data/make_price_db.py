@@ -3,9 +3,8 @@
 
 # In[1]:
 
-
-import pandas as pd
 import numpy as np
+import pandas as pd
 from IPython.display import display
 
 
@@ -100,8 +99,8 @@ df_db['d'] = pd.concat([df_db['d'], df['ecos_d']])
 
 # `price_db_#.pkl`
 
-# In[7]:
-
+# Upsampling (business days -> everyday with padding nan)
+df_db['d'] = df_db['d'].set_index('date').groupby('itemcode').resample('D').fillna('pad').reset_index(level=0, drop=True).reset_index()
 
 for freq in frequency:
     df_db[freq].to_pickle(filepath + 'price_db_' + freq + '.pkl')

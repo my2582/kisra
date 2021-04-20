@@ -8,7 +8,7 @@ else:
 try:
     from src.models.load_data import Singleton, Balance, Instruments, PriceDB, SimulatableInstruments, Constraints, AdvisedPortfolios
 except:
-    from load_data import Singleton, Balance, Instruments, PriceDB, SimulatableInstruments, Constraints, AdvisedPortfolios
+    from .load_data import Singleton, Balance, Instruments, PriceDB, SimulatableInstruments, Constraints, AdvisedPortfolios
 
 class Asset:
     """

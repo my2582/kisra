@@ -59,7 +59,7 @@ class PortfolioAdvisor:
 
     def run(self, risk_profile=None, current_date=None, non_tradables=None, drop_wt_threshold=0.005,
             model='Classic', rm='CDaR', method_mu='hist', method_cov='oas',
-            decay=0.97, allow_short=False, alpha=0.05):
+            decay=0.97, allow_short=False, alpha=0.05, savefig=True):
         r"""
         최적화 모델을 실행한다(즉, 최적화를 한다).
         risk_profile과 current_date값을 바꿔가면서 반복적으로 실행하면 self.weights에 추천 포트폴리오가 누적되어 저장된다.
@@ -73,7 +73,7 @@ class PortfolioAdvisor:
 
         self.w = self._optimize(drop_wt_threshold=drop_wt_threshold, model=model, rm=rm,
                                 method_mu=method_mu, method_cov=method_cov, decay=decay,
-                                allow_short=allow_short, alpha=alpha)
+                                allow_short=allow_short, alpha=alpha, savefig=savefig)
 
         if self.weights is None:
             # run()이 처음으로 실행됐을 경우에는 'date', 'risk_profile' 컬럼의 빈 DataFrame을 만들어
@@ -253,7 +253,7 @@ class PortfolioAdvisor:
         ax2 = plf.plot_frontier_area(w_frontier=frontier, cmap="tab20", height=6, width=10, ax=None)
         fig2.savefig('ef_area-{}_{}.png'.format(self.risk_profile, self.current_date))
 
-    def _optimize(self, drop_wt_threshold=0.005, model='Classic', rm='CDaR', method_mu='hist', method_cov='oas', decay=0.97, allow_short=False, alpha=0.05):
+    def _optimize(self, drop_wt_threshold=0.005, model='Classic', rm='CDaR', method_mu='hist', method_cov='oas', decay=0.97, allow_short=False, alpha=0.05, savefig=True):
         r"""
         Riskfolio 패키지를 이용하여 최적화한다. Riskfolio는 내부적으로 최근 사용층을 넓혀가고 있는 cvxpy를 이용한다.
         ref: https://riskfolio-lib.readthedocs.io/en/latest/portfolio.html
@@ -311,7 +311,8 @@ class PortfolioAdvisor:
         assert self.w is not None, "Optimization failed with these actual inputs: "
         print('Optimized weights have been estimated.')
 
-        self.savefig()
+        if savefig:
+            self.savefig()
 
         # threshold보다 작은 비중을 추천받은 종목은 삭제한다.
         self.drop_trivial_weights(threshold=drop_wt_threshold, drop=True)
