@@ -550,8 +550,8 @@ class Character:
         da = DiscreteAllocation(weights=wt, latest_prices=pr, total_portfolio_value=trading_amt)
         
         allocation, remaining_cash = da.greedy_portfolio()
-        print("Discrete allocation on {}:{}".format(rebal_date,allocation))
-        print("Funds remaining: {:.2f} KRW".format(remaining_cash))
+        # print("Discrete allocation on {}:{}".format(rebal_date,allocation))
+        # print("Funds remaining: {:.2f} KRW".format(remaining_cash))
         
         # 매매한 뒤의 레코드 생성
         df_qty = pd.DataFrame.from_dict(allocation, orient='index', columns=['quantity'])
@@ -629,7 +629,7 @@ class Character:
             if dt in rebal_dates[1:]:
                 # 리밸런싱한다.
                 new_port = self.advised_pf.loc[(self.advised_pf.risk_profile==self.risk_profile) & (self.advised_pf.date==dt), ['date', 'itemcode', 'weights', 'itemname', 'price', 'asset_class']]
-                print('new_port.price: ', new_port[['date', 'price']])
+#                print('new_port.price: ', new_port[['date', 'price']])
                 next_detail = self.rebalance(rebal_date=dt, price_d=price_d, detail=copy.deepcopy(next_detail), new_port=new_port)
             else:
                 # 리밸런싱 일자가 아니면, 새로운 종가만 업데이트하고 종목별 시가평가액(value=price*quantity)만 업데이트한다.
@@ -660,9 +660,7 @@ class Character:
             all_the_nexts = pd.concat((all_the_nexts, next_detail))
 
         # 불필요한 컬럼 및 행 삭제
-        all_the_nexts = all_the_nexts.drop(['weights'], axis=1)
         all_the_nexts = all_the_nexts.loc[all_the_nexts.quantity > 0]
-
         all_the_nexts = all_the_nexts.reset_index(drop=True)
 
         all_the_generals = all_the_nexts.loc[:,['date', 'wt', 'value', 'asset_class']].sort_values(
