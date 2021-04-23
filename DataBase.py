@@ -55,6 +55,9 @@ class databaseDF:
         user['answer'] = user['answer'].values.astype(float)
         user['risk_pref_value'] = user['risk_pref_value'].values.astype(float)
 
+        print('----user is----')
+        print(user)
+
         for i in range(len(general)):
             temp = general.iloc[i, :].values.tolist()
             self.con.execute(insert_query_gen.format('general'), temp)
