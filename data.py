@@ -21,7 +21,7 @@ class Data:
     def uniqueUser(self):
         #users = self.detail_data['name'].tolist()
         users = self.db.getUserList()
-        users = pd.DataFrame(users, columns=['userid', 'name', 'q_no', 'answer', 'risk_perf_value'])
+        users = pd.DataFrame(users, columns=['userid', 'name'])
         return list(set(users.name))
 
     def specificDate(self, name):
