@@ -626,7 +626,7 @@ class Character:
         for dt in dates:
 #            print(dt)
             price_d = price_db.loc[price_db.date==dt, ['date', 'price', 'itemcode']].reset_index(drop=True)
-            if dt in rebal_dates[1:]:
+            if dt in rebal_dates:
                 # 리밸런싱한다.
                 new_port = self.advised_pf.loc[(self.advised_pf.risk_profile==self.risk_profile) & (self.advised_pf.date==dt), ['date', 'itemcode', 'weights', 'itemname', 'price', 'asset_class']]
 #                print('new_port.price: ', new_port[['date', 'price']])
@@ -635,7 +635,7 @@ class Character:
                 # 리밸런싱 일자가 아니면, 새로운 종가만 업데이트하고 종목별 시가평가액(value=price*quantity)만 업데이트한다.
                 next_date = datetime.strptime(dt, '%Y-%m-%d')
                 #next_date = str(next_date.month)+'/'+str(next_date.day)+'/'+str(next_date.year)+' 09:00:00 AM'
-                next_detail = copy.deepcopy(detail)
+                next_detail = copy.deepcopy(next_detail)
                 next_detail['date'] = next_date
                 next_detail = pd.merge(next_detail,
                                     price_d.loc[price_d.date == next_date,

@@ -118,6 +118,8 @@ class databaseDF:
         new_detail['value'] = new_detail['value'].values.astype(float)
         new_detail['wt'] = new_detail['wt'].values.astype(float)
 
+        # 날짜형식 변환
+        new_detail.date = new_detail.date.map(lambda x:str(x.month)+'/'+str(x.day)+'/'+str(x.year)+ ' 4:00:00 PM')
 
         col_order = ['itemcode', 'quantity', 'cost_price', 'price', 'cost_value', 'value', 'itemname', 'asset_class', 'date', 'userid', 'username', 'group_by', 'original', 'wt']
         print(new_detail.loc[:, col_order])
@@ -129,6 +131,9 @@ class databaseDF:
     
     def insert_general(self, new_general):
         insert_query_gen = 'INSERT INTO general (date, userid, asset_class, value, wt) values (%s, %s, %s, %s, %s)'
+
+        # 날짜형식 변환
+        new_general.date = new_general.date.map(lambda x:str(x.month)+'/'+str(x.day)+'/'+str(x.year)+ ' 4:00:00 PM')
 
         for idx, row in new_general.iterrows():
             temp = row[['date', 'userid', 'asset_class', 'value', 'wt']].values.tolist()
