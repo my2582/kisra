@@ -628,7 +628,7 @@ class Character:
             price_d = price_db.loc[price_db.date==dt, ['date', 'price', 'itemcode']].reset_index(drop=True)
             if dt in rebal_dates[1:]:
                 # 리밸런싱한다.
-                new_port = advised_pf.loc[(advised_pf.risk_profile==risk_profile) & (advised_pf.date==dt), ['date', 'itemcode', 'weights', 'itemname', 'price', 'asset_class']]
+                new_port = self.advised_pf.loc[(self.advised_pf.risk_profile==self.risk_profile) & (self.advised_pf.date==dt), ['date', 'itemcode', 'weights', 'itemname', 'price', 'asset_class']]
                 print('new_port.price: ', new_port[['date', 'price']])
                 next_detail = rebalance(rebal_date=dt, price_d=price_d, detail=copy.deepcopy(next_detail), new_port=new_port)
             else:
