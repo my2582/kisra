@@ -667,6 +667,9 @@ class Character:
                                           ['date'], ascending=True).groupby([
                                               'date', 'asset_class'
                                           ]).sum().reset_index(drop=False)
+
+        all_the_generals['userid'] = self.userid
+
         # general 테이블 기록
         self.db.insert_general(all_the_generals)
 
@@ -690,9 +693,9 @@ class Character:
             print('risk_value : ', risk_value)
             self.score += risk_value
             answers[idx] = (answers[idx], risk_value)
-        print('----------------answer------------------')
-        print(answers)
+        print('----------------날짜------------------')
         self.current_date = self.options[-2]  # 날짜.
+        print(self.current_date)
         self.current_date = datetime.strptime(
             self.current_date, '%Y-%m-%d').strftime('%Y-%m-%d')
 
