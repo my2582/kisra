@@ -630,7 +630,7 @@ class Character:
                 # 리밸런싱한다.
                 new_port = self.advised_pf.loc[(self.advised_pf.risk_profile==self.risk_profile) & (self.advised_pf.date==dt), ['date', 'itemcode', 'weights', 'itemname', 'price', 'asset_class']]
                 print('new_port.price: ', new_port[['date', 'price']])
-                next_detail = rebalance(rebal_date=dt, price_d=price_d, detail=copy.deepcopy(next_detail), new_port=new_port)
+                next_detail = self.rebalance(rebal_date=dt, price_d=price_d, detail=copy.deepcopy(next_detail), new_port=new_port)
             else:
                 # 리밸런싱 일자가 아니면, 새로운 종가만 업데이트하고 종목별 시가평가액(value=price*quantity)만 업데이트한다.
                 next_date = datetime.strptime(dt, '%Y-%m-%d')
