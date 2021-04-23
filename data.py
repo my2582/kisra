@@ -8,14 +8,19 @@ class Data:
         # self.detail_data = pd.read_pickle(os.getcwd()+'\\data\\processed\\balance_s.pkl')
         self.usersel = pd.read_pickle('./data/processed/profiles_s.pkl')
         self.pre_data = pd.read_pickle('./data/processed/balance_m.pkl')
-        self.detail_data = pd.read_pickle('./data/processed/balance_s.pkl')
+        self.detail_data = pd.read_pickle('./data/processed/balance_s.pkl') 
         self.columns = list(self.detail_data.columns)
         self.db = databaseDF()
         self.db.createDefault((self.pre_data, self.detail_data, self.usersel))
+        
+        #self.detail_data = pd.read_pickle('./data/processed/balance_s.pkl')
+        #self.detail_data = pd.read_pickle('./data/processed/balance_s.pkl') 
 
     def uniqueUser(self):
-        users = self.detail_data['name'].tolist()
-        return list(set(users))
+        #users = self.detail_data['name'].tolist()
+        users = self.db.getUserList()
+        users = pd.DataFrame(users, columns=['userid', 'name', 'q_no', 'answer', 'risk_perf_value'])
+        return list(set(users.name))
 
     def specificDate(self, name):
         print('------------------name------------------------------')

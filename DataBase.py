@@ -20,7 +20,7 @@ class databaseDF:
                                   "itemname varchar(255), quantity float(24), cost_price float(24), cost_value float(24), price float(24), value float(24), "
                                   "wt float(24), group_by varchar(255), original varchar(15))")
         self.conn.commit()
-        self.con.execute("CREATE TABLE IF NOT EXISTS userselection(userid varchar(255), set_no float(24), q_no float(24), answer float(24), risk_pref_value float(24))")
+        self.con.execute("CREATE TABLE IF NOT EXISTS userselection(userid varchar(255), name varchar(255), set_no float(24), q_no float(24), answer float(24), risk_pref_value float(24))")
         self.conn.commit()
         self.con.execute("SELECT COUNT(*) FROM detail")
         self.conn.commit()
@@ -41,7 +41,7 @@ class databaseDF:
         insert_query_dtl = 'INSERT INTO {0} (date, userid, name, asset_class, itemcode, itemname,' \
                            'quantity, cost_price, cost_value, price, value, wt, group_by, original) values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'
 
-        insert_query_user = 'INSERT INTO {0} (userid, set_no, q_no, answer, risk_pref_value) values (%s, %s, %s, %s, %s)'
+        insert_query_user = 'INSERT INTO {0} (userid, name, set_no, q_no, answer, risk_pref_value) values (%s, %s, %s, %s, %s)'
 
         general['value'] = general['value'].values.astype(float)
         general['wt'] = general['wt'].values.astype(float)
@@ -87,6 +87,10 @@ class databaseDF:
 
     def getSelection(self, user):
         record = self.query.getUserSelection(user)
+        return record
+
+    def getUserList(self):
+        record = self.query.getUserList()
         return record
 
     def newUser(self, answer, money, current_date=None, username=None):

@@ -30,6 +30,12 @@ class query:
         self.conn.commit()
         return self.con.fetchall()
 
+    def getUserList(self):
+        query = "select distinct userid, name from userselection"
+        self.con.execute(query)
+        self.conn.commit()
+        return self.con.fetchall()
+
     def newUser(self, answers, money, current_date=None, username=None):
         query = "select distinct userid from userselection"
         self.con.execute(query)
