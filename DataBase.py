@@ -57,8 +57,6 @@ class databaseDF:
 
         for i in range(len(general)):
             temp = general.iloc[i, :].values.tolist()
-            print('in general')
-            print(i, temp)
             self.con.execute(insert_query_gen.format('general'), temp)
             self.conn.commit()
 
@@ -121,7 +119,7 @@ class databaseDF:
         new_detail['wt'] = new_detail['wt'].values.astype(float)
 
 
-        col_order = ['itemcode', 'quantity', 'cost_price', 'price', 'cost_value', 'value', 'itemname', 'asset_class', 'date', 'userid', 'name', 'group_by', 'original', 'wt']
+        col_order = ['itemcode', 'quantity', 'cost_price', 'price', 'cost_value', 'value', 'itemname', 'asset_class', 'date', 'userid', 'username', 'group_by', 'original', 'wt']
         print(new_detail.loc[:, col_order])
 
         for idx, row in new_detail.iterrows():

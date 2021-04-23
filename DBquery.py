@@ -51,7 +51,7 @@ class query:
         if current_date is None:
             date = str(now.month)+'/'+str(now.day)+'/'+str(now.year)+' '+str(hour)+':'+str(now.minute)+':'+str(now.second)+' '+timezone 
         else:
-            dt = datetime.datetime.strptime('2021-02-01', '%Y-%m-%d')
+            dt = datetime.datetime.strptime(current_date, '%Y-%m-%d')
             date = str(dt.month)+'/'+str(dt.day)+'/'+str(dt.year)+' 9:00:00 AM'
 
         userid='A' + ('00' + str(id))[-3:]
