@@ -715,4 +715,4 @@ class Character:
 
         first_advised_port, by_asset_class = self.run_simulation(first_trade=first_trade)
 
-        return self.scoring[self.score//(len(self.options) - 3)], first_advised_port, by_asset_class, self.score//(len(self.options) - 3),  self.current_date, self.risk_profile
+        return self.scoring[self.score//(len(self.options) - 3)], first_advised_port, by_asset_class, self.score//(len(self.options) - 3), datetime.strptime(self.options[-2], '%Y-%m-%d').strftime('%Y-%m-%d'), self.risk_profile

@@ -171,9 +171,12 @@ def show_content(users):
 
                 risk_avg, df, by_assetclass, score, current_date, risk_profile = character.predict(
                     answer, first_trade=True)
-                fig_rpt = get_fig(source='https://raw.githubusercontent.com/my2582/kisra_storage/main/report-{}-{}.png'.format(risk_profile, current_date), width=1008, height=2592)
-                fig_rpt2 = get_fig(source='https://raw.githubusercontent.com/my2582/kisra_storage/main/ef_area-{}-{}.png'.format(risk_profile, current_date), width=1000, height=600)
-                fig_rpt3 = get_fig(source='https://raw.githubusercontent.com/my2582/kisra_storage/main/ef-{}-{}.png'.format(risk_profile, current_date), width=640, height=480)
+                rpt_url = 'https://raw.githubusercontent.com/my2582/kisra_storage/main/report-{}-{}.png'.format(risk_profile, current_date)
+                rpt2_url = 'https://raw.githubusercontent.com/my2582/kisra_storage/main/ef_area-{}-{}.png'.format(risk_profile, current_date)
+                rpt3_url = 'https://raw.githubusercontent.com/my2582/kisra_storage/main/ef-{}-{}.png'.format(risk_profile, current_date)
+                fig_rpt = get_fig(source=rpt_url, width=1008, height=2592)
+                fig_rpt2 = get_fig(source=rpt2_url, width=1000, height=600)
+                fig_rpt3 = get_fig(source=rpt3_url, width=640, height=480)
                 
                 result = '당신의 점수는 {0}이며 {1}형 투자자입니다. 당신에게 맞는 포트폴리오를 확인해 보세요'.format(
                     score, risk_avg)

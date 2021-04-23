@@ -63,13 +63,13 @@ class query:
         query = "INSERT INTO detail (date, userid, name, asset_class, itemcode, itemname, quantity, cost_price, cost_value, price, value, wt, group_by, original) " \
                 "values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
 
-        self.con.execute(query, [date, userid, username, '현금성', 'C000001', '현금', float(money), float(1), float(money),
+        self.con.execute(query, [date, userid, username, 'Cash', 'C000001', '현금', float(money), float(1), float(money),
                                  float(1), float(money), float(1),
                                  str(now.year)+str(now.month)+str(now.day)+type_hour+':'+str(now.minute)+'현금성', 'Y'])
         self.conn.commit()
 
         query = "INSERT INTO general(date, userid, asset_class, value, wt) values (%s, %s, %s, %s, %s)"
-        self.con.execute(query, [date, userid, '현금성', float(money), float(1)])
+        self.con.execute(query, [date, userid, 'Cash', float(money), float(1)])
         self.conn.commit()
 
         return userid
