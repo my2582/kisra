@@ -30,7 +30,7 @@ class query:
         self.conn.commit()
         return self.con.fetchall()
 
-    def newUser(self, answers, money, current_date=None):
+    def newUser(self, answers, money, current_date=None, username=None):
         query = "select distinct userid from userselection"
         self.con.execute(query)
         self.conn.commit()
@@ -63,7 +63,7 @@ class query:
         query = "INSERT INTO detail (date, userid, name, asset_class, itemcode, itemname, quantity, cost_price, cost_value, price, value, wt, group_by, original) " \
                 "values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
 
-        self.con.execute(query, [date, userid, '투자자'+str(id), '현금성', 'C000001', '현금', float(money), float(1), float(money),
+        self.con.execute(query, [date, userid, username, '현금성', 'C000001', '현금', float(money), float(1), float(money),
                                  float(1), float(money), float(1),
                                  str(now.year)+str(now.month)+str(now.day)+type_hour+':'+str(now.minute)+'현금성', 'Y'])
         self.conn.commit()
