@@ -155,9 +155,7 @@ def show_content(users):
                 # fig_rpt = go.Figure().add_layout_image(source='./reports/figures/report-4_2021-02-26.png')
                 # fig_rpt2 = go.Figure().add_layout_image(source='./reports/figures/ef_area-4_2021-02-26.png')
                 # fig_rpt3 = go.Figure().add_layout_image(source='./reports/figures/ef-4_2021-02-26.png')
-                fig_rpt = get_fig(source='https://raw.githubusercontent.com/michaelbabyn/plot_data/master/bridge.jpg', width=1008, height=2592)
-                fig_rpt2 = get_fig(source='./reports/figures/ef_area-4_2021-02-26.png', width=1000, height=600)
-                fig_rpt3 = get_fig(source='./reports/figures/ef-4_2021-02-26.png', width=640, height=480)
+
                 answer = []
                 for_selected = layout.signup[3]
                 for id in tags_id:
@@ -171,8 +169,12 @@ def show_content(users):
                         if check:
                             break
 
-                risk_avg, df, by_assetclass, score, new_units, prices, remaining_cash = character.predict(
-                    answer)
+                risk_avg, df, by_assetclass, score, current_date, risk_profile = character.predict(
+                    answer, first_trade=True)
+                fig_rpt = get_fig(source='https://raw.githubusercontent.com/my2582/kisra_storage/main/report-{}-{}.png'.format(risk_profile, current_date), width=1008, height=2592)
+                fig_rpt2 = get_fig(source='https://raw.githubusercontent.com/my2582/kisra_storage/main/ef_area-{}-{}.png'.format(risk_profile, current_date), width=1000, height=600)
+                fig_rpt3 = get_fig(source='https://raw.githubusercontent.com/my2582/kisra_storage/main/ef-{}-{}.png'.format(risk_profile, current_date), width=640, height=480)
+                
                 result = '당신의 점수는 {0}이며 {1}형 투자자입니다. 당신에게 맞는 포트폴리오를 확인해 보세요'.format(
                     score, risk_avg)
                 # 파이차트 (종목별)
