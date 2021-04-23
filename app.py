@@ -171,9 +171,10 @@ def show_content(users):
 
                 risk_avg, df, by_assetclass, score, current_date, risk_profile = character.predict(
                     answer, first_trade=True)
-                rpt_url = 'https://raw.githubusercontent.com/my2582/kisra_storage/main/report-{}-{}.png'.format(risk_profile, current_date)
-                rpt2_url = 'https://raw.githubusercontent.com/my2582/kisra_storage/main/ef_area-{}-{}.png'.format(risk_profile, current_date)
-                rpt3_url = 'https://raw.githubusercontent.com/my2582/kisra_storage/main/ef-{}-{}.png'.format(risk_profile, current_date)
+                rpt_url = 'https://raw.githubusercontent.com/my2582/kisra_storage/main/report-{}_{}.png'.format(risk_profile, current_date)
+                rpt2_url = 'https://raw.githubusercontent.com/my2582/kisra_storage/main/ef_area-{}_{}.png'.format(risk_profile, current_date)
+                rpt3_url = 'https://raw.githubusercontent.com/my2582/kisra_storage/main/ef-{}_{}.png'.format(risk_profile, current_date)
+                print('URLs:', rpt_url, rpt2_url, rpt3_url)
                 fig_rpt = get_fig(source=rpt_url, width=1008, height=2592)
                 fig_rpt2 = get_fig(source=rpt2_url, width=1000, height=600)
                 fig_rpt3 = get_fig(source=rpt3_url, width=640, height=480)
