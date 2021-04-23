@@ -586,8 +586,8 @@ class Character:
                 price_d.loc[price_d.date==rebal_date, ['date', 'itemcode']],
                 left_on=['date', 'itemcode'],
                 right_on=['date', 'itemcode'], how='left')
-        next_detail['username'] = username
-        next_detail['userid'] = userid
+        next_detail['username'] = self.username
+        next_detail['userid'] = self.userid
         next_detail['original'] = 'Rebal'
         next_detail = next_detail.rename(columns={'weights':'wt'})
         next_detail = next_detail[['itemcode', 'quantity', 'cost_price', 'price', 'cost_value', 'value',
