@@ -21,11 +21,22 @@ class Data:
         #self.detail_data = pd.read_pickle('./data/processed/balance_s.pkl')
         #self.detail_data = pd.read_pickle('./data/processed/balance_s.pkl') 
 
-    def uniqueUser(self):
+    def uniqueUser(self, return_pd=False):
         #users = self.detail_data['name'].tolist()
         users = self.db.getUserList()
         users = pd.DataFrame(users, columns=['userid', 'name'])
+
+        if return_pd:
+            # DataFrame 형식으로 리턴
+            return users
+
+        # 이름만 리스트로 리턴
         return list(set(users.name))
+
+    def getUserId(self, name):
+        df_users = self.uniqueUser(return_pd=True)
+        userid = df_users.loc[df_users.name==name, 'userid']
+        return userid
 
     def specificDate(self, name):
         print('------------------in specificDate() name------------------------------')
@@ -40,7 +51,7 @@ class Data:
     def getUserBalance(self, name):
         userid = self.check_name(name)
         self.balance = self.db.getUserBalance(userid)
-        
+
         return self.balance
 
     def defaults(self):
@@ -53,7 +64,8 @@ class Data:
 
     def check_name(self, name):
         try:
-            user_id = self.detail_data[self.detail_data['name'] == name]['userid'].iloc[0]
+            #user_id = self.detail_data[self.detail_data['name'] == name]['userid'].iloc[0]
+            user_id = self.getUserId(name)
             return user_id
         except:
             return False

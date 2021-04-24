@@ -265,18 +265,18 @@ def show_content(users):
                 message=content
             )
 
-        before, after = content
+        # before, after = content
         table_header = [
             html.Thead(html.Tr([html.Th("시점"), html.Th("현금성"), html.Th(
                 "주식"), html.Th("채권"), html.Th("대체"), html.Th('상세정보')]))
         ]
 
-        row1 = html.Tr([html.Td("현재"), html.Td(before[before['asset_class'] == '현금성']['value'].iloc[0]),
-                        html.Td(before[before['asset_class']
+        row1 = html.Tr([html.Td("현재"), html.Td(content[content['asset_class'] == '현금성']['value'].iloc[0]),
+                        html.Td(content[content['asset_class']
                                        == '주식']['value'].iloc[0]),
-                        html.Td(before[before['asset_class']
+                        html.Td(content[content['asset_class']
                                        == '채권']['value'].iloc[0]),
-                        html.Td(before[before['asset_class']
+                        html.Td(content[content['asset_class']
                                        == '대체']['value'].iloc[0]),
                         html.Td(html.Div([html.Button('상세정보', id='detail-info-button'),
                                           dbc.Modal(
@@ -293,21 +293,45 @@ def show_content(users):
                             size="sm"
                         )]))])
 
-        row2 = html.Tr([html.Td("미래"), html.Td(before[before['asset_class'] == '현금성']['value'].iloc[0]),
-                        html.Td(before[before['asset_class']
-                                       == '주식']['value'].iloc[0]),
-                        html.Td(before[before['asset_class']
-                                       == '채권']['value'].iloc[0]),
-                        html.Td(before[before['asset_class']
-                                       == '대체']['value'].iloc[0]),
-                        html.Td('')],
-                       style={'background-color': '#FFA500'})
+
+        # row1 = html.Tr([html.Td("현재"), html.Td(before[before['asset_class'] == '현금성']['value'].iloc[0]),
+        #                 html.Td(before[before['asset_class']
+        #                                == '주식']['value'].iloc[0]),
+        #                 html.Td(before[before['asset_class']
+        #                                == '채권']['value'].iloc[0]),
+        #                 html.Td(before[before['asset_class']
+        #                                == '대체']['value'].iloc[0]),
+        #                 html.Td(html.Div([html.Button('상세정보', id='detail-info-button'),
+        #                                   dbc.Modal(
+        #                     [
+        #                         dbc.ModalHeader("상세정보"),
+        #                         dbc.ModalBody(
+        #                             "A small modal.", id='record'),
+        #                         dbc.ModalFooter(
+        #                             dbc.Button(
+        #                                 "Close", id="close-detail-info", className="ml-auto")
+        #                         ),
+        #                     ],
+        #                     id="modal-detail-info",
+        #                     size="sm"
+        #                 )]))])
+
+        # row2 = html.Tr([html.Td("미래"), html.Td(before[before['asset_class'] == '현금성']['value'].iloc[0]),
+        #                 html.Td(before[before['asset_class']
+        #                                == '주식']['value'].iloc[0]),
+        #                 html.Td(before[before['asset_class']
+        #                                == '채권']['value'].iloc[0]),
+        #                 html.Td(before[before['asset_class']
+        #                                == '대체']['value'].iloc[0]),
+        #                 html.Td('')],
+        #                style={'background-color': '#FFA500'})
 
         # if not content[-1]:
         #     row2.style['background-color'] = '#ddd'
         #     return html.Div(dbc.Table(table_header, html.Tbody([row1, row2]), bordered=True))
 
-        return html.Div(dbc.Table(table_header + [html.Tbody([row1, row2])], bordered=True))
+        # return html.Div(dbc.Table(table_header + [html.Tbody([row1, row2])], bordered=True))
+        return html.Div(dbc.Table(table_header + [html.Tbody([row1])], bordered=True))
 
     def changePeriod(select):
         for idx, sel in enumerate(select):
@@ -379,7 +403,7 @@ def show_content(users):
         select = changePeriod(select)
         print('----select:----', select)
         result = user.closeData(select, date, name, choice=True)
-        print('-----result of closeDaata----')
+        print('-----result of closeData----')
         print(result)
         return page2_result(result), date
 
