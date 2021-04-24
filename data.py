@@ -108,6 +108,7 @@ class Data:
 
     def returnData(self, point, name=None, date=None, choice=False):
         if name is None:
+            print('Your name is None!!')
             name = '투자자1'
             date='3/22/2021 4:00:00 PM'
 

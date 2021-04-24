@@ -129,6 +129,13 @@ class databaseDF:
         print(record)
         return record
 
+    def getUserGeneral(self, userid):
+        record = self.query.getUserGeneral(userid=userid)
+        print('-------------general------------------')
+        print(userid)
+        print(record)
+        return record
+
     def getUserRiskProfile(self, name):
         record = self.query.getUserRiskProfile(name)
         return record
