@@ -320,7 +320,7 @@ class Character:
     #             holding_itemcodes = detail.itemcode.to_list()
     #             holding_prices = prices_dt[prices_dt.itemcode.isin(holding_itemcodes)]
     #             next_date = datetime.strptime(dt, '%Y-%m-%d')
-    #             next_date = str(next_date.month)+'/'+str(next_date.day)+'/'+str(next_date.year)+' 09:00:00 AM'
+    #             next_date = str(next_date.month)+'/'+str(next_date.day)+'/'+str(next_date.year)+' 04:00:00 PM'
     #             next_detail = copy.deepcopy(next_detail)
     #             next_detail.merge(holding_prices, left_on='itemcode', right_on='itemcode', how='left', suffixes=('_old', '')).drop('price_old', axis=1)
     #             next_detail.loc[next_detail.itemcode=='C000001', 'price'] = 1
@@ -635,7 +635,7 @@ class Character:
             else:
                 # 리밸런싱 일자가 아니면, 새로운 종가만 업데이트하고 종목별 시가평가액(value=price*quantity)만 업데이트한다.
                 next_date = datetime.strptime(dt, '%Y-%m-%d')
-                #next_date = str(next_date.month)+'/'+str(next_date.day)+'/'+str(next_date.year)+' 09:00:00 AM'
+                #next_date = str(next_date.month)+'/'+str(next_date.day)+'/'+str(next_date.year)+' 04:00:00 PM'
                 next_detail = copy.deepcopy(next_detail)
                 next_detail['date'] = next_date
                 next_detail = pd.merge(next_detail,

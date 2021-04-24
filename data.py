@@ -89,7 +89,11 @@ class Data:
 
         return answer, baseline[baseline[self.columns[0]] == standard_date]
 
-    def returnData(self, point, name, date, choice=False):
+    def returnData(self, point, name=None, date=None, choice=False):
+        if name is None:
+            name = '투자자1'
+            date='3/22/2021 4:00:00 PM'
+
         user_id = self.check_name(name)
 
         if not user_id:

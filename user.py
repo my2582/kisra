@@ -30,7 +30,7 @@ class User:
     def selections(self, name):
         return self.data.getSelection(name)
 
-    def closeData(self, point, date, name, choice=False):
+    def closeData(self, point, date=None, name=None, choice=False):
         result = self.data.returnData(point, name, date, choice)
 
         # risk_profile = self.data.getRiskProfile(name)

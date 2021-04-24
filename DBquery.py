@@ -64,7 +64,7 @@ class query:
             date = str(now.month)+'/'+str(now.day)+'/'+str(now.year)+' '+str(hour)+':'+str(now.minute)+':'+str(now.second)+' '+timezone 
         else:
             dt = datetime.datetime.strptime(current_date, '%Y-%m-%d')
-            date = str(dt.month)+'/'+str(dt.day)+'/'+str(dt.year)+' 9:00:00 AM'
+            date = str(dt.month)+'/'+str(dt.day)+'/'+str(dt.year)+' 4:00:00 PM'
 
         userid='A' + ('00' + str(id))[-3:]
         query = "INSERT INTO userselection(userid, name, set_no, q_no, answer, risk_pref_value) values (%s, %s, %s, %s, %s, %s)"
