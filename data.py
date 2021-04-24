@@ -139,5 +139,8 @@ class Data:
         if not len(data):
             return pd.DataFrame(columns=self.columns)
         data.columns = self.columns
+
+        # 날짜 역순 정렬
+        data = data.iloc[pd.to_datetime(data.date).values.argsort()[::-1]]
         print('type(data): {}'.format(type(data)))
         return data

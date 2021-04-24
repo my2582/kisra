@@ -303,7 +303,7 @@ def show_content(users):
                                        == 'Alternative']['value'].iloc[0]),
                         html.Td(total)])
         
-        row2 = html.Tr([html.Td("상단: 자산군별 평가금액 / 하단: 상기 기간 내 잔고변화(Rebal은 리밸런싱일을 의미)")])
+        row2 = html.Tr([html.Td(""), html.Td(""), html.Td(""), html.Td(""), html.Td(""), html.Td("")])
 
 
         # row1 = html.Tr([html.Td("현재"), html.Td(before[before['asset_class'] == '현금성']['value'].iloc[0]),
