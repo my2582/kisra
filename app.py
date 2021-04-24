@@ -439,8 +439,10 @@ def show_content(users):
         State('predict-slider', 'value')
     )
     def detailInfo(open, close, is_open, select):
+        print('----in detailInfo. Before-select is {}'.format(select))
         select = changePeriod(select)
-        result = user.closeData(select, choice=False)
+        print('After-{}'.format(select))
+        result = user.closeData(select, name=user.name, date=user.date, choice=False)
         table_header = [
             html.Thead(html.Tr([html.Th(col) for col in list(result.columns)]))
         ]
