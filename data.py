@@ -24,17 +24,19 @@ class Data:
         users = pd.DataFrame(users, columns=['userid', 'name'])
         return list(set(users.name))
 
-    def specificDate(self, name):
-        print('------------------name------------------------------')
-        print(name)
-        date = self.db.getMaxDate(self.check_name(name))
+    def specificDate(self, userid):
+        print('------------------in specificDate() userid------------------------------')
+        print(userid)
+        date = self.db.getMaxDate(self.userid)
         return date[-1][0]
 
     def defaults(self):
         background = self.detail_data[self.detail_data[self.columns[-1]] == 'Y']
         date = background[self.columns[0]].iloc[0]
         name = background[self.columns[2]].iloc[0]
-        return name, date
+        userid = background[self.columns[1]].iloc[0]
+        print('---in defaults(): date={} / name={}'.format(date, name))
+        return name, date, userid
 
     def check_name(self, name):
         try:
