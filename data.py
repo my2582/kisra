@@ -35,7 +35,7 @@ class Data:
 
     def getUserId(self, name):
         df_users = self.uniqueUser(return_pd=True)
-        userid = df_users.loc[df_users.name==name, 'userid']
+        userid = df_users.loc[df_users.name==name, 'userid'].iloc[0]
         return userid
 
     def specificDate(self, name):
