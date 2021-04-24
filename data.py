@@ -91,6 +91,8 @@ class Data:
         latest_balance = self.getUserBalance(name)
         latest_general = self.getUserGeneral(name)
 
+        print('types: ', type(latest_balance), type(latest_general))
+
         latest_general.value = latest_general.value.astype(int).apply(lambda x : "{:,}".format(x))
         latest_general.wt = latest_general.wt.astype(float).apply(lambda x : "{:,}".format(x))
 

@@ -343,7 +343,7 @@ def show_content(users):
         #     return html.Div(dbc.Table(table_header, html.Tbody([row1, row2]), bordered=True))
 
         # return html.Div(dbc.Table(table_header + [html.Tbody([row1, row2])], bordered=True))
-        return html.Div(dbc.Table(table_header + [html.Tbody([row1, row2])], bordered=True))
+        return html.Div(dbc.Table(table_header + [html.Tbody([row1, row1])], bordered=True))
 
     def changePeriod(select):
         for idx, sel in enumerate(select):
