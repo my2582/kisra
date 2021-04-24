@@ -235,7 +235,7 @@ class App:
         )
         def page3DateResult(name):
             user.name = name
-            startPoint = user.getStartDate()
+            startPoint = user.getStartDate(name)
             return startPoint, startPoint
 
         @app.callback(

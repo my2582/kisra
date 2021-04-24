@@ -6,8 +6,8 @@ class User:
         self.data = Data.Data()
         self.name, self.date = self.data.defaults()
 
-    def getStartDate(self):
-        return self.data.specificDate(self.name)
+    def getStartDate(self, name):
+        return self.data.specificDate(name)
 
     def changedUserData(self, data):
         return self.data.changeSingleData(data)

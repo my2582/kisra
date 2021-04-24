@@ -147,6 +147,7 @@ class databaseDF:
             self.con.execute(insert_query_gen, temp)
             self.conn.commit()
 
-    def getMaxDate(self, userid):
-        return self.query.getUserBalance(userid)
+    def getMaxDate(self, name):
+        # 최근 잔고를 이름으로 불러와서 최근 날짜를 이용할 수 있게 한다.
+        return self.query.getUserBalanceByName(name)
 

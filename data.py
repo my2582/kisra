@@ -24,10 +24,10 @@ class Data:
         users = pd.DataFrame(users, columns=['userid', 'name'])
         return list(set(users.name))
 
-    def specificDate(self, userid):
-        print('------------------in specificDate() userid------------------------------')
-        print(userid)
-        date = self.db.getMaxDate(userid)
+    def specificDate(self, name):
+        print('------------------in specificDate() name------------------------------')
+        print(name)
+        date = self.db.getMaxDate(name)
         return date[-1][0]
 
     def defaults(self):

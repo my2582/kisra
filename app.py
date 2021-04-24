@@ -372,7 +372,7 @@ def show_content(users):
     )
     def show_prediction(select, name):
         user.name = name
-        date = user.getStartDate()
+        date = user.getStartDate(name)
         print('-----------------date----------------')
         print(date)
         user.date = date
@@ -418,7 +418,7 @@ def show_content(users):
     )
     def page3DateResult(name):
         user.name = name
-        startPoint = user.getStartDate()
+        startPoint = user.getStartDate(name)
         return startPoint, startPoint
 
     @app.callback(
