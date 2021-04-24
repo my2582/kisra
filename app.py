@@ -259,7 +259,7 @@ def show_content(users):
         print(values)
         return values
 
-    def page2_result(content):
+    def page2_result(content, date):
         if type(content) == str:
             return dcc.ConfirmDialog(
                 id='confirm',
@@ -268,21 +268,22 @@ def show_content(users):
 
         table_header = [
             html.Thead(html.Tr([html.Th("시점"), html.Th("Cash"), html.Th(
-                "Equity"), html.Th("Fixed Income"), html.Th("Alternative"), html.Th("Total")]))
+                "Equity"), html.Th("Fixed Income"), html.Th("Alternative"), html.Th("Total"), html.Th('상세')]))
         ]
 
-        total = to_numeric(content.value).sum()
+        latest_content = content.loc[content.date==date, :]
+        total = to_numeric(latest_content.value).sum()
         total = '{:,}'.format(int(total))
-        content.value = to_numeric(content.value).astype(int).apply(lambda x : "{:,}".format(x))
+        latest_content.value = to_numeric(latest_content.value).astype(int).apply(lambda x : "{:,}".format(x))
 
-        row1 = html.Tr([html.Td("현재"), html.Td(content[content['asset_class'] == 'Cash']['value'].iloc[0]),
-                        html.Td(content[content['asset_class']
-                                       == 'Equity']['value'].iloc[0]),
-                        html.Td(content[content['asset_class']
-                                       == 'Fixed Income']['value'].iloc[0]),
-                        html.Td(content[content['asset_class']
-                                       == 'Alternative']['value'].iloc[0]),
-                        html.Td(total)])
+        # row1 = html.Tr([html.Td("현재"), html.Td(content[content['asset_class'] == 'Cash']['value'].iloc[0]),
+        #                 html.Td(content[content['asset_class']
+        #                                == 'Equity']['value'].iloc[0]),
+        #                 html.Td(content[content['asset_class']
+        #                                == 'Fixed Income']['value'].iloc[0]),
+        #                 html.Td(content[content['asset_class']
+        #                                == 'Alternative']['value'].iloc[0]),
+        #                 html.Td(total)])
 
         # before, after = content
         # table_header = [
@@ -290,27 +291,28 @@ def show_content(users):
         #         "주식"), html.Th("채권"), html.Th("대체"), html.Th('상세정보')]))
         # ]
 
-        # row1 = html.Tr([html.Td("현재"), html.Td(content[content['asset_class'] == '현금성']['value'].iloc[0]),
-        #                 html.Td(content[content['asset_class']
-        #                                == '주식']['value'].iloc[0]),
-        #                 html.Td(content[content['asset_class']
-        #                                == '채권']['value'].iloc[0]),
-        #                 html.Td(content[content['asset_class']
-        #                                == '대체']['value'].iloc[0]),
-        #                 html.Td(html.Div([html.Button('상세정보', id='detail-info-button'),
-        #                                   dbc.Modal(
-        #                     [
-        #                         dbc.ModalHeader("상세정보"),
-        #                         dbc.ModalBody(
-        #                             "A small modal.", id='record'),
-        #                         dbc.ModalFooter(
-        #                             dbc.Button(
-        #                                 "Close", id="close-detail-info", className="ml-auto")
-        #                         ),
-        #                     ],
-        #                     id="modal-detail-info",
-        #                     size="sm"
-        #                 )]))])
+        row1 = html.Tr([html.Td("현재"), html.Td(latest_content[latest_content['asset_class'] == 'Cash']['value'].iloc[0]),
+                        html.Td(latest_content[latest_content['asset_class']
+                                       == 'Equity']['value'].iloc[0]),
+                        html.Td(latest_content[latest_content['asset_class']
+                                       == 'Fixed Income']['value'].iloc[0]),
+                        html.Td(latest_content[latest_content['asset_class']
+                                       == 'Alternative']['value'].iloc[0]),
+                        html.Td(total),
+                        html.Td(html.Div([html.Button('상세정보', id='detail-info-button'),
+                                          dbc.Modal(
+                            [
+                                dbc.ModalHeader("상세정보"),
+                                dbc.ModalBody(
+                                    "A small modal.", id='record'),
+                                dbc.ModalFooter(
+                                    dbc.Button(
+                                        "Close", id="close-detail-info", className="ml-auto")
+                                ),
+                            ],
+                            id="modal-detail-info",
+                            size="sm"
+                        )]))])
 
 
         # row1 = html.Tr([html.Td("현재"), html.Td(before[before['asset_class'] == '현금성']['value'].iloc[0]),
@@ -350,7 +352,7 @@ def show_content(users):
         #     return html.Div(dbc.Table(table_header, html.Tbody([row1, row2]), bordered=True))
 
         # return html.Div(dbc.Table(table_header + [html.Tbody([row1, row2])], bordered=True))
-        return html.Div(dbc.Table(table_header + [html.Tbody([row1])], bordered=True))
+        return html.Div(dbc.Table(table_header + [html.Tbody([row1, row1])], bordered=True))
 
     def changePeriod(select):
         for idx, sel in enumerate(select):
@@ -424,7 +426,7 @@ def show_content(users):
         result = user.closeData(select, date, name, choice=True)
         print('-----result of closeData---- I changed back to choice=True')
         print(result)
-        return page2_result(result), date
+        return page2_result(result, date), date
 
     @app.callback(
         Output('modal-detail-info', 'is_open'),
