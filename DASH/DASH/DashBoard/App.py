@@ -197,7 +197,7 @@ class App:
         def show_prediction(select, name, date):
             user.name, user.date = name, date
             select = changePeriod(select)
-            result = user.closeData(select)
+            result = user.closeData(select, choice=True)
             return page2_result(result)
 
         @app.callback(
@@ -210,7 +210,7 @@ class App:
         )
         def detailInfo(open, close, is_open, select):
             select = changePeriod(select)
-            result = user.closeData(select, True)
+            result = user.closeData(select, choice=True)
             table_header = [
                 html.Thead(html.Tr([html.Th(col) for col in list(result.columns)]))
             ]

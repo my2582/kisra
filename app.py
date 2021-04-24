@@ -377,7 +377,7 @@ def show_content(users):
         print(date)
         user.date = date
         select = changePeriod(select)
-        result = user.closeData(select)
+        result = user.closeData(select, date, name, choice=True)
         return page2_result(result), date
 
     @app.callback(
@@ -390,7 +390,7 @@ def show_content(users):
     )
     def detailInfo(open, close, is_open, select):
         select = changePeriod(select)
-        result = user.closeData(select, True)
+        result = user.closeData(select, choice=True)
         table_header = [
             html.Thead(html.Tr([html.Th(col) for col in list(result.columns)]))
         ]

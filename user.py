@@ -7,7 +7,9 @@ class User:
         self.name, self.date, self.userid = self.data.defaults()
 
     def getStartDate(self, name):
-        return self.data.specificDate(name)
+        dt = self.data.specificDate(name)
+        print('---in getStartDate(), dt is {}'.format(dt))
+        return dt
         # return self.data.specificDate(self.userid)
 
     def page3Data(self, date):
@@ -25,8 +27,8 @@ class User:
     def selections(self, name):
         return self.data.getSelection(name)
 
-    def closeData(self, point, choice=False):
-        result = self.data.returnData(point, self.name, self.date, choice)
+    def closeData(self, point, date, name, choice=False):
+        result = self.data.returnData(point, name, date, choice)
 
         if type(result) == str:
             return result

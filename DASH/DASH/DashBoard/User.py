@@ -22,6 +22,7 @@ class User:
         return [{'label': i, 'value': i} for i in users]
 
     def closeData(self, point, choice=False):
+        print('----is this ever called??----')
         result = self.data.returnData(point, self.name, self.date, choice)
 
         if type(result) == str:
