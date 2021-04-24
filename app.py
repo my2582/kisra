@@ -270,7 +270,7 @@ def show_content(users):
                 "Equity"), html.Th("Fixed Income"), html.Th("Alternative"), html.Th("Total")]))
         ]
 
-        total = content.value.sum()
+        total = pd.to_numeric(content.value).sum()
         total = '{:,}'.format(int(total))
         content.value = content.value.astype(int).apply(lambda x : "{:,}".format(x))
 
