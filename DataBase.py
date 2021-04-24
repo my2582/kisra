@@ -45,7 +45,7 @@ class databaseDF:
                            'quantity, cost_price, cost_value, price, value, wt, group_by, original) values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'
 
         insert_query_user = 'INSERT INTO {0} (userid, name, set_no, q_no, answer, risk_pref_value) values (%s, %s, %s, %s, %s, %s)'
-        insert_query_investor = 'INSERT INTO {0} (userid, name, acc_no, profile_code) values (%s, %s, %s, %s, %s)'
+        insert_query_investors = 'INSERT INTO {0} (userid, name, acc_no, profile_code) values (%s, %s, %s, %s, %s)'
 
         general['value'] = general['value'].values.astype(float)
         general['wt'] = general['wt'].values.astype(float)
@@ -79,7 +79,7 @@ class databaseDF:
             self.con.execute(insert_query_user.format('userselection'), temp)
             self.conn.commit()
 
-        for i in range(len(user)):
+        for i in range(len(investors_m)):
             temp = investors_m.iloc[i, :].values.tolist()
             self.con.execute(insert_query_investors.format('investors'), temp)
             self.conn.commit()
