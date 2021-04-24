@@ -8,6 +8,7 @@ class query:
         self.con = con
 
     def findDate(self, table, date, userid):
+        # date 전날까지 데이터를 detail 테이블에서 조회해서 반환한다.
         query = "select distinct * from {0} where to_timestamp(%s,  'mm/dd/yyyy HH:M1:SS AM') > to_timestamp(date, 'mm/dd/yyyy HH:M1:SS AM') and userid=%s"
         self.con.execute(query.format(table), [date, userid])
         self.conn.commit()
@@ -93,6 +94,7 @@ class query:
         return self.con.fetchall()
 
     def getUserBalance(self, userid):
+        # 마지막 날짜의 잔고를 detail 테이블에서 가져온다.
         print('----in getUserBalance(), userid is {}'.format(userid))
         query = "select distinct * from detail A " \
                 "where to_timestamp(A.date, 'mm/dd/yyyy HH:M1:SS AM') = (select max(to_timestamp(B.date, 'mm/dd/yyyy HH:M1:SS AM')) from detail B group by B.userid " \
@@ -109,5 +111,16 @@ class query:
                 "having B.name=%s) and A.name=%s and A.wt > 0.0"
 
         self.con.execute(query, [name, name])
+        self.conn.commit()
+        return self.con.fetchall()
+
+    def getUserGeneral(self, userid):
+        # 마지막 날짜의 요약잔고를 general 테이블에서 가져온다.
+        print('----in getUserGeneral(), userid is {}'.format(userid))
+        query = "select distinct * from general A " \
+                "where to_timestamp(A.date, 'mm/dd/yyyy HH:M1:SS AM') = (select max(to_timestamp(B.date, 'mm/dd/yyyy HH:M1:SS AM')) from general B group by B.userid " \
+                "having B.userid=%s) and A.userid=%s and A.wt > 0.0"
+
+        self.con.execute(query, [userid, userid])
         self.conn.commit()
         return self.con.fetchall()

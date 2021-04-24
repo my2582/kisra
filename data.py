@@ -54,6 +54,12 @@ class Data:
 
         return self.balance
 
+    def getUserGeneral(self, name):
+        userid = self.check_name(name)
+        self.general = self.db.getUserGeneral(userid)
+
+        return self.general
+
     def defaults(self):
         background = self.detail_data[self.detail_data[self.columns[-1]] == 'Y']
         date = background[self.columns[0]].iloc[0]
@@ -82,12 +88,23 @@ class Data:
         if not user_id:
             return '존재하지 않는 사용자입니다. 가입 먼저 해주세요'
 
-        baseline = self.detail_data[self.detail_data[self.columns[2]] == name]
-        standard_date = self.db.getDate(user_id, date)
-        print('standard_date : ', standard_date)
-        answer = self.pre_data[(self.pre_data['date'] == standard_date)&(self.pre_data['userid'] == user_id)]
+        latest_balance = getUserBalance(name)
+        latest_general = getUserGeneral(name)
 
-        return answer, baseline[baseline[self.columns[0]] == standard_date]
+        latest_general.value = latest_general.value.astype(int).apply(lambda x : "{:,}".format(x))
+        latest_general.wt = latest_general.wt.astype(float).apply(lambda x : "{:,}".format(x))
+
+
+        return latest_general, latest_balance
+
+        # baseline = self.detail_data[self.detail_data[self.columns[2]] == name]
+        # standard_date = self.db.getDate(user_id, date)
+        # print('standard_date : ', standard_date)
+        # answer = self.pre_data[(self.pre_data['date'] == standard_date)&(self.pre_data['userid'] == user_id)]
+
+        # return answer, baseline[baseline[self.columns[0]] == standard_date]
+
+
 
     def returnData(self, point, name=None, date=None, choice=False):
         if name is None:

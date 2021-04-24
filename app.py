@@ -270,6 +270,10 @@ def show_content(users):
                 "Equity"), html.Th("Fixed Income"), html.Th("Alternative"), html.Th("Total")]))
         ]
 
+        total = content.value.sum()
+        total = '{:,}'.format(int(total))
+        content.value = content.value.astype(int).apply(lambda x : "{:,}".format(x))
+
         row1 = html.Tr([html.Td("현재"), html.Td(content[content['asset_class'] == 'Cash']['value'].iloc[0]),
                         html.Td(content[content['asset_class']
                                        == 'Equity']['value'].iloc[0]),
@@ -277,8 +281,7 @@ def show_content(users):
                                        == 'Fixed Income']['value'].iloc[0]),
                         html.Td(content[content['asset_class']
                                        == 'Alternative']['value'].iloc[0]),
-                        html.Td(content.value.sum())
-                                       ])
+                        html.Td(total)])
 
         # before, after = content
         # table_header = [
@@ -417,8 +420,8 @@ def show_content(users):
         user.date = date
         select = changePeriod(select)
         print('----select:----', select)
-        result = user.closeData(select, date, name, choice=True)
-        print('-----result of closeData----')
+        result = user.closeData(select, date, name, choice=False)
+        print('-----result of closeData---- I changed to choice=False')
         print(result)
         return page2_result(result), date
 
