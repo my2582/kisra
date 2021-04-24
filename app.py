@@ -272,6 +272,8 @@ def show_content(users):
         ]
 
         latest_content = content.loc[content.date==date, :]
+        print('latest_content')
+        print(latest_content)
         total = to_numeric(latest_content.value).sum()
         total = '{:,}'.format(int(total))
         latest_content.value = to_numeric(latest_content.value).astype(int).apply(lambda x : "{:,}".format(x))

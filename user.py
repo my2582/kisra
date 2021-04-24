@@ -33,6 +33,8 @@ class User:
     def closeData(self, point, date=None, name=None, choice=False):
         result = self.data.returnData(point, name, date, choice)
 
+        return result
+
         # risk_profile = self.data.getRiskProfile(name)
         # pf = self.data.advised_pf
         # max_dt = pf.loc[pf.risk_profile==2, ['date']].max().date
@@ -40,11 +42,12 @@ class User:
         # latest_advised_pf = pf.loc[(pf.risk_profile==2) & (pf.date==max_dt), :]
         # detail = self.data.getUserBalance(name)
 
-        if type(result) == str:
-            return result
+        # if type(result) == str:
+        #     return result
 
-        if choice:
-            return result
+        # if choice:
+        #     return result
+
 
         before, after = result
         before, after = self.fullCond(before), self.fullCond(after)
