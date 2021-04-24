@@ -420,8 +420,8 @@ def show_content(users):
         user.date = date
         select = changePeriod(select)
         print('----select:----', select)
-        result = user.closeData(select, date, name, choice=False)
-        print('-----result of closeData---- I changed to choice=False')
+        result = user.closeData(select, date, name, choice=True)
+        print('-----result of closeData---- I changed back to choice=True')
         print(result)
         return page2_result(result), date
 

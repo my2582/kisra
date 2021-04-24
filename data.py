@@ -88,8 +88,8 @@ class Data:
         if not user_id:
             return '존재하지 않는 사용자입니다. 가입 먼저 해주세요'
 
-        latest_balance = getUserBalance(name)
-        latest_general = getUserGeneral(name)
+        latest_balance = self.getUserBalance(name)
+        latest_general = self.getUserGeneral(name)
 
         latest_general.value = latest_general.value.astype(int).apply(lambda x : "{:,}".format(x))
         latest_general.wt = latest_general.wt.astype(float).apply(lambda x : "{:,}".format(x))
