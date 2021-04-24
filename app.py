@@ -390,7 +390,7 @@ def show_content(users):
     )
     def detailInfo(open, close, is_open, select):
         select = changePeriod(select)
-        result = user.closeData(select, choice=True)
+        result = user.closeData(select, choice=False)
         table_header = [
             html.Thead(html.Tr([html.Th(col) for col in list(result.columns)]))
         ]
