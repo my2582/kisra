@@ -301,7 +301,21 @@ def show_content(users):
                                        == 'Fixed Income']['value'].iloc[0]),
                         html.Td(latest_content[latest_content['asset_class']
                                        == 'Alternative']['value'].iloc[0]),
-                        html.Td(total)])
+                        html.Td(total),
+                        html.Td(html.Div([html.Button('상세정보', id='detail-info-button'),
+                                          dbc.Modal(
+                            [
+                                dbc.ModalHeader("상세정보"),
+                                dbc.ModalBody(
+                                    "A small modal.", id='record'),
+                                dbc.ModalFooter(
+                                    dbc.Button(
+                                        "Close", id="close-detail-info", className="ml-auto")
+                                ),
+                            ],
+                            id="modal-detail-info",
+                            size="sm"
+                        )]))])
         
         row2 = html.Tr([html.Td(""), html.Td(""), html.Td(""), html.Td(""), html.Td(""), html.Td("")])
 
