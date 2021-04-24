@@ -273,7 +273,7 @@ def show_content(users):
 
         total = to_numeric(content.value).sum()
         total = '{:,}'.format(int(total))
-        content.value = content.value.astype(int).apply(lambda x : "{:,}".format(x))
+        content.value = to_numeric(content.value).astype(int).apply(lambda x : "{:,}".format(x))
 
         row1 = html.Tr([html.Td("현재"), html.Td(content[content['asset_class'] == 'Cash']['value'].iloc[0]),
                         html.Td(content[content['asset_class']
