@@ -55,7 +55,7 @@ class User:
         return before, after
 
     def fullCond(self, data):
-        condition = ['현금성', '주식', '채권', '대체']
+        condition = ['Cash', 'Equity', 'Fixed Income', 'Alternative']
         present = set(list(data['asset_class']))
         need = [col for col in condition if col not in present]
 ##

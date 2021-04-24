@@ -77,7 +77,7 @@ class query:
 
         self.con.execute(query, [date, userid, username, 'Cash', 'C000001', '현금', float(money), float(1), float(money),
                                  float(1), float(money), float(1),
-                                 str(now.year)+str(now.month)+str(now.day)+type_hour+':'+str(now.minute)+'현금성', 'Y'])
+                                 str(now.year)+str(now.month)+str(now.day)+type_hour+':'+str(now.minute)+'Cash', 'Y'])
         self.conn.commit()
 
         query = "INSERT INTO general(date, userid, asset_class, value, wt) values (%s, %s, %s, %s, %s)"

@@ -95,6 +95,7 @@ class App:
 
 
         def page2_result(content):
+            print('-=-=-=-= is this every called??-=-=-=')
             if type(content) == str:
                 return dcc.ConfirmDialog(
                         id='confirm',
