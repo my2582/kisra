@@ -13,6 +13,7 @@ import plotly.graph_objects as go
 from DataBase import databaseDF
 from src.models.load_data import AdvisedPortfolios, Singleton
 from skimage import io
+from pandas import to_numeric
 
 
 sheet = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
@@ -270,7 +271,7 @@ def show_content(users):
                 "Equity"), html.Th("Fixed Income"), html.Th("Alternative"), html.Th("Total")]))
         ]
 
-        total = pd.to_numeric(content.value).sum()
+        total = to_numeric(content.value).sum()
         total = '{:,}'.format(int(total))
         content.value = content.value.astype(int).apply(lambda x : "{:,}".format(x))
 
