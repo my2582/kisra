@@ -8,7 +8,7 @@ class User:
 
     def getStartDate(self, name):
         dt = self.data.specificDate(name)
-        print('---in getStartDate(), dt is {}'.format(dt))
+        print('---in getStartDate(), last record for {} is {}'.format(name, dt))
         return dt
         # return self.data.specificDate(self.userid)
 

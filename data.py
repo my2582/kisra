@@ -69,17 +69,27 @@ class Data:
 
         if not user_id:
             return '존재하지 않는 사용자입니다. 가입 먼저 해주세요'
+        # commented on 4/24 at 12:38PM ----------------
+        # data = self.pre_data[self.pre_data['userid'] == user_id]
 
-        data = self.pre_data[self.pre_data['userid'] == user_id]
+        # start, end = point
+        # standard_date = dt.today().strftime('%m/%d/%y')+' 1:00:00 AM'
+
+        # if choice:
+        #     data = self.db.getRecord(user_id, (standard_date, start, end))
+        #     if not len(data):
+        #         return pd.DataFrame(columns=self.columns)
+        #     data.columns = self.columns
+        #     return data
+        #
+        # return data[data['date'] == date], data[data['date'] == date]
+        # -------------------------------------------
 
         start, end = point
         standard_date = dt.today().strftime('%m/%d/%y')+' 1:00:00 AM'
 
-        if choice:
-            data = self.db.getRecord(user_id, (standard_date, start, end))
-            if not len(data):
-                return pd.DataFrame(columns=self.columns)
-            data.columns = self.columns
-            return data
-
-        return data[data['date'] == date], data[data['date'] == date]
+        data = self.db.getRecord(user_id, (standard_date, start, end))
+        if not len(data):
+            return pd.DataFrame(columns=self.columns)
+        data.columns = self.columns
+        return data

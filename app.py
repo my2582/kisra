@@ -377,7 +377,7 @@ def show_content(users):
         print(date)
         user.date = date
         select = changePeriod(select)
-        result = user.closeData(select, date, name, choice=False)
+        result = user.closeData(select, date, name, choice=True)
         return page2_result(result), date
 
     @app.callback(
