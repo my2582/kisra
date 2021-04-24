@@ -11,7 +11,7 @@ class Data:
         self.detail_data = pd.read_pickle('./data/processed/balance_s.pkl') 
         self.columns = list(self.detail_data.columns)
         self.db = databaseDF()
-        print('Data is intialized -------------------. detailed_data is')
+        print('Data is initialized -------------------. detailed_data is')
         self.db.createDefault((self.pre_data, self.detail_data, self.usersel))
         print(self.detail_data)
         
@@ -27,7 +27,7 @@ class Data:
     def specificDate(self, userid):
         print('------------------in specificDate() userid------------------------------')
         print(userid)
-        date = self.db.getMaxDate(self.userid)
+        date = self.db.getMaxDate(userid)
         return date[-1][0]
 
     def defaults(self):
