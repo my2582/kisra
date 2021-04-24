@@ -195,6 +195,8 @@ class App:
             State('analysis-datetime', 'value')
         )
         def show_prediction(select, name, date):
+            if not date:
+                date = user.getStartDate(name)
             user.name, user.date = name, date
             select = changePeriod(select)
             result = user.closeData(select, choice=True)
@@ -210,7 +212,7 @@ class App:
         )
         def detailInfo(open, close, is_open, select):
             select = changePeriod(select)
-            result = user.closeData(select, choice=True)
+            result = user.closeData(select, choice=False)
             table_header = [
                 html.Thead(html.Tr([html.Th(col) for col in list(result.columns)]))
             ]

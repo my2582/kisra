@@ -11,6 +11,9 @@ class User:
         print('---in getStartDate(), last record for {} is {}'.format(name, dt))
         return dt
         # return self.data.specificDate(self.userid)
+    
+    def getRiskProfile(self, name):
+        self.risk_profile = self.data.getRiskProfile(name)
 
     def page3Data(self, date):
         general, detail = self.data.returnPage3Data(self.name, date)
@@ -29,6 +32,13 @@ class User:
 
     def closeData(self, point, date, name, choice=False):
         result = self.data.returnData(point, name, date, choice)
+
+        # risk_profile = self.data.getRiskProfile(name)
+        # pf = self.data.advised_pf
+        # max_dt = pf.loc[pf.risk_profile==2, ['date']].max().date
+
+        # latest_advised_pf = pf.loc[(pf.risk_profile==2) & (pf.date==max_dt), :]
+        # detail = self.data.getUserBalance(name)
 
         if type(result) == str:
             return result

@@ -550,8 +550,9 @@ class Character:
         da = DiscreteAllocation(weights=wt, latest_prices=pr, total_portfolio_value=trading_amt)
         
         allocation, remaining_cash = da.greedy_portfolio()
-        # print("Discrete allocation on {}:{}".format(rebal_date,allocation))
-        # print("Funds remaining: {:.2f} KRW".format(remaining_cash))
+        print("리밸런싱 결과:")
+        print("{}: 새 포트폴리오-{}".format(rebal_date,allocation))
+        print(" - 매매 후 잔액: {:.2f} KRW".format(remaining_cash))
         
         # 매매한 뒤의 레코드 생성
         df_qty = pd.DataFrame.from_dict(allocation, orient='index', columns=['quantity'])
@@ -679,6 +680,8 @@ class Character:
         print('----all the details are inserted----')
         self.db.insert_detail(all_the_nexts)
 
+        # investor 테이블 기록
+        self.db.insert_investor(userid=self.userid, name=self.username, profile_code=self.risk_profile)
     
         return first_advised_port, by_assetclass
 

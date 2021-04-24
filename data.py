@@ -1,6 +1,7 @@
 import pandas as pd
 from DataBase import databaseDF
 from datetime import date as dt
+from src.models.load_data import AdvisedPortfolios, Singleton
 
 class Data:
     def __init__(self):
@@ -8,11 +9,13 @@ class Data:
         # self.detail_data = pd.read_pickle(os.getcwd()+'\\data\\processed\\balance_s.pkl')
         self.usersel = pd.read_pickle('./data/processed/profiles_s.pkl')
         self.pre_data = pd.read_pickle('./data/processed/balance_m.pkl')
-        self.detail_data = pd.read_pickle('./data/processed/balance_s.pkl') 
+        self.detail_data = pd.read_pickle('./data/processed/balance_s.pkl')
+        self.investors_m =  pd.read_pickle('./data/processed/investors_m.pkl')
+        self.advised_pf = AdvisedPortfolios.instance().data
         self.columns = list(self.detail_data.columns)
         self.db = databaseDF()
         print('Data is initialized -------------------. detailed_data is')
-        self.db.createDefault((self.pre_data, self.detail_data, self.usersel))
+        self.db.createDefault((self.pre_data, self.detail_data, self.usersel, self.investors_m))
         print(self.detail_data)
         
         #self.detail_data = pd.read_pickle('./data/processed/balance_s.pkl')
@@ -29,6 +32,16 @@ class Data:
         print(name)
         date = self.db.getMaxDate(name)
         return date[-1][0]
+
+    def getRiskProfile(self, name):
+        profile_code = self.db.getUserRiskProfile(name)
+        return profile_code
+
+    def getUserBalance(self, name):
+        userid = self.check_name(name)
+        self.balance = self.db.getUserBalance(userid)
+        
+        return self.balance
 
     def defaults(self):
         background = self.detail_data[self.detail_data[self.columns[-1]] == 'Y']
