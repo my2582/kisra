@@ -139,5 +139,5 @@ class Data:
         if not len(data):
             return pd.DataFrame(columns=self.columns)
         data.columns = self.columns
-        print('type(data): '.format(type(data)))
+        print('type(data): {}'.format(type(data)))
         return data

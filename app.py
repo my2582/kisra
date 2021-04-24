@@ -302,6 +302,8 @@ def show_content(users):
                         html.Td(latest_content[latest_content['asset_class']
                                        == 'Alternative']['value'].iloc[0]),
                         html.Td(total)])
+        
+        row2 = html.Tr([html.Td("상단: 자산군별 평가금액 / 하단: 상기 기간 내 잔고변화(Rebal은 리밸런싱일을 의미)")])
 
 
         # row1 = html.Tr([html.Td("현재"), html.Td(before[before['asset_class'] == '현금성']['value'].iloc[0]),
@@ -341,7 +343,7 @@ def show_content(users):
         #     return html.Div(dbc.Table(table_header, html.Tbody([row1, row2]), bordered=True))
 
         # return html.Div(dbc.Table(table_header + [html.Tbody([row1, row2])], bordered=True))
-        return html.Div(dbc.Table(table_header + [html.Tbody([row1])], bordered=True))
+        return html.Div(dbc.Table(table_header + [html.Tbody([row1, row2])], bordered=True))
 
     def changePeriod(select):
         for idx, sel in enumerate(select):
@@ -413,7 +415,7 @@ def show_content(users):
         select = changePeriod(select)
         print('----select:----', select)
         result = user.closeData(select, date, name, choice=True)
-        print('-----result of closeData---- I changed back to choice=True')
+        print('-----result of closeData---- result type is: {}'.format(type(result)))
         print(result)
         return page2_result(result, date), date
 
