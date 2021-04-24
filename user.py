@@ -6,9 +6,9 @@ class User:
         self.data = Data()
         self.name, self.date, self.userid = self.data.defaults()
 
-    def getStartDate(self):
-        # return self.data.specificDate(self.name)
-        return self.data.specificDate(self.userid)
+    def getStartDate(self, name):
+        return self.data.specificDate(name)
+        # return self.data.specificDate(self.userid)
 
     def page3Data(self, date):
         general, detail = self.data.returnPage3Data(self.name, date)
