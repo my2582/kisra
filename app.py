@@ -267,7 +267,7 @@ def show_content(users):
 
         table_header = [
             html.Thead(html.Tr([html.Th("시점"), html.Th("Cash"), html.Th(
-                "Equity"), html.Th("Fixed Income"), html.Th("Alternative")]))
+                "Equity"), html.Th("Fixed Income"), html.Th("Alternative"), html.Th("Total")]))
         ]
 
         row1 = html.Tr([html.Td("현재"), html.Td(content[content['asset_class'] == 'Cash']['value'].iloc[0]),
@@ -276,7 +276,9 @@ def show_content(users):
                         html.Td(content[content['asset_class']
                                        == 'Fixed Income']['value'].iloc[0]),
                         html.Td(content[content['asset_class']
-                                       == 'Alternative']['value'].iloc[0])])
+                                       == 'Alternative']['value'].iloc[0]),
+                        html.Td(content.value.sum())
+                                       ])
 
         # before, after = content
         # table_header = [

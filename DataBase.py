@@ -64,6 +64,9 @@ class databaseDF:
         print('----user is----')
         print(user)
 
+        print('investors_m is -----')
+        print(investors_m)
+
         for i in range(len(general)):
             temp = general.iloc[i, :].values.tolist()
             self.con.execute(insert_query_gen.format('general'), temp)
@@ -81,6 +84,7 @@ class databaseDF:
 
         for i in range(len(investors_m)):
             temp = investors_m.iloc[i, :].values.tolist()
+            print('temp {}-{}'.format(i, temp))
             self.con.execute(insert_query_investors.format('investors'), temp)
             self.conn.commit()
 
@@ -171,5 +175,5 @@ class databaseDF:
     def insert_investor(self, userid, name, profile_code):
         insert_query_inv = 'INSERT INTO investors (userid, name, acc_no, profile_code) values (%s, %s, %s, %s)'
 
-        self.con.execute(insert_query_gen, [userid, name, '', profile_code])
+        self.con.execute(insert_query_inv, [userid, name, '', profile_code])
         self.conn.commit()

@@ -37,7 +37,7 @@ class query:
         return self.con.fetchall()
 
     def getUserRiskProfile(self, name):
-        query = "select profile_code from investors where name=%s"
+        query = "select distinct profile_code from investors where name=%s"
         self.con.execute(query, [name])
         self.conn.commit()
         return self.con.fetchall()
