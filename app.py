@@ -268,12 +268,13 @@ def show_content(users):
 
         table_header = [
             html.Thead(html.Tr([html.Th("시점"), html.Th("Cash"), html.Th(
-                "Equity"), html.Th("Fixed Income"), html.Th("Alternative"), html.Th("Total"), html.Th('상세')]))
+                "Equity"), html.Th("Fixed Income"), html.Th("Alternative"), html.Th("Total")]))
         ]
 
         latest_content = content.loc[content.date==date, :]
         print('latest_content')
         print(latest_content)
+        print('content.date: {}, date: {}'.format(content.date, date))
         total = to_numeric(latest_content.value).sum()
         total = '{:,}'.format(int(total))
         latest_content.value = to_numeric(latest_content.value).astype(int).apply(lambda x : "{:,}".format(x))
@@ -300,21 +301,7 @@ def show_content(users):
                                        == 'Fixed Income']['value'].iloc[0]),
                         html.Td(latest_content[latest_content['asset_class']
                                        == 'Alternative']['value'].iloc[0]),
-                        html.Td(total),
-                        html.Td(html.Div([html.Button('상세정보', id='detail-info-button'),
-                                          dbc.Modal(
-                            [
-                                dbc.ModalHeader("상세정보"),
-                                dbc.ModalBody(
-                                    "A small modal.", id='record'),
-                                dbc.ModalFooter(
-                                    dbc.Button(
-                                        "Close", id="close-detail-info", className="ml-auto")
-                                ),
-                            ],
-                            id="modal-detail-info",
-                            size="sm"
-                        )]))])
+                        html.Td(total)])
 
 
         # row1 = html.Tr([html.Td("현재"), html.Td(before[before['asset_class'] == '현금성']['value'].iloc[0]),
@@ -354,7 +341,7 @@ def show_content(users):
         #     return html.Div(dbc.Table(table_header, html.Tbody([row1, row2]), bordered=True))
 
         # return html.Div(dbc.Table(table_header + [html.Tbody([row1, row2])], bordered=True))
-        return html.Div(dbc.Table(table_header + [html.Tbody([row1, row1])], bordered=True))
+        return html.Div(dbc.Table(table_header + [html.Tbody([row1])], bordered=True))
 
     def changePeriod(select):
         for idx, sel in enumerate(select):
