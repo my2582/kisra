@@ -7,6 +7,7 @@ class User:
         self.name, self.date = self.data.defaults()
 
     def getStartDate(self, name):
+        print('----in getStartDate, name is {}'.format(name))
         return self.data.specificDate(name)
 
     def changedUserData(self, data):
