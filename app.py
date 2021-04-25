@@ -353,7 +353,7 @@ def show_content(users):
             'original': '납입금여부'
         })
 
-        table_header = [
+        table_header_detail = [
             html.Thead(html.Tr([html.Th(col) for col in list(result.columns)]))
         ]
 
@@ -405,7 +405,8 @@ def show_content(users):
         #     return html.Div(dbc.Table(table_header, html.Tbody([row1, row2]), bordered=True))
 
         # return html.Div(dbc.Table(table_header + [html.Tbody([row1, row2])], bordered=True))
-        return html.Div(dbc.Table(table_header + [html.Tbody([row1, table_row])], bordered=True))
+        return html.Div([dbc.Table(table_header + [html.Tbody([row1])], bordered=True), 
+                    dbc.Table(table_header_detail + [html.Tbody(table_row)], bordered=True)])
 
     def changePeriod(select):
         for idx, sel in enumerate(select):
