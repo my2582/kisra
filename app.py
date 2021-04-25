@@ -282,7 +282,7 @@ def show_content(users):
         print('latest_content: {}'.format(latest_content))
         print('latest_content.date: {}, date: {}'.format(latest_content.date, date))
         print('latest_content[latest_content[asset_class] == Cash][value]: {}'.format(latest_content.loc[latest_content.asset_class == 'Cash', 'value']))
-        summary = latest_content.loc[:, ['asset_class', 'value']].groupby('asset_class').sum()
+        summary = latest_content.loc[:, ['asset_class', 'value']].groupby('asset_class').sum().reset_index()
 
         total = summary.value.sum()
         total = '{:,}'.format(int(total))
