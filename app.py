@@ -245,8 +245,8 @@ def show_content(users):
         if username == 'x':
             return [None]*8
         outputs = user.selections(username)
-        print('-------------outputs----------------')
-        print(outputs)
+        # print('-------------outputs----------------')
+        # print(outputs)
         for_selected = layout.signup[3]
         values = []
         idx = 0
@@ -254,8 +254,8 @@ def show_content(users):
             values.append(
                 for_selected.children[i].options[int(outputs[idx][0]-1)]['value'])
             idx += 1
-        print('-------------values-------------')
-        print(values)
+        # print('-------------values-------------')
+        # print(values)
         return values
 
     def page2_result(content, date):
@@ -273,15 +273,15 @@ def show_content(users):
 
         latest_content = content.loc[content.date==date, :]
         latest_content.value = to_numeric(latest_content.value)
-        print('content.columns: {}'.format(content.columns))
-        print('content.shape: {}'.format(content.shape))
-        print('content: {}'.format(content))
-        print('----------------------------')
-        print('latest_content.shape: {}'.format(latest_content.shape))
-        print('latest_content.columns: {}'.format(latest_content.columns))
-        print('latest_content: {}'.format(latest_content))
-        print('latest_content.date: {}, date: {}'.format(latest_content.date, date))
-        print('latest_content[latest_content[asset_class] == Cash][value]: {}'.format(latest_content.loc[latest_content.asset_class == 'Cash', 'value']))
+        # print('content.columns: {}'.format(content.columns))
+        # print('content.shape: {}'.format(content.shape))
+        # print('content: {}'.format(content))
+        # print('----------------------------')
+        # print('latest_content.shape: {}'.format(latest_content.shape))
+        # print('latest_content.columns: {}'.format(latest_content.columns))
+        # print('latest_content: {}'.format(latest_content))
+        # print('latest_content.date: {}, date: {}'.format(latest_content.date, date))
+        # print('latest_content[latest_content[asset_class] == Cash][value]: {}'.format(latest_content.loc[latest_content.asset_class == 'Cash', 'value']))
         summary = latest_content.loc[:, ['asset_class', 'value']].groupby('asset_class').sum().reset_index()
 
         total = summary.value.sum()
@@ -435,10 +435,10 @@ def show_content(users):
         print(date, name)
         user.date = date
         select = changePeriod(select)
-        print('----select:----', select)
+        # result는 DataFrame 타입임.
         result = user.closeData(select, date, name, choice=True)
-        print('-----result of closeData---- result type is: {}'.format(type(result)))
-        print(result)
+        #print('-----result of closeData---- result type is: {}'.format(type(result)))
+        # print(result)
         return page2_result(result, date), date
 
     @app.callback(
@@ -461,7 +461,7 @@ def show_content(users):
         result = result[['date', 'name', 'itemname', 'price', 'quantity', 'value', 'cost_price', 'cost_value', 'wt', 'original']]
         result.date = to_datetime(result.date).dt.strftime('%Y-%m-%d')
         result.loc[:, ['price', 'quantity', 'value', 'cost_price', 'cost_value']] = result.loc[:, ['price', 'quantity', 'value', 'cost_price', 'cost_value']].astype(float).astype(int).applymap(lambda x : "{:,}".format(x))
-        result.loc[:, ['wt']] = result.loc[:, ['wt']].astype(float).applymap(lambda x : "{:.3f}".format(x))
+        result.loc[:, ['wt']] = (result.loc[:, ['wt']].astype(float)*100).applymap(lambda x : "{:.1f}".format(x))
         result = result.rename(columns={
             'date':'날짜',
             'name':'이름',
@@ -480,7 +480,7 @@ def show_content(users):
         ]
 
         rows = result.values.tolist()
-        print(rows)
+        # print(rows)
         table_row = list()
         for row in rows:
             temp = [html.Td(data) for data in row]

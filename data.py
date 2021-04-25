@@ -139,14 +139,14 @@ class Data:
         standard_date = dt.today().strftime('%m/%d/%y')+' 1:00:00 AM'
 
         data = self.db.getRecord(user_id, (standard_date, start, end))
-        print('현재 시점 잔고 데이터 가져옴---')
+        print('현재 시점 잔고 데이터 가져옴. userid: {}, name: {}'.format(user_id, name))
         if not len(data):
             return pd.DataFrame(columns=self.columns)
         data.columns = self.columns
 
         # 날짜 역순 정렬
         data = data.iloc[pd.to_datetime(data.date).values.argsort()[::-1]]
-        print('type(data): {}'.format(type(data)))
-        print(data)
-        
+        # print('type(data): {}'.format(type(data)))
+        # print(data)
+
         return data
