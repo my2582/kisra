@@ -270,11 +270,15 @@ def show_content(users):
                 "Equity"), html.Th("Fixed Income"), html.Th("Alternative"), html.Th("Total")]))
         ]
 
-        print('content.shape: ', content.shape)
 
         latest_content = content.loc[content.date==date, :]
-        print('latest_content: {}'.format(latest_contest))
+        print('content.columns: {}'.format(content.columns))
+        print('content.shape: {}'.format(content.shape))
+        print('content: {}'.format(content))
+        print('----------------------------')
+        print('latest_content.shape: {}'.format(latest_content.shape))
         print('latest_content.columns: {}'.format(latest_content.columns))
+        print('latest_content: {}'.format(latest_content))
         print('latest_content.date: {}, date: {}'.format(latest_content.date, date))
         print('latest_content[latest_content[asset_class] == Cash][value]: {}'.format(latest_content.loc[latest_content.asset_class == 'Cash', 'value']))
         total = to_numeric(latest_content.value).sum()
