@@ -14,9 +14,9 @@ class Data:
         self.advised_pf = AdvisedPortfolios.instance().data
         self.columns = list(self.detail_data.columns)
         self.db = databaseDF()
-        print('Data is initialized -------------------. detailed_data is')
+        # print('Data is initialized -------------------. detailed_data is')
         self.db.createDefault((self.pre_data, self.detail_data, self.usersel, self.investors_m))
-        print(self.detail_data)
+        # print(self.detail_data)
         
         #self.detail_data = pd.read_pickle('./data/processed/balance_s.pkl')
         #self.detail_data = pd.read_pickle('./data/processed/balance_s.pkl') 
@@ -39,8 +39,8 @@ class Data:
         return userid
 
     def specificDate(self, name):
-        print('------------------in specificDate() name------------------------------')
-        print(name)
+        # print('------------------in specificDate() name------------------------------')
+        # print(name)
         date = self.db.getMaxDate(name)
         return date[-1][0]
 
@@ -65,7 +65,7 @@ class Data:
         date = background[self.columns[0]].iloc[0]
         name = background[self.columns[2]].iloc[0]
         userid = background[self.columns[1]].iloc[0]
-        print('---in defaults(): date={} / name={}'.format(date, name))
+        # print('---in defaults(): date={} / name={}'.format(date, name))
         return name, date, userid
 
     def check_name(self, name):
@@ -77,9 +77,9 @@ class Data:
             return False
 
     def getSelection(self, name):
-        print(name)
+        # print(name)
         userid = self.check_name(name)
-        print(userid)
+        # print(userid)
         return self.db.getSelection(userid)
 
     def returnPage3Data(self, name, date):
@@ -94,7 +94,7 @@ class Data:
         latest_balance = pd.DataFrame(latest_balance, columns=self.columns)
         latest_general = pd.DataFrame(latest_general, columns=['date', 'userid', 'asset_class', 'value', 'wt'])
 
-        print('types: ', type(latest_balance), type(latest_general))
+        # print('types: ', type(latest_balance), type(latest_general))
 
         latest_general.value = latest_general.value.astype(int).apply(lambda x : "{:,}".format(x))
         latest_general.wt = (latest_general.wt.astype(float)*100).apply(lambda x : "{:,}".format(x))
@@ -113,7 +113,7 @@ class Data:
 
 
     def returnData(self, point, name=None, date=None, choice=False):
-        print('현재 시점 잔고 조회시작---returnData 시작')
+        # print('현재 시점 잔고 조회시작---returnData 시작')
         if name is None:
             print('Your name is None!!')
             name = '투자자1'
@@ -143,7 +143,7 @@ class Data:
         standard_date = dt.today().strftime('%m/%d/%y')+' 1:00:00 AM'
 
         data = self.db.getRecord(user_id, (standard_date, start, end))
-        print('현재 시점 잔고 데이터 가져옴. userid: {}, name: {}'.format(user_id, name))
+        # print('현재 시점 잔고 데이터 가져옴. userid: {}, name: {}'.format(user_id, name))
         if not len(data):
             return pd.DataFrame(columns=self.columns)
         data.columns = self.columns

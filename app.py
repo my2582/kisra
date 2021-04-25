@@ -143,7 +143,7 @@ def show_content(users):
             tags_id = [input_1, input_2, input_3, input_4, input_5, input_6, input_7, input_8, input_9,
                        input_10, input_11]
             character = Character(tags_id)
-            print('tags_id: {}'.format(tags_id))
+            # print('tags_id: {}'.format(tags_id))
             assert app.layout.children[-1] is not None, "app.layout is none."
             output = html.Div([
                 html.Div(id='character-result')
@@ -174,7 +174,7 @@ def show_content(users):
                 rpt_url = 'https://raw.githubusercontent.com/my2582/kisra_storage/main/report-{}_{}.png'.format(risk_profile, current_date)
                 rpt2_url = 'https://raw.githubusercontent.com/my2582/kisra_storage/main/ef_area-{}_{}.png'.format(risk_profile, current_date)
                 rpt3_url = 'https://raw.githubusercontent.com/my2582/kisra_storage/main/ef-{}_{}.png'.format(risk_profile, current_date)
-                print('URLs:', rpt_url, rpt2_url, rpt3_url)
+                # print('URLs:', rpt_url, rpt2_url, rpt3_url)
                 fig_rpt = get_fig(source=rpt_url, width=1008, height=2592)
                 fig_rpt2 = get_fig(source=rpt2_url, width=1000, height=600)
                 fig_rpt3 = get_fig(source=rpt3_url, width=640, height=480)
@@ -185,8 +185,8 @@ def show_content(users):
                 pie = px.pie(df, names=df.loc[:, 'itemname'], values=df.loc[:, 'weights'],
                              title="추천 포트폴리오", color_discrete_sequence=px.colors.qualitative.Set3)
 
-                print('-=-=-=-df.columns-=-=-=-=-')
-                print(df.columns)
+                # print('-=-=-=-df.columns-=-=-=-=-')
+                # print(df.columns)
 
                 # 바 차트(자산군별)
                 bar_chart = px.bar(by_assetclass, y='weights', x='asset_class', title='자산군별 비중',
@@ -208,7 +208,7 @@ def show_content(users):
                     output.children.append(fig)
                     output.children.append(fig_bar)
 
-                print('------------fig---------------')
+                # print('------------fig---------------')
                 # fig_show = html.Img(class_='picture-show', src="./reports/figures/report-4_2021-02-26.png")
                 # href = html.A('Download readMe.pdf', download='./reports/figures/report-4_2021-02-26.png', href='/readMe.pdf')
                 # output.children.append(href)
@@ -329,10 +329,10 @@ def show_content(users):
 
 
 
-        print('----page2_result에서 상세내역 찍기 시작---')
+        # print('----page2_result에서 상세내역 찍기 시작---')
         # result = user.closeData(select, name=user.name, date=user.date, choice=False)
-        print('content 첫줄 보면..')
-        print(content.iloc[:1, :3])
+        # print('content 첫줄 보면..')
+        # print(content.iloc[:1, :3])
 
         result = content
         # RA자문 탭에서 상세잔고내역의 컬럼명/컬럼순서 변경
@@ -428,13 +428,16 @@ def show_content(users):
 
         table_header = [
             html.Thead(html.Tr([html.Th("종목명"), html.Th(
-                "평가액"), html.Th("비중"), html.Th("비고")]))
+                "평가액"), html.Th("비중(%)"), html.Th("자산군")]))
         ]
         informations = table.loc[:, ['itemname', 'value', 'wt', 'asset_class']]
+        
         # informations.loc[:, 'wt'] = informations.loc[:, 'wt']*100
         total_value = informations.value.str.replace(',','').astype(float).sum()
         total_value = '{:,}'.format(round(total_value))
-        total_wt = informations.wt.str.replace(',','').astype(float).sum()*100
+        informations.wt = informations.wt.str.replace(',','').astype(float)
+        informations.wt = informations.wt.apply(lambda x: '{:.1f}'.format(x))
+        total_wt = informations.wt.sum()
         total_wt = '{:.1f}'.format(total_wt)
         sumOfInfo = [html.Td('계'), html.Td(total_value), html.Td(total_wt), html.Td('')]
         informations = informations.values.tolist()
@@ -478,7 +481,7 @@ def show_content(users):
     def show_prediction(select, name):
         user.name = name
         date = user.getStartDate(name)
-        print('app.py show_prediction params: date {}, name {}, select {}'.format(date, name, select))
+        # print('app.py show_prediction params: date {}, name {}, select {}'.format(date, name, select))
         user.date = date
         select = changePeriod(select)
         # result는 DataFrame 타입임.
@@ -496,14 +499,14 @@ def show_content(users):
         State('predict-slider', 'value')
     )
     def detailInfo(open, close, is_open, select):
-        print('----in detailInfo. close: {}, is_open: {}, select is {}'.format(close, is_open, select))
+        # print('----in detailInfo. close: {}, is_open: {}, select is {}'.format(close, is_open, select))
         select = changePeriod(select)
-        print('After-{}'.format(select))
-        print('user.name: {}'.format(user.name))
-        print('user.date: {}'.format(user.date))
+        # print('After-{}'.format(select))
+        # print('user.name: {}'.format(user.name))
+        # print('user.date: {}'.format(user.date))
         result = user.closeData(select, name=user.name, date=user.date, choice=False)
-        print('여기랑 이름이 같아야..')
-        print(result.iloc[:1, :3])
+        # print('여기랑 이름이 같아야..')
+        # print(result.iloc[:1, :3])
 
         # RA자문 탭에서 상세잔고내역의 컬럼명/컬럼순서 변경
         result = result[['date', 'name', 'itemname', 'price', 'quantity', 'value', 'cost_price', 'cost_value', 'wt', 'original']]

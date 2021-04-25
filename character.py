@@ -551,7 +551,7 @@ class Character:
         
         allocation, remaining_cash = da.greedy_portfolio()
         print("리밸런싱 결과:")
-        print("{}: 새 포트폴리오-{}".format(rebal_date,allocation))
+        print("{}: 새 포트폴리오(종목코드/수량)-{}".format(rebal_date,allocation))
         print(" - 매매 후 잔액: {:.2f} KRW".format(remaining_cash))
         
         # 매매한 뒤의 레코드 생성
@@ -673,11 +673,9 @@ class Character:
         all_the_generals['userid'] = self.userid
 
         # general 테이블 기록
-        print('----all the generals are inserted----')
         self.db.insert_general(all_the_generals)
 
         # detail 테이블에 기록
-        print('----all the details are inserted----')
         self.db.insert_detail(all_the_nexts)
 
         # investor 테이블 기록
@@ -699,9 +697,9 @@ class Character:
 #            print('risk_value : ', risk_value)
             self.score += risk_value
             answers[idx] = (answers[idx], risk_value)
-        print('----------------날짜------------------')
+        # print('----------------날짜------------------')
         self.current_date = self.options[-2]  # 날짜.
-        print(self.current_date)
+        # print(self.current_date)
         self.current_date = datetime.strptime(
             self.current_date, '%Y-%m-%d').strftime('%Y-%m-%d')
 
@@ -710,7 +708,7 @@ class Character:
 
         self.userid = self.db.newUser(
             answers, money=self.options[-3], current_date=self.current_date, username=self.username)
-        print('### userid is {} #####'.format(self.userid))
+        # print('### userid is {} #####'.format(self.userid))
 
         # 추천 포트폴리오를 가져온다.
         self.advised_pf = AdvisedPortfolios.instance().data

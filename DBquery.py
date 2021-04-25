@@ -105,7 +105,6 @@ class query:
         return self.con.fetchall()
 
     def getUserBalanceByName(self, name):
-        print('----in getUserBalance(), name is {}'.format(name))
         query = "select distinct * from detail A " \
                 "where to_timestamp(A.date, 'mm/dd/yyyy HH:M1:SS AM') = (select max(to_timestamp(B.date, 'mm/dd/yyyy HH:M1:SS AM')) from detail B group by B.name " \
                 "having B.name=%s) and A.name=%s and A.wt > 0.0"
@@ -116,7 +115,6 @@ class query:
 
     def getUserGeneral(self, userid):
         # 마지막 날짜의 요약잔고를 general 테이블에서 가져온다.
-        print('----in getUserGeneral(), userid is {}'.format(userid))
         query = "select distinct * from general A " \
                 "where to_timestamp(A.date, 'mm/dd/yyyy HH:M1:SS AM') = (select max(to_timestamp(B.date, 'mm/dd/yyyy HH:M1:SS AM')) from general B group by B.userid " \
                 "having B.userid=%s) and A.userid=%s and A.wt > 0.0"

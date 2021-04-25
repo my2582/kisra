@@ -61,11 +61,11 @@ class databaseDF:
 
         investors_m['profile_code'] = investors_m['profile_code'].values.astype(float)
 
-        print('----user is----')
-        print(user)
+        # print('----user is----')
+        # print(user)
 
-        print('investors_m is -----')
-        print(investors_m)
+        # print('investors_m is -----')
+        # print(investors_m)
 
         for i in range(len(general)):
             temp = general.iloc[i, :].values.tolist()
@@ -84,7 +84,7 @@ class databaseDF:
 
         for i in range(len(investors_m)):
             temp = investors_m.iloc[i, :].values.tolist()
-            print('temp {}-{}'.format(i, temp))
+            # print('temp {}-{}'.format(i, temp))
             self.con.execute(insert_query_investors.format('investors'), temp)
             self.conn.commit()
 
@@ -95,7 +95,7 @@ class databaseDF:
         return value[-1][0]
 
     def getRecord(self, user, dates):
-        print('----in getRecord(), dates:{}, user:{}'.format(dates, user))
+        # print('----in getRecord(), dates:{}, user:{}'.format(dates, user))
         record = self.query.BetweenDate('detail', dates, user)
 
         return record
@@ -121,16 +121,16 @@ class databaseDF:
 
     def getUserBalance(self, userid):
         record = self.query.getUserBalance(userid=userid)
-        print('-------------balance------------------')
-        print(userid)
-        print(record)
+        # print('-------------balance------------------')
+        # print(userid)
+        # print(record)
         return record
 
     def getUserGeneral(self, userid):
         record = self.query.getUserGeneral(userid=userid)
-        print('-------------general------------------')
-        print(userid)
-        print(record)
+        # print('-------------general------------------')
+        # print(userid)
+        # print(record)
         return record
 
     def getUserRiskProfile(self, name):
@@ -152,7 +152,7 @@ class databaseDF:
         new_detail.date = new_detail.date.map(lambda x:str(x.month)+'/'+str(x.day)+'/'+str(x.year)+ ' 4:00:00 PM')
 
         col_order = ['itemcode', 'quantity', 'cost_price', 'price', 'cost_value', 'value', 'itemname', 'asset_class', 'date', 'userid', 'username', 'group_by', 'original', 'wt']
-        print(new_detail.loc[:, col_order])
+        # print(new_detail.loc[:, col_order])
 
         for idx, row in new_detail.iterrows():
             temp = row[col_order].values.tolist()
