@@ -305,7 +305,7 @@ def show_content(users):
         #         "주식"), html.Th("채권"), html.Th("대체"), html.Th('상세정보')]))
         # ]
 
-        row1 = html.Tr([html.Td("현재"), html.Td(summary.loc[summary.asset_class == Cash, 'value']),
+        row1 = html.Tr([html.Td("현재"), html.Td(summary.loc[summary.asset_class == 'Cash', 'value']),
                         html.Td(summary.loc[summary.asset_class == 'Equity', 'value']),
                         html.Td(summary.loc[summary.asset_class == 'Fixed Income', 'value']),
                         html.Td(summary.loc[summary.asset_class == 'Alternative', 'value']),
