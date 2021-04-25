@@ -336,7 +336,7 @@ def show_content(users):
 
         result = content
         # RA자문 탭에서 상세잔고내역의 컬럼명/컬럼순서 변경
-        result = result[['date', 'name', 'itemname', 'price', 'quantity', 'value', 'cost_price', 'cost_value', 'wt', 'original']]
+        result = result.loc[:, ['date', 'name', 'itemname', 'price', 'quantity', 'value', 'cost_price', 'cost_value', 'wt', 'original']]
         result.date = to_datetime(result.date).dt.strftime('%Y-%m-%d')
         result.loc[:, ['price', 'quantity', 'value', 'cost_price', 'cost_value']] = result.loc[:, ['price', 'quantity', 'value', 'cost_price', 'cost_value']].astype(float).astype(int).applymap(lambda x : "{:,}".format(x))
         result.loc[:, ['wt']] = (result.loc[:, ['wt']].astype(float)*100).applymap(lambda x : "{:.1f}".format(x))
@@ -438,7 +438,7 @@ def show_content(users):
         informations.wt = informations.wt.str.replace(',','').astype(float)
         informations.wt = informations.wt.apply(lambda x: '{:.1f}'.format(x))
         total_wt = informations.wt.sum()
-        total_wt = '{:.1f}'.format(total_wt)
+        total_wt = '{:.1f}'.format(float(total_wt))
         sumOfInfo = [html.Td('계'), html.Td(total_value), html.Td(total_wt), html.Td('')]
         informations = informations.values.tolist()
 
@@ -509,7 +509,7 @@ def show_content(users):
         # print(result.iloc[:1, :3])
 
         # RA자문 탭에서 상세잔고내역의 컬럼명/컬럼순서 변경
-        result = result[['date', 'name', 'itemname', 'price', 'quantity', 'value', 'cost_price', 'cost_value', 'wt', 'original']]
+        result = result.loc[:, ['date', 'name', 'itemname', 'price', 'quantity', 'value', 'cost_price', 'cost_value', 'wt', 'original']]
         result.date = to_datetime(result.date).dt.strftime('%Y-%m-%d')
         result.loc[:, ['price', 'quantity', 'value', 'cost_price', 'cost_value']] = result.loc[:, ['price', 'quantity', 'value', 'cost_price', 'cost_value']].astype(float).astype(int).applymap(lambda x : "{:,}".format(x))
         result.loc[:, ['wt']] = (result.loc[:, ['wt']].astype(float)*100).applymap(lambda x : "{:.1f}".format(x))

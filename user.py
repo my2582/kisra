@@ -8,7 +8,7 @@ class User:
 
     def getStartDate(self, name):
         dt = self.data.specificDate(name)
-        print('---in getStartDate(), last record for {} is {}'.format(name, dt))
+        # print('---in getStartDate(), last record for {} is {}'.format(name, dt))
         return dt
         # return self.data.specificDate(self.userid)
     
@@ -17,10 +17,10 @@ class User:
 
     def page3Data(self, date):
         general, detail = self.data.returnPage3Data(self.name, date)
-        print('---------------------general-----------------------')
-        print(general)
-        print('--------------------detail-----------------------------')
-        print(detail)
+        # print('---------------------general-----------------------')
+        # print(general)
+        # print('--------------------detail-----------------------------')
+        # print(detail)
         return self.fullCond(general), detail
 
     def userList(self):
@@ -28,14 +28,14 @@ class User:
         return [{'label': i, 'value': i} for i in users]
 
     def selections(self, name):
-        print('selection?? name is {}'.format(name))
+        # print('selection?? name is {}'.format(name))
         return self.data.getSelection(name)
 
     def closeData(self, point, date=None, name=None, choice=False):
         result, user_id, name = self.data.returnData(point, name, date, choice)
         self.name = name
         self.userid = user_id
-        print('returnData() 에서 리턴한 userid: {}, name: {}'.format(self.userid, self.name))
+        # print('returnData() 에서 리턴한 userid: {}, name: {}'.format(self.userid, self.name))
 
         return result
 
