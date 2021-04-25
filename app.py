@@ -13,8 +13,7 @@ import plotly.graph_objects as go
 from DataBase import databaseDF
 from src.models.load_data import AdvisedPortfolios, Singleton
 from skimage import io
-from pandas import to_numeric
-
+from pandas import to_numeric, to_datetime
 
 sheet = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 app = dash.Dash(__name__, external_stylesheets=sheet,
@@ -271,6 +270,8 @@ def show_content(users):
                 "Equity"), html.Th("Fixed Income"), html.Th("Alternative"), html.Th("Total")]))
         ]
 
+        print('content.shape: ', content.shape)
+
         latest_content = content.loc[content.date==date, :]
         print('latest_content')
         print(latest_content)
@@ -451,7 +452,7 @@ def show_content(users):
 
         # RA자문 탭에서 상세잔고내역의 컬럼명/컬럼순서 변경
         result = result[['date', 'name', 'itemname', 'price', 'quantity', 'value', 'cost_price', 'cost_value', 'wt', 'original']]
-        result.date = pd.to_datetime(result.date).dt.strftime('%Y-%m-%d')
+        result.date = to_datetime(result.date).dt.strftime('%Y-%m-%d')
         result.loc[:, ['price', 'quantity', 'value', 'cost_price', 'cost_value']] = result.loc[:, ['price', 'quantity', 'value', 'cost_price', 'cost_value']].astype(int).applymap(lambda x : "{:,}".format(x))
         result.loc[:, ['wt']] = result.loc[:, ['wt']].astype(float).applymap(lambda x : "{:.3f}".format(x))
         result = result.rename(columns={
