@@ -432,12 +432,11 @@ def show_content(users):
         ]
         informations = table.loc[:, ['itemname', 'value', 'wt', 'asset_class']]
         # informations.loc[:, 'wt'] = informations.loc[:, 'wt']*100
-        total_value = sum(to_numeric(informations.value.astype(float)))
+        total_value = to_numeric(informations.value).sum()
         total_value = '{:,}'.format(total_value)
-        total_wt = sum(to_numeric(informations.wt).astype(float))*100
-        total_value = '{:.1f}'.format(total_value)
-        sumOfInfo = [html.Td('계'), html.Td(), html.Td(
-            ), html.Td('')]
+        total_wt = to_numeric(informations.wt).sum()*100
+        total_wt = '{:.1f}'.format(total_wt)
+        sumOfInfo = [html.Td('계'), html.Td(total_value), html.Td(total_wt), html.Td('')]
         informations = informations.values.tolist()
 
         ### 탭3 포메팅 시작 ###
