@@ -175,9 +175,9 @@ analysis = [
             },
             options=[],
 
-            value='투자자1이걸고치면?'),
+            value='투자자1'),
 
-        html.Label('자문기준일'),
+        html.Label('가장 최근의 자문받은 날짜'),
         html.Div(id='max-date')]
 
         , id='user-information-analysis'),

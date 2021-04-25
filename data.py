@@ -91,6 +91,9 @@ class Data:
         latest_balance = self.getUserBalance(name)
         latest_general = self.getUserGeneral(name)
 
+        latest_balance = pd.DataFrame(latest_balance, columns=self.columns)
+        latest_general = pd.DataFrame(latest_general, columns=['date', 'userid', 'asset_class', 'value', 'wt'])
+
         print('types: ', type(latest_balance), type(latest_general))
 
         latest_general.value = latest_general.value.astype(int).apply(lambda x : "{:,}".format(x))
