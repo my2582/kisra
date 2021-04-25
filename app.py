@@ -431,10 +431,17 @@ def show_content(users):
                 "평가액"), html.Th("비중"), html.Th("비고")]))
         ]
         informations = table.loc[:, ['itemname', 'value', 'wt', 'asset_class']]
-        informations.loc[:, 'wt'] = informations.loc[:, 'wt']*100
-        sumOfInfo = [html.Td('계'), html.Td(sum(informations['value'])), html.Td(
-            round(sum(informations['wt']))), html.Td('')]
+        # informations.loc[:, 'wt'] = informations.loc[:, 'wt']*100
+        total_value = sum(to_numeric(informations.value.astype(float)))
+        total_value = '{:,}'.format(total_value)
+        total_wt = sum(to_numeric(informations.wt).astype(float))*100
+        total_value = '{:.1f}'.format(total_value)
+        sumOfInfo = [html.Td('계'), html.Td(), html.Td(
+            ), html.Td('')]
         informations = informations.values.tolist()
+
+        ### 탭3 포메팅 시작 ###
+        ####
         table_row = list()
         for row in informations:
             temp = [html.Td(data) for data in row]
