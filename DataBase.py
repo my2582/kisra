@@ -22,8 +22,8 @@ class databaseDF:
         self.conn.commit()
         self.con.execute("CREATE TABLE IF NOT EXISTS userselection(userid varchar(255), name varchar(255), set_no float(24), q_no float(24), answer float(24), risk_pref_value float(24))")        
         self.conn.commit()
-        self.con.execute("CREATE TABLE IF NOT EXISTS investors(userid varchar(255), name varchar(255), acc_no varchar(20), profile_code float(4))")
-        self.conn.commit()
+        # self.con.execute("CREATE TABLE IF NOT EXISTS investors(userid varchar(255), name varchar(255), acc_no varchar(20), profile_code float(4))")
+        # self.conn.commit()
 
         self.con.execute("SELECT COUNT(*) FROM detail")
         self.conn.commit()
@@ -39,13 +39,13 @@ class databaseDF:
 
 
     def insertDefault(self, data):
-        general, detail, user, investors_m = data
+        general, detail, user = data
         insert_query_gen = 'INSERT INTO {0} (date, userid, asset_class, value, wt) values (%s, %s, %s, %s, %s)'
         insert_query_dtl = 'INSERT INTO {0} (date, userid, name, asset_class, itemcode, itemname,' \
                            'quantity, cost_price, cost_value, price, value, wt, group_by, original) values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'
 
         insert_query_user = 'INSERT INTO {0} (userid, name, set_no, q_no, answer, risk_pref_value) values (%s, %s, %s, %s, %s, %s)'
-        insert_query_investors = 'INSERT INTO {0} (userid, name, acc_no, profile_code) values (%s, %s, %s, %s, %s)'
+        # insert_query_investors = 'INSERT INTO {0} (userid, name, acc_no, profile_code) values (%s, %s, %s, %s, %s)'
 
         general['value'] = general['value'].values.astype(float)
         general['wt'] = general['wt'].values.astype(float)
@@ -59,7 +59,7 @@ class databaseDF:
         user['answer'] = user['answer'].values.astype(float)
         user['risk_pref_value'] = user['risk_pref_value'].values.astype(float)
 
-        investors_m['profile_code'] = investors_m['profile_code'].values.astype(float)
+        # investors_m['profile_code'] = investors_m['profile_code'].values.astype(float)
 
         # print('----user is----')
         # print(user)
@@ -80,12 +80,6 @@ class databaseDF:
         for i in range(len(user)):
             temp = user.iloc[i, :].values.tolist()
             self.con.execute(insert_query_user.format('userselection'), temp)
-            self.conn.commit()
-
-        for i in range(len(investors_m)):
-            temp = investors_m.iloc[i, :].values.tolist()
-            # print('temp {}-{}'.format(i, temp))
-            self.con.execute(insert_query_investors.format('investors'), temp)
             self.conn.commit()
 
         return
@@ -174,8 +168,8 @@ class databaseDF:
         # 최근 잔고를 이름으로 불러와서 최근 날짜를 이용할 수 있게 한다.
         return self.query.getUserBalanceByName(name)
 
-    def insert_investor(self, userid, name, profile_code):
-        insert_query_inv = 'INSERT INTO investors (userid, name, acc_no, profile_code) values (%s, %s, %s, %s)'
+    # def insert_investor(self, userid, name, profile_code):
+    #     insert_query_inv = 'INSERT INTO investors (userid, name, acc_no, profile_code) values (%s, %s, %s, %s)'
 
-        self.con.execute(insert_query_inv, [userid, name, '', profile_code])
-        self.conn.commit()
+    #     self.con.execute(insert_query_inv, [userid, name, '', profile_code])
+    #     self.conn.commit()

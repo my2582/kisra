@@ -18,7 +18,7 @@ class query:
     def BetweenDate(self, table, dates, user):
         standard, start, end = dates
         standard = standard[:6]+'2021'+standard[8:]
-        print(standard)
+        # print(standard)
         query = "select distinct * from {0} where to_timestamp(%s, 'mm/dd/yyyy HH:M1:SS AM') - interval %s <= to_timestamp(date, 'mm/dd/yyyy HH:M1:SS AM') " \
                 "and to_timestamp(date, 'mm/dd/yyyy HH:M1:SS AM') <= to_timestamp(%s, 'mm/dd/yyyy HH:M1:SS AM') - interval %s and userid=%s"
         self.con.execute(query.format(table),  [standard, str(start)+' days', standard, str(end) +' days', user])
@@ -37,11 +37,11 @@ class query:
         self.conn.commit()
         return self.con.fetchall()
 
-    def getUserRiskProfile(self, name):
-        query = "select distinct profile_code from investors where name=%s"
-        self.con.execute(query, [name])
-        self.conn.commit()
-        return self.con.fetchall()
+    # def getUserRiskProfile(self, name):
+    #     query = "select distinct profile_code from investors where name=%s"
+    #     self.con.execute(query, [name])
+    #     self.conn.commit()
+    #     return self.con.fetchall()
 
     def newUser(self, answers, money, current_date=None, username=None):
         query = "select distinct userid from userselection"
@@ -95,7 +95,7 @@ class query:
 
     def getUserBalance(self, userid):
         # 마지막 날짜의 잔고를 detail 테이블에서 가져온다.
-        print('----in getUserBalance(), userid is {}'.format(userid))
+        # print('----in getUserBalance(), userid is {}'.format(userid))
         query = "select distinct * from detail A " \
                 "where to_timestamp(A.date, 'mm/dd/yyyy HH:M1:SS AM') = (select max(to_timestamp(B.date, 'mm/dd/yyyy HH:M1:SS AM')) from detail B group by B.userid " \
                 "having B.userid=%s) and A.userid=%s and A.wt > 0.0"
