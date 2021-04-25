@@ -97,8 +97,10 @@ class Data:
         print('types: ', type(latest_balance), type(latest_general))
 
         latest_general.value = latest_general.value.astype(int).apply(lambda x : "{:,}".format(x))
-        latest_general.wt = latest_general.wt.astype(float).apply(lambda x : "{:,}".format(x))
+        latest_general.wt = (latest_general.wt.astype(float)*100).apply(lambda x : "{:,}".format(x))
 
+        latest_balance.value = latest_balance.value.astype(int).apply(lambda x : "{:,}".format(x))
+        latest_balance.wt = (latest_balance.wt.astype(float)*100).apply(lambda x : "{:,}".format(x))
 
         return latest_general, latest_balance
 
@@ -147,7 +149,9 @@ class Data:
         data.columns = self.columns
 
         # 날짜 역순 정렬
-        data = data.iloc[pd.to_datetime(data.date).values.argsort()[::-1]]
+        # data = data.iloc[pd.to_datetime(data.date).values.argsort()[::-1]]
+        data.date = pd.to_datetime(data.date)
+        data = data.sort_values(['date', 'wt'], ascending=False)
         # print('type(data): {}'.format(type(data)))
         # print(data)
 
