@@ -432,9 +432,9 @@ def show_content(users):
         ]
         informations = table.loc[:, ['itemname', 'value', 'wt', 'asset_class']]
         # informations.loc[:, 'wt'] = informations.loc[:, 'wt']*100
-        total_value = to_numeric(informations.value).sum()
-        total_value = '{:,}'.format(total_value)
-        total_wt = to_numeric(informations.wt).sum()*100
+        total_value = informations.value.str.replace(',','').astype(float).sum()
+        total_value = '{:,}'.format(round(total_value))
+        total_wt = informations.wt.str.replace(',','').astype(float).sum()*100
         total_wt = '{:.1f}'.format(total_wt)
         sumOfInfo = [html.Td('계'), html.Td(total_value), html.Td(total_wt), html.Td('')]
         informations = informations.values.tolist()
