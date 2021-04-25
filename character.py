@@ -551,7 +551,7 @@ class Character:
         
         allocation, remaining_cash = da.greedy_portfolio()
         print("리밸런싱 결과:")
-        print("{}: 새 포트폴리오(종목코드/수량)-{}".format(rebal_date,allocation))
+        print("{}: 새 포트폴리오(종목코드:수량)-{}".format(rebal_date,allocation))
         print(" - 매매 후 잔액: {:.2f} KRW".format(remaining_cash))
         
         # 매매한 뒤의 레코드 생성
@@ -679,7 +679,7 @@ class Character:
         self.db.insert_detail(all_the_nexts)
 
         # investor 테이블 기록
-        self.db.insert_investor(userid=self.userid, name=self.username, profile_code=self.risk_profile)
+        # self.db.insert_investor(userid=self.userid, name=self.username, profile_code=self.risk_profile)
     
         return first_advised_port, by_assetclass
 
