@@ -272,6 +272,7 @@ def show_content(users):
 
 
         latest_content = content.loc[content.date==date, :]
+        latest_content.value = to_numeric(latest_content.value)
         print('content.columns: {}'.format(content.columns))
         print('content.shape: {}'.format(content.shape))
         print('content: {}'.format(content))
@@ -281,9 +282,13 @@ def show_content(users):
         print('latest_content: {}'.format(latest_content))
         print('latest_content.date: {}, date: {}'.format(latest_content.date, date))
         print('latest_content[latest_content[asset_class] == Cash][value]: {}'.format(latest_content.loc[latest_content.asset_class == 'Cash', 'value']))
-        total = to_numeric(latest_content.value).sum()
+        summary = latest_content.loc[:, ['asset_class', 'value']].groupby('asset_class').sum()
+
+        total = summary.value.sum()
         total = '{:,}'.format(int(total))
-        latest_content.value = to_numeric(latest_content.value).astype(int).apply(lambda x : "{:,}".format(x))
+
+        latest_content.value = latest_content.value.astype(int).apply(lambda x : "{:,}".format(x))
+        summary.value = summary.value.astype(int).apply(lambda x : "{:,}".format(x))
 
         # row1 = html.Tr([html.Td("현재"), html.Td(content[content['asset_class'] == 'Cash']['value'].iloc[0]),
         #                 html.Td(content[content['asset_class']
@@ -300,13 +305,10 @@ def show_content(users):
         #         "주식"), html.Th("채권"), html.Th("대체"), html.Th('상세정보')]))
         # ]
 
-        row1 = html.Tr([html.Td("현재"), html.Td(latest_content[latest_content['asset_class'] == 'Cash']['value'].iloc[0]),
-                        html.Td(latest_content[latest_content['asset_class']
-                                       == 'Equity']['value'].iloc[0]),
-                        html.Td(latest_content[latest_content['asset_class']
-                                       == 'Fixed Income']['value'].iloc[0]),
-                        html.Td(latest_content[latest_content['asset_class']
-                                       == 'Alternative']['value'].iloc[0]),
+        row1 = html.Tr([html.Td("현재"), html.Td(summary.loc[summary.asset_class == Cash, 'value']),
+                        html.Td(summary.loc[summary.asset_class == 'Equity', 'value']),
+                        html.Td(summary.loc[summary.asset_class == 'Fixed Income', 'value']),
+                        html.Td(summary.loc[summary.asset_class == 'Alternative', 'value']),
                         html.Td(total),
                         html.Td(html.Div([html.Button('상세정보', id='detail-info-button'),
                                           dbc.Modal(
@@ -458,7 +460,7 @@ def show_content(users):
         # RA자문 탭에서 상세잔고내역의 컬럼명/컬럼순서 변경
         result = result[['date', 'name', 'itemname', 'price', 'quantity', 'value', 'cost_price', 'cost_value', 'wt', 'original']]
         result.date = to_datetime(result.date).dt.strftime('%Y-%m-%d')
-        result.loc[:, ['price', 'quantity', 'value', 'cost_price', 'cost_value']] = result.loc[:, ['price', 'quantity', 'value', 'cost_price', 'cost_value']].astype(int).applymap(lambda x : "{:,}".format(x))
+        result.loc[:, ['price', 'quantity', 'value', 'cost_price', 'cost_value']] = result.loc[:, ['price', 'quantity', 'value', 'cost_price', 'cost_value']].astype(float).astype(int).applymap(lambda x : "{:,}".format(x))
         result.loc[:, ['wt']] = result.loc[:, ['wt']].astype(float).applymap(lambda x : "{:.3f}".format(x))
         result = result.rename(columns={
             'date':'날짜',
