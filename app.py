@@ -431,8 +431,7 @@ def show_content(users):
     def show_prediction(select, name):
         user.name = name
         date = user.getStartDate(name)
-        print('-----------------date----------------')
-        print(date, name)
+        print('app.py show_prediction params: date {}, name {}, select {}'.format(date, name, select))
         user.date = date
         select = changePeriod(select)
         # result는 DataFrame 타입임.
@@ -450,12 +449,14 @@ def show_content(users):
         State('predict-slider', 'value')
     )
     def detailInfo(open, close, is_open, select):
-        print('----in detailInfo. Before-select is {}'.format(select))
+        print('----in detailInfo. close: {}, is_open: {}, select is {}'.format(close, is_open, select))
         select = changePeriod(select)
         print('After-{}'.format(select))
         print('user.name: {}'.format(user.name))
         print('user.date: {}'.format(user.date))
         result = user.closeData(select, name=user.name, date=user.date, choice=False)
+        print('여기랑 이름이 같아야..')
+        print(result.iloc[:1, :3])
 
         # RA자문 탭에서 상세잔고내역의 컬럼명/컬럼순서 변경
         result = result[['date', 'name', 'itemname', 'price', 'quantity', 'value', 'cost_price', 'cost_value', 'wt', 'original']]

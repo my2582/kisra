@@ -28,6 +28,7 @@ class User:
         return [{'label': i, 'value': i} for i in users]
 
     def selections(self, name):
+        print('selection?? name is {}'.format(name))
         return self.data.getSelection(name)
 
     def closeData(self, point, date=None, name=None, choice=False):
