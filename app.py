@@ -273,9 +273,10 @@ def show_content(users):
         print('content.shape: ', content.shape)
 
         latest_content = content.loc[content.date==date, :]
-        print('latest_content')
-        print(latest_content)
-        print('content.date: {}, date: {}'.format(content.date, date))
+        print('latest_content: {}'.format(latest_contest))
+        print('latest_content.columns: {}'.format(latest_content.columns))
+        print('latest_content.date: {}, date: {}'.format(latest_content.date, date))
+        print('latest_content[latest_content[asset_class] == Cash][value]: {}'.format(latest_content.loc[latest_content.asset_class == 'Cash', 'value']))
         total = to_numeric(latest_content.value).sum()
         total = '{:,}'.format(int(total))
         latest_content.value = to_numeric(latest_content.value).astype(int).apply(lambda x : "{:,}".format(x))
