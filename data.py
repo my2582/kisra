@@ -107,7 +107,6 @@ class Data:
         # return answer, baseline[baseline[self.columns[0]] == standard_date]
 
 
-
     def returnData(self, point, name=None, date=None, choice=False):
         print('현재 시점 잔고 조회시작---returnData 시작')
         if name is None:

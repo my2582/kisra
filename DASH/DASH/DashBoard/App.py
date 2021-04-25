@@ -212,6 +212,7 @@ class App:
             State('predict-slider', 'value')
         )
         def detailInfo(open, close, is_open, select):
+            print(' is this ever called???')
             select = changePeriod(select)
             result = user.closeData(select, choice=False)
             table_header = [

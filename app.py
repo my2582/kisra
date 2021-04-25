@@ -267,7 +267,7 @@ def show_content(users):
 
         table_header = [
             html.Thead(html.Tr([html.Th("시점"), html.Th("Cash"), html.Th(
-                "Equity"), html.Th("Fixed Income"), html.Th("Alternative"), html.Th("Total")]))
+                "Equity"), html.Th("Fixed Income"), html.Th("Alternative"), html.Th("Total"), html.Th("")]))
         ]
 
 
@@ -310,10 +310,10 @@ def show_content(users):
                         html.Td(summary.loc[summary.asset_class == 'Fixed Income', 'value']),
                         html.Td(summary.loc[summary.asset_class == 'Alternative', 'value']),
                         html.Td(total),
-                        html.Td(html.Div([html.Button('상세정보', id='detail-info-button'),
+                        html.Td(html.Div([html.Button('잔고내역보기', id='detail-info-button'),
                                           dbc.Modal(
                             [
-                                dbc.ModalHeader("상세정보"),
+                                dbc.ModalHeader("상세 잔고내역"),
                                 dbc.ModalBody(
                                     "A small modal.", id='record'),
                                 dbc.ModalFooter(
@@ -365,7 +365,7 @@ def show_content(users):
         #     return html.Div(dbc.Table(table_header, html.Tbody([row1, row2]), bordered=True))
 
         # return html.Div(dbc.Table(table_header + [html.Tbody([row1, row2])], bordered=True))
-        return html.Div(dbc.Table(table_header + [html.Tbody([row1, row1])], bordered=True))
+        return html.Div(dbc.Table(table_header + [html.Tbody([row1, row2])], bordered=True))
 
     def changePeriod(select):
         for idx, sel in enumerate(select):

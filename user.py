@@ -35,6 +35,7 @@ class User:
         result, user_id, name = self.data.returnData(point, name, date, choice)
         self.name = name
         self.userid = user_id
+        print('returnData() 에서 리턴한 userid: {}, name: {}'.format(self.userid, self.name))
 
         return result
 
