@@ -148,10 +148,14 @@ class databaseDF:
         col_order = ['itemcode', 'quantity', 'cost_price', 'price', 'cost_value', 'value', 'itemname', 'asset_class', 'date', 'userid', 'username', 'group_by', 'original', 'wt']
         # print(new_detail.loc[:, col_order])
 
+        print('상세잔고 내역 저장 시작')
         for idx, row in new_detail.iterrows():
+            if (idx+1)%1000==0:
+                print('.', end='')
             temp = row[col_order].values.tolist()
             self.con.execute(insert_query_dtl, temp)
             self.conn.commit()
+        print('상세잔고 내역 저장 종료')
     
     def insert_general(self, new_general):
         insert_query_gen = 'INSERT INTO general (date, userid, asset_class, value, wt) values (%s, %s, %s, %s, %s)'
@@ -159,10 +163,15 @@ class databaseDF:
         # 날짜형식 변환
         new_general.date = new_general.date.map(lambda x:str(x.month)+'/'+str(x.day)+'/'+str(x.year)+ ' 4:00:00 PM')
 
+        print('잔고요약 저장 시작')
         for idx, row in new_general.iterrows():
+            if (idx+1)%1000==0:
+                print('.', end='')
             temp = row[['date', 'userid', 'asset_class', 'value', 'wt']].values.tolist()
             self.con.execute(insert_query_gen, temp)
             self.conn.commit()
+
+        print('잔고요약 저장 종료')
 
     def getMaxDate(self, name):
         # 최근 잔고를 이름으로 불러와서 최근 날짜를 이용할 수 있게 한다.
