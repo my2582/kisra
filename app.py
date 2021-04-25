@@ -436,9 +436,11 @@ def show_content(users):
         total_value = informations.value.str.replace(',','').astype(float).sum()
         total_value = '{:,}'.format(round(total_value))
         informations.wt = informations.wt.str.replace(',','').astype(float)
-        informations.wt = informations.wt.apply(lambda x: '{:.1f}'.format(x))
         total_wt = informations.wt.sum()
         total_wt = '{:.1f}'.format(float(total_wt))
+        informations.wt = informations.wt.apply(lambda x: '{:.1f}'.format(x))
+
+
         sumOfInfo = [html.Td('계'), html.Td(total_value), html.Td(total_wt), html.Td('')]
         informations = informations.values.tolist()
 
