@@ -445,7 +445,28 @@ def show_content(users):
         print('----in detailInfo. Before-select is {}'.format(select))
         select = changePeriod(select)
         print('After-{}'.format(select))
+        print('user.name: {}'.format(user.name))
+        print('user.date: {}'.format(user.date))
         result = user.closeData(select, name=user.name, date=user.date, choice=False)
+
+        # RA자문 탭에서 상세잔고내역의 컬럼명/컬럼순서 변경
+        result = result[['date', 'name', 'itemname', 'price', 'quantity', 'value', 'cost_price', 'cost_value', 'wt', 'original']]
+        result.date = pd.to_datetime(result.date).dt.strftime('%Y-%m-%d')
+        result.loc[:, ['price', 'quantity', 'value', 'cost_price', 'cost_value']] = result.loc[:, ['price', 'quantity', 'value', 'cost_price', 'cost_value']].astype(int).applymap(lambda x : "{:,}".format(x))
+        result.loc[:, ['wt']] = result.loc[:, ['wt']].astype(float).applymap(lambda x : "{:.3f}".format(x))
+        result = result.rename(columns={
+            'date':'날짜',
+            'name':'이름',
+            'itemname': '종목명',
+            'price': '종가',
+            'quantity': '보유수량',
+            'value': '평가금액',
+            'cost_price': '매수단가',
+            'cost_value': '매수가격',
+            'wt': '비중(%)',
+            'original': '납입금여부'
+        })
+
         table_header = [
             html.Thead(html.Tr([html.Th(col) for col in list(result.columns)]))
         ]
