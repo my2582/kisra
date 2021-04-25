@@ -5,7 +5,7 @@ from DBquery import query
 class databaseDF:
     def __init__(self):
         try:
-            self.dburl = os.environ['DATABASE_URL']
+            self.dburl = os.environ['HEROKU_POSTGRESQL_YELLOW_URL']
             self.conn = psycopg2.connect(self.dburl, sslmode='require')
         except:
             self.conn = psycopg2.connect(host='127.0.0.1', dbname='postgres', user='postgres', password='alstn121!', port='5432', sslmode='prefer')
