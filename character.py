@@ -660,6 +660,8 @@ class Character:
 
             all_the_nexts = pd.concat((all_the_nexts, next_detail))
 
+
+        print('리밸런싱 종료----')
         # 불필요한 컬럼 및 행 삭제
         all_the_nexts = all_the_nexts.loc[all_the_nexts.quantity > 0]
         all_the_nexts = all_the_nexts.reset_index(drop=True)
@@ -669,6 +671,7 @@ class Character:
                                           ['date'], ascending=True).groupby([
                                               'date', 'asset_class'
                                           ]).sum().reset_index(drop=False)
+        print('자산군별 요약 계산 종료----')
 
         all_the_generals['userid'] = self.userid
 
@@ -677,6 +680,11 @@ class Character:
 
         # detail 테이블에 기록
         self.db.insert_detail(all_the_nexts)
+
+        print('테이블 업데이트 종료----')
+
+        del all_the_generals
+        del all_the_nexts
 
         # investor 테이블 기록
         # self.db.insert_investor(userid=self.userid, name=self.username, profile_code=self.risk_profile)
