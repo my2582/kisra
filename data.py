@@ -149,4 +149,4 @@ class Data:
         # print('type(data): {}'.format(type(data)))
         # print(data)
 
-        return data
+        return data, user_id, name
