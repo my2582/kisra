@@ -309,23 +309,63 @@ def show_content(users):
                         html.Td(summary.loc[summary.asset_class == 'Equity', 'value']),
                         html.Td(summary.loc[summary.asset_class == 'Fixed Income', 'value']),
                         html.Td(summary.loc[summary.asset_class == 'Alternative', 'value']),
-                        html.Td(total),
-                        html.Td(html.Div([html.Button('잔고내역보기', id='detail-info-button'),
-                                          dbc.Modal(
-                            [
-                                dbc.ModalHeader("상세 잔고내역"),
-                                dbc.ModalBody(
-                                    "A small modal.", id='record'),
-                                dbc.ModalFooter(
-                                    dbc.Button(
-                                        "Close", id="close-detail-info", className="ml-auto")
-                                ),
-                            ],
-                            id="modal-detail-info",
-                            size="sm"
-                        )]))])
-        
-        row2 = html.Tr([html.Td(""), html.Td(""), html.Td(""), html.Td(""), html.Td(""), html.Td("")])
+                        html.Td(total)
+                        # ,
+                        # html.Td(html.Div([html.Button('잔고내역보기', id='detail-info-button'),
+                        #                   dbc.Modal(
+                        #     [
+                        #         dbc.ModalHeader("상세 잔고내역"),
+                        #         dbc.ModalBody(
+                        #             "A small modal.", id='record'),
+                        #         dbc.ModalFooter(
+                        #             dbc.Button(
+                        #                 "Close", id="close-detail-info", className="ml-auto")
+                        #         ),
+                        #     ],
+                        #     id="modal-detail-info",
+                        #     size="sm"
+                        # )]))
+                        ])
+
+
+
+        print('----page2_result에서 상세내역 찍기 시작---')
+        # result = user.closeData(select, name=user.name, date=user.date, choice=False)
+        print('content 첫줄 보면..')
+        print(content.iloc[:1, :3])
+
+        result = content
+        # RA자문 탭에서 상세잔고내역의 컬럼명/컬럼순서 변경
+        result = result[['date', 'name', 'itemname', 'price', 'quantity', 'value', 'cost_price', 'cost_value', 'wt', 'original']]
+        result.date = to_datetime(result.date).dt.strftime('%Y-%m-%d')
+        result.loc[:, ['price', 'quantity', 'value', 'cost_price', 'cost_value']] = result.loc[:, ['price', 'quantity', 'value', 'cost_price', 'cost_value']].astype(float).astype(int).applymap(lambda x : "{:,}".format(x))
+        result.loc[:, ['wt']] = (result.loc[:, ['wt']].astype(float)*100).applymap(lambda x : "{:.1f}".format(x))
+        result = result.rename(columns={
+            'date':'날짜',
+            'name':'이름',
+            'itemname': '종목명',
+            'price': '종가',
+            'quantity': '보유수량',
+            'value': '평가금액',
+            'cost_price': '매수단가',
+            'cost_value': '매수가격',
+            'wt': '비중(%)',
+            'original': '납입금여부'
+        })
+
+        table_header = [
+            html.Thead(html.Tr([html.Th(col) for col in list(result.columns)]))
+        ]
+
+        rows = result.values.tolist()
+        # print(rows)
+        table_row = list()
+        for row in rows:
+            temp = [html.Td(data) for data in row]
+            table_row.extend([html.Tr(temp)])
+
+
+        # row2 = html.Tr([html.Td(""), html.Td(""), html.Td(""), html.Td(""), html.Td(""), html.Td("")])
 
 
         # row1 = html.Tr([html.Td("현재"), html.Td(before[before['asset_class'] == '현금성']['value'].iloc[0]),
@@ -365,7 +405,7 @@ def show_content(users):
         #     return html.Div(dbc.Table(table_header, html.Tbody([row1, row2]), bordered=True))
 
         # return html.Div(dbc.Table(table_header + [html.Tbody([row1, row2])], bordered=True))
-        return html.Div(dbc.Table(table_header + [html.Tbody([row1, row2])], bordered=True))
+        return html.Div(dbc.Table(table_header + [html.Tbody([row1, table_row])], bordered=True))
 
     def changePeriod(select):
         for idx, sel in enumerate(select):
