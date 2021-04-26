@@ -572,7 +572,7 @@ def show_content(users):
             pDate += ' 4:00:00 PM'
         user.name = userchoice
         
-        print('Selected date: {}'.formdat(pDate))
+        print('Selected date: {}'.format(pDate))
         result = user.page3Data(pDate)
 
         return page3Layout(result, datetime.strptime(user.date, '%m/%d/%Y %I:%M:%S %p'), datetime.strptime(pDate, '%m/%d/%Y %I:%M:%S %p'))
