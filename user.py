@@ -56,13 +56,13 @@ class User:
         #     return result
 
 
-        before, after = result
-        before, after = self.fullCond(before), self.fullCond(after)
+        # before, after = result
+        # before, after = self.fullCond(before), self.fullCond(after)
 
-        # if before.equals(after):
-        #     return before, after, False
+        # # if before.equals(after):
+        # #     return before, after, False
 
-        return before, after
+        # return before, after
 
     def fullCond(self, data):
         condition = ['Cash', 'Equity', 'Fixed Income', 'Alternative']
