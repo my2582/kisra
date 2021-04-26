@@ -205,4 +205,4 @@ class databaseDF:
     #     self.conn.commit()
 
     def getUserPerformance(self, userid):
-        return self.db.getUserPerformance(userid)
+        return self.query.getUserPerformance(userid)
