@@ -122,3 +122,17 @@ class query:
         self.con.execute(query, [userid, userid])
         self.conn.commit()
         return self.con.fetchall()
+
+    def getUserPerformance(self, userid):
+        # 누적수익률과 연율화 변동성을 가져온다.
+        query = "select exp(sum(R.ret))-1 as cum_ret, stddev(R.ret)*sqrt(250) as vol " \
+                  "from (select A.ordered_date as date, ln(A.value/lag(A.value) OVER (ORDER BY A.ordered_date)) as ret " \
+	                      "from (select B.ordered_date, sum(B.value) as value " \
+			                      "from (select to_timestamp(date, 'mm/dd/yyyy HH:M1:SS AM') as ordered_date, value " \
+				                          "from detail "\
+				                 "where userid=%s order by ordered_date) B " \
+                 "group by B.ordered_date) A) R"
+
+        self.con.execute(query, [userid])
+        self.conn.commit()
+        return self.con.fetchall()

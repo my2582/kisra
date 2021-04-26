@@ -258,7 +258,7 @@ def show_content(users):
         # print(values)
         return values
 
-    def page2_result(content, date):
+    def page2_result(content, date, ret, vol):
         if type(content) == str:
             return dcc.ConfirmDialog(
                 id='confirm',
@@ -267,7 +267,7 @@ def show_content(users):
 
         table_header = [
             html.Thead(html.Tr([html.Th("시점"), html.Th("Cash"), html.Th(
-                "Equity"), html.Th("Fixed Income"), html.Th("Alternative"), html.Th("Total"), html.Th("")]))
+                "Equity"), html.Th("Fixed Income"), html.Th("Alternative"), html.Th("Total"), html.Th("누적수익률"), html.Th("변동성")]))
         ]
 
 
@@ -309,7 +309,9 @@ def show_content(users):
                         html.Td(summary.loc[summary.asset_class == 'Equity', 'value']),
                         html.Td(summary.loc[summary.asset_class == 'Fixed Income', 'value']),
                         html.Td(summary.loc[summary.asset_class == 'Alternative', 'value']),
-                        html.Td(total)
+                        html.Td(total),
+                        html.Td(float(ret)*100),
+                        html.Td(float(vol)*100)
                         # ,
                         # html.Td(html.Div([html.Button('잔고내역보기', id='detail-info-button'),
                         #                   dbc.Modal(
@@ -486,9 +488,11 @@ def show_content(users):
         select = changePeriod(select)
         # result는 DataFrame 타입임.
         result = user.closeData(select, date, name, choice=True)
+        ret, vol = user.getUserPerformance(name)
+        print('return: {}, vol: {}'.format(ret, vol))
         #print('-----result of closeData---- result type is: {}'.format(type(result)))
         # print(result)
-        return page2_result(result, date), date
+        return page2_result(result, date, ret, vol), date
 
     @app.callback(
         Output('modal-detail-info', 'is_open'),

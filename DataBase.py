@@ -203,3 +203,6 @@ class databaseDF:
 
     #     self.con.execute(insert_query_inv, [userid, name, '', profile_code])
     #     self.conn.commit()
+    
+    def getPerformance(self, userid):
+        return self.db.getUserPerformance(userid)

@@ -33,6 +33,13 @@ class Data:
         # 이름만 리스트로 리턴
         return list(set(users.name))
 
+    def getPerformance(self, name):
+        userid = self.check_name(name)
+        perf = self.db.getUserPerformance(userid)
+        ret = perf[0]   # 누적수익률
+        vol = perf[1]  # 변동성
+        return ret, vol
+
     def getUserId(self, name):
         df_users = self.uniqueUser(return_pd=True)
         userid = df_users.loc[df_users.name==name, 'userid'].iloc[0]
