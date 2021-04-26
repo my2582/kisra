@@ -60,6 +60,7 @@ class Data:
                baseline[baseline[self.columns[0]] == standard_date]
 
     def returnData(self, point, name, date, choice=False):
+        print('Is this ever called?? ---')
         user_id = self.check_name(name)
 
         if not user_id:

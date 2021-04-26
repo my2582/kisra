@@ -17,8 +17,8 @@ class User:
 
     def getPerformance(self, name):
         ret, vol = self.data.getPerformance(name)
-        ret = ret if ret else ''
-        vol = vol if vol else ''
+        ret = ret if ret else 0
+        vol = vol if vol else 0
         return ret, vol
 
     def page3Data(self, date):

@@ -37,10 +37,6 @@ class Data:
         userid = self.check_name(name)
         result = self.db.getUserPerformance(userid)
         perf = result[0]
-        print('type(perf)'.format(type(perf)))
-        print('perf: {}'.format(perf))
-        if not perf:
-            print('nothing returned from getUserPerformance.')
 
         ret = perf[0] if perf[0] else '-'  # 누적수익률
         vol = perf[1] if perf[0] else '-' # 변동성

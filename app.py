@@ -267,7 +267,7 @@ def show_content(users):
 
         table_header = [
             html.Thead(html.Tr([html.Th("시점"), html.Th("Cash"), html.Th(
-                "Equity"), html.Th("Fixed Income"), html.Th("Alternative"), html.Th("Total"), html.Th("누적수익률"), html.Th("변동성")]))
+                "Equity"), html.Th("Fixed Income"), html.Th("Alternative"), html.Th("Total"), html.Th("누적수익률(%)"), html.Th("변동성(%)")]))
         ]
 
 
@@ -310,8 +310,8 @@ def show_content(users):
                         html.Td(summary.loc[summary.asset_class == 'Fixed Income', 'value']),
                         html.Td(summary.loc[summary.asset_class == 'Alternative', 'value']),
                         html.Td(total),
-                        html.Td(float(ret)*100),
-                        html.Td(float(vol)*100)
+                        html.Td('{:.1f}'.format(float(ret)*100)),
+                        html.Td('{:.1f}'.format(float(vol)*100))
                         # ,
                         # html.Td(html.Div([html.Button('잔고내역보기', id='detail-info-button'),
                         #                   dbc.Modal(
