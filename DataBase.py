@@ -113,15 +113,15 @@ class databaseDF:
     #     print(record)
     #     return record
 
-    def getUserBalance(self, userid):
-        record = self.query.getUserBalance(userid=userid)
+    def getUserBalance(self, userid, date=None, latest=True):
+        record = self.query.getUserBalance(userid=userid, date=date, latest=latest)
         # print('-------------balance------------------')
         # print(userid)
         # print(record)
         return record
 
-    def getUserGeneral(self, userid):
-        record = self.query.getUserGeneral(userid=userid)
+    def getUserGeneral(self, userid, date=None, latest=True):
+        record = self.query.getUserGeneral(userid=userid, date=date, latest=latest)
         # print('-------------general------------------')
         # print(userid)
         # print(record)

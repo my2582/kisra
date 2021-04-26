@@ -22,7 +22,8 @@ class User:
         return ret, vol
 
     def page3Data(self, date):
-        general, detail = self.data.returnPage3Data(self.name, date)
+        # latest가 False면 date에 해당하는 잔고 내역을 리턴한다.
+        general, detail = self.data.returnPage3Data(self.name, date, latest=False)
         # print('---------------------general-----------------------')
         # print(general)
         # print('--------------------detail-----------------------------')

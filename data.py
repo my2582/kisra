@@ -57,15 +57,15 @@ class Data:
         profile_code = self.db.getUserRiskProfile(name)
         return profile_code
 
-    def getUserBalance(self, name):
+    def getUserBalance(self, name, date=None, latest=True):
         userid = self.check_name(name)
-        self.balance = self.db.getUserBalance(userid)
+        self.balance = self.db.getUserBalance(userid, date, latest)
 
         return self.balance
 
-    def getUserGeneral(self, name):
+    def getUserGeneral(self, name, date=None, latest=True):
         userid = self.check_name(name)
-        self.general = self.db.getUserGeneral(userid)
+        self.general = self.db.getUserGeneral(userid, date, latest)
 
         return self.general
 
@@ -91,14 +91,14 @@ class Data:
         # print(userid)
         return self.db.getSelection(userid)
 
-    def returnPage3Data(self, name, date):
+    def returnPage3Data(self, name, date=None, latest=True):
         user_id = self.check_name(name)
 
         if not user_id:
             return '존재하지 않는 사용자입니다. 가입 먼저 해주세요'
 
-        latest_balance = self.getUserBalance(name)
-        latest_general = self.getUserGeneral(name)
+        latest_balance = self.getUserBalance(name, date, latest=latest)
+        latest_general = self.getUserGeneral(name, date, latest=latest)
 
         latest_balance = pd.DataFrame(latest_balance, columns=self.columns)
         latest_general = pd.DataFrame(latest_general, columns=['date', 'userid', 'asset_class', 'value', 'wt'])
