@@ -488,7 +488,7 @@ def show_content(users):
         select = changePeriod(select)
         # result는 DataFrame 타입임.
         result = user.closeData(select, date, name, choice=True)
-        ret, vol = user.getUserPerformance(name)
+        ret, vol = user.getPerformance(name)
         print('return: {}, vol: {}'.format(ret, vol))
         #print('-----result of closeData---- result type is: {}'.format(type(result)))
         # print(result)

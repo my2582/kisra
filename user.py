@@ -15,8 +15,8 @@ class User:
     def getRiskProfile(self, name):
         self.risk_profile = self.data.getRiskProfile(name)
 
-    def getUserPerformance(self, name):
-        ret, vol = self.data.getUserPerformance(name)
+    def getPerformance(self, name):
+        ret, vol = self.data.getPerformance(name)
 
     def page3Data(self, date):
         general, detail = self.data.returnPage3Data(self.name, date)
