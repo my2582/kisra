@@ -609,16 +609,16 @@ class Character:
         # 시뮬레이션 기간은 현재일(current_date) 다음 날부터 추천 포트폴리오가 존재하는 마지막날까지임.
         dates = self.advised_pf.loc[(self.advised_pf.risk_profile == self.risk_profile) & (
             self.advised_pf.date > self.current_date), 'date'].unique()
-        dates = set(dates)
         rebal_dates = dates[::20]
+        dates = set(dates)
         rebal_dates = set(rebal_dates)
 
         # return할 때 필요한 첫날의 추천 포트 폴리오와 asset class별 정보 수집
         df_temp = self.advised_pf.loc[(self.advised_pf.date == dates[0]) & (
             self.advised_pf.risk_profile == self.risk_profile), :]
 
-        first_advised_port = copy.deepcopy(df_temp)
-        first_advised_port = first_advised_port.loc[:, ['weights', 'itemname']].groupby(
+        # first_advised_port = df_temp.copy()
+        first_advised_port = df_temp.loc[:, ['weights', 'itemname']].groupby(
             'itemname').sum().reset_index()
         by_assetclass = df_temp.loc[:, ['weights', 'asset_class']].groupby(
             'asset_class').sum().sort_values('weights', ascending=False).reset_index()
