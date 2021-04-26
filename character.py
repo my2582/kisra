@@ -625,9 +625,9 @@ class Character:
 
 
         # next_detail = copy.deepcopy(detail)
-        next_detail = detail.copy()
+        next_detail = detail
         all_the_nexts = pd.DataFrame(columns=next_detail.columns)
-        price_db.loc[:, ['date', 'price', 'itemcode']].reset_index(drop=True)
+        price_db = price_db.loc[:, ['date', 'price', 'itemcode']]
         for dt in dates:
 #            print(dt)
             price_d = price_db.loc[price_db.date==dt, ['date', 'price', 'itemcode']]
