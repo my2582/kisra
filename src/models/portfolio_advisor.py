@@ -13,12 +13,12 @@ import matplotlib.pyplot as plt
 
 if __name__ == '__main__':
     from utils import get_asset_classes
-    from asset import Asset
+    # from asset import Asset
     from price import Price
     from load_data import Singleton, Balance, Instruments, PriceDB, SimulatableInstruments, Constraints, AdvisedPortfolios
 else:
     from .utils import get_asset_classes
-    from .asset import Asset
+    # from .asset import Asset
     from .price import Price
     from .load_data import Singleton, Balance, Instruments, PriceDB, SimulatableInstruments, Constraints, AdvisedPortfolios
 
@@ -376,7 +376,18 @@ if __name__ == '__main__':
     #          '2020-05-29', '2020-06-30',  '2020-07-31',  '2020-08-31', '2020-09-30',
     #          '2020-10-30',  '2020-11-30', '2020-12-31', '2021-01-29','2021-02-26', '2021-03-19']
     #dates = ['2021-02-26']
-    dates = pd.bdate_range('2021-01-01', '2021-03-19', freq='B').strftime('%Y-%m-%d').to_list()
+    # biz days
+    # dates = pd.bdate_range('2021-01-01', '2021-03-19', freq='B').strftime('%Y-%m-%d').to_list()
+
+    # weekends
+    # create a dataframe of dates
+    df = pd.DataFrame({'Dates': pd.date_range("2020-01-01", "2021-03-19")})
+
+    # create a series of business days
+    busines_dates = pd.bdate_range("2020-01-01", "2021-03-19")
+
+    # find where the two do not intersect
+    dates = df.loc[~df['Dates'].isin(busines_dates)].Dates.dt.strftime('%Y-%m-%d').to_list()
     for dt in dates:
         pa.run(risk_profile=2, current_date=dt)
         print(pa.w)

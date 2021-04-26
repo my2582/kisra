@@ -428,9 +428,6 @@ def show_content(users):
         fig = dcc.Graph(id='pie-chart-page3')
         fig.figure = pie
 
-        print('chart: {}'.format(chart))
-        print('table: {}'.format(table))
-
         table_header = [
             html.Thead(html.Tr([html.Th("종목명"), html.Th(
                 "평가액"), html.Th("비중(%)"), html.Th("자산군")]))

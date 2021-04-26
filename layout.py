@@ -177,7 +177,7 @@ analysis = [
 
             value='투자자1'),
 
-        html.Label('가장 최근의 자문받은 날짜'),
+        html.Label('종가반영 기준일'),
         html.Div(id='max-date')]
 
         , id='user-information-analysis'),
@@ -223,10 +223,10 @@ info = [
         value='x')], id='selection'),
 
     html.Div([
-        html.Label('날짜'),
+        html.Label('종가 반영일'),
         dcc.Input(value='y', type='text', id='info-datetime'),
 
-        html.Label('기준일'),
+        html.Label('잔고 기준일'),
         dcc.DatePickerSingle(
             id='default-predict-date',
             # min_date_allowed=date.today(),
