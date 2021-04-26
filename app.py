@@ -444,8 +444,6 @@ def show_content(users):
         sumOfInfo = [html.Td('계'), html.Td(total_value), html.Td(total_wt), html.Td('')]
         informations = informations.values.tolist()
 
-        ### 탭3 포메팅 시작 ###
-        ####
         table_row = list()
         for row in informations:
             temp = [html.Td(data) for data in row]
