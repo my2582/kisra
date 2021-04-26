@@ -610,8 +610,6 @@ class Character:
         dates = self.advised_pf.loc[(self.advised_pf.risk_profile == self.risk_profile) & (
             self.advised_pf.date > self.current_date), 'date'].unique()
         rebal_dates = dates[::20]
-        dates = set(dates)
-        rebal_dates = set(rebal_dates)
 
         # return할 때 필요한 첫날의 추천 포트 폴리오와 asset class별 정보 수집
         df_temp = self.advised_pf.loc[(self.advised_pf.date == dates[0]) & (
@@ -627,7 +625,10 @@ class Character:
         # next_detail = copy.deepcopy(detail)
         next_detail = detail
         all_the_nexts = pd.DataFrame(columns=next_detail.columns)
+        nexts_list = []
         price_db = price_db.loc[:, ['date', 'price', 'itemcode']]
+        dates = set(dates)
+        rebal_dates = set(rebal_dates)
         for dt in dates:
 #            print(dt)
             price_d = price_db.loc[price_db.date==dt, ['date', 'price', 'itemcode']]
@@ -662,8 +663,10 @@ class Character:
         #               'itemname', 'asset_class', 'date', 'userid', 'username', 'group_by',
         #               'original', 'wt']]
 
-            all_the_nexts = pd.concat((all_the_nexts, next_detail))
+            # all_the_nexts = pd.concat((all_the_nexts, next_detail))
+            nexts_list.append(next_detail)
 
+        all_the_nexts = pd.concat(nexts_list, axis=0)
 
         print('리밸런싱 종료----')
         # 불필요한 컬럼 및 행 삭제
@@ -687,8 +690,8 @@ class Character:
 
         print('테이블 업데이트 종료----')
 
-        del all_the_generals
-        del all_the_nexts
+        # del all_the_generals
+        # del all_the_nexts
 
         # investor 테이블 기록
         # self.db.insert_investor(userid=self.userid, name=self.username, profile_code=self.risk_profile)
