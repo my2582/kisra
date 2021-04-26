@@ -428,6 +428,9 @@ def show_content(users):
         fig = dcc.Graph(id='pie-chart-page3')
         fig.figure = pie
 
+        print('chart: {}'.format(chart))
+        print('table: {}'.format(table))
+
         table_header = [
             html.Thead(html.Tr([html.Th("종목명"), html.Th(
                 "평가액"), html.Th("비중(%)"), html.Th("자산군")]))
@@ -564,9 +567,9 @@ def show_content(users):
     def page3OutputResult(pDate, userchoice):
         try:
             temp = pDate.split('-')
-            pDate = temp[1]+'/'+temp[2]+'/'+temp[0]+' 1:0:0 AM'
+            pDate = temp[1]+'/'+temp[2]+'/'+temp[0]+' 4:00:00 PM'
         except:
-            pDate += ' 1:0:0 AM'
+            pDate += ' 4:00:00 PM'
         user.name = userchoice
         result = user.page3Data(pDate)
         return page3Layout(result, datetime.strptime(user.date, '%m/%d/%Y %I:%M:%S %p'), datetime.strptime(pDate, '%m/%d/%Y %I:%M:%S %p'))
