@@ -609,7 +609,9 @@ class Character:
         # 시뮬레이션 기간은 현재일(current_date) 다음 날부터 추천 포트폴리오가 존재하는 마지막날까지임.
         dates = self.advised_pf.loc[(self.advised_pf.risk_profile == self.risk_profile) & (
             self.advised_pf.date > self.current_date), 'date'].unique()
+        dates = set(dates)
         rebal_dates = dates[::20]
+        rebal_dates = set(rebal_dates)
 
         # return할 때 필요한 첫날의 추천 포트 폴리오와 asset class별 정보 수집
         df_temp = self.advised_pf.loc[(self.advised_pf.date == dates[0]) & (
@@ -622,21 +624,23 @@ class Character:
             'asset_class').sum().sort_values('weights', ascending=False).reset_index()
 
 
-        next_detail = copy.deepcopy(detail)
+        # next_detail = copy.deepcopy(detail)
+        next_detail = detail.copy()
         all_the_nexts = pd.DataFrame(columns=next_detail.columns)
+        price_db.loc[:, ['date', 'price', 'itemcode']].reset_index(drop=True)
         for dt in dates:
 #            print(dt)
-            price_d = price_db.loc[price_db.date==dt, ['date', 'price', 'itemcode']].reset_index(drop=True)
+            price_d = price_db.loc[price_db.date==dt, ['date', 'price', 'itemcode']]
             if dt in rebal_dates:
                 # 리밸런싱한다.
                 new_port = self.advised_pf.loc[(self.advised_pf.risk_profile==self.risk_profile) & (self.advised_pf.date==dt), ['date', 'itemcode', 'weights', 'itemname', 'price', 'asset_class']]
 #                print('new_port.price: ', new_port[['date', 'price']])
-                next_detail = self.rebalance(rebal_date=dt, price_d=price_d, detail=copy.deepcopy(next_detail), new_port=new_port)
+                next_detail = self.rebalance(rebal_date=dt, price_d=price_d, detail=next_detail, new_port=new_port)
             else:
                 # 리밸런싱 일자가 아니면, 새로운 종가만 업데이트하고 종목별 시가평가액(value=price*quantity)만 업데이트한다.
                 next_date = datetime.strptime(dt, '%Y-%m-%d')
                 #next_date = str(next_date.month)+'/'+str(next_date.day)+'/'+str(next_date.year)+' 04:00:00 PM'
-                next_detail = copy.deepcopy(next_detail)
+                next_detail = next_detail.copy()
                 next_detail['date'] = next_date
                 next_detail = pd.merge(next_detail,
                                     price_d.loc[price_d.date == next_date,
