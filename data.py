@@ -129,7 +129,7 @@ class Data:
         user_id = self.check_name(name)
 
         if not user_id:
-            return '존재하지 않는 사용자입니다. 가입 먼저 해주세요'
+            return '존재하지 않는 사용자입니다. 가입 먼저 해주세요', '', ''
         # commented on 4/24 at 12:38PM ----------------
         # data = self.pre_data[self.pre_data['userid'] == user_id]
 

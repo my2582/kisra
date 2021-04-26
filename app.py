@@ -548,17 +548,13 @@ def show_content(users):
         return is_open, result
 
     @app.callback(
-        [
-            Output('info-datetime', 'value'),
-            Output('default-predict-date', 'min_date_allowed'),
-        ],
-
+        Output('info-datetime', 'value'),
         Input({'type': 'filter-dropdown'}, 'value'),
     )
     def page3DateResult(name):
         user.name = name
         startPoint = user.getStartDate(name)
-        return startPoint, startPoint
+        return startPoint
 
     @app.callback(
         Output('detail-info-output', 'children'),
