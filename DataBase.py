@@ -148,13 +148,25 @@ class databaseDF:
         col_order = ['itemcode', 'quantity', 'cost_price', 'price', 'cost_value', 'value', 'itemname', 'asset_class', 'date', 'userid', 'username', 'group_by', 'original', 'wt']
         # print(new_detail.loc[:, col_order])
 
-        print('상세잔고 내역 저장 시작')
-        for idx, row in new_detail.iterrows():
+        print('상세잔고 내역 저장 시작. 점 1개는 레코드 1,000개.')
+        z_rows = zip(new_detail.itemcode, new_detail.quantity, new_detail.cost_price, new_detail.price, new_detail.cost_value, new_detail.value,
+                    new_detail.itemname, new_detail.asset_class, new_detail.date, new_detail.userid, new_detail.username, new_detail.group_by, new_detail.original, new_detail.wt)
+        for idx, (itemcode, quantity, cost_price, price, cost_value, value,
+                    itemname, asset_class, date, userid, username, group_by, original, wt) in enumerate(z_rows):
             if (idx+1)%1000==0:
                 print('.', end='')
-            temp = row[col_order].values.tolist()
+            temp = [itemcode, quantity, cost_price, price, cost_value, value,
+                    itemname, asset_class, date, userid, username, group_by, original, wt]
             self.con.execute(insert_query_dtl, temp)
             self.conn.commit()
+
+
+        # for idx, row in new_detail.iterrows():
+        #     if (idx+1)%1000==0:
+        #         print('.', end='')
+        #     temp = row[col_order].values.tolist()
+        #     self.con.execute(insert_query_dtl, temp)
+        #     self.conn.commit()
         print('상세잔고 내역 저장 종료')
     
     def insert_general(self, new_general):
@@ -163,13 +175,22 @@ class databaseDF:
         # 날짜형식 변환
         new_general.date = new_general.date.map(lambda x:str(x.month)+'/'+str(x.day)+'/'+str(x.year)+ ' 4:00:00 PM')
 
-        print('잔고요약 저장 시작')
-        for idx, row in new_general.iterrows():
-            if (idx+1)%1000==0:
+        print('잔고요약 저장 시작. 점 1개는 레코드 100개.')
+        z_rows = zip(new_general.date, new_general.userid, new_general.asset_class, new_general.value, new_general.wt)
+
+        for idx, (date, userid, asset_class, value, wt) in enumerate(z_rows):
+            if (idx+1)%100==0:
                 print('.', end='')
-            temp = row[['date', 'userid', 'asset_class', 'value', 'wt']].values.tolist()
+            temp = [date, userid, asset_class, value, wt]
             self.con.execute(insert_query_gen, temp)
             self.conn.commit()
+
+        # for idx, row in new_general.iterrows():
+        #     if (idx+1)%1000==0:
+        #         print('.', end='')
+        #     temp = row[['date', 'userid', 'asset_class', 'value', 'wt']].values.tolist()
+        #     self.con.execute(insert_query_gen, temp)
+        #     self.conn.commit()
 
         print('잔고요약 저장 종료')
 
