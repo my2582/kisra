@@ -9,10 +9,10 @@ from models.portfolio_advisor import PortfolioAdvisor
 
 pa = PortfolioAdvisor(root_path='../../')
 path_to_save = './data/processed/'
-filename = 'advised_portfolios.pkl'
+filename = 'advised_portfolios-0423.pkl'
 
-start_date = '2019-01-02'
-end_date = '2021-03-19'
+start_date = '2020-03-20'
+end_date = '2021-04-23'
 
 for date in pd.date_range(start=start_date, end=end_date):
     for r in [2,3,4]:
