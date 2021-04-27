@@ -24,17 +24,17 @@ signup = [
 
         , id='user-information'),
 
-    # html.Div([
-    #  html.Label('투자자목록'),
-    #  dcc.Dropdown(
-    #      id={
-    #          'type': 'users-dropdown'
-    #      },
-    #      options=[],
+    html.Div([
+     html.Label('투자자목록'),
+     dcc.Dropdown(
+         id={
+             'type': 'users-dropdown'
+         },
+         options=[],
 
-    #      value='x')], id='user-selection'),
+         value='x')], id='user-selection'),
 
-    # html.Hr(style={"width": "3000px"}),
+    html.Hr(style={"width": "3000px"}),
 
     html.Div([
         html.Label('1. 투자경험'),
@@ -181,32 +181,33 @@ analysis = [
         html.Div(id='max-date')]
 
         , id='user-information-analysis'),
+
     html.Br(),
-    # dcc.RangeSlider(
-    #     id='predict-slider',
-    #     min=0,
-    #     max=16,
-    #     value=[0, 16],
-    #     marks={
-    #         0: {'label': '12개월'},
-    #         1: {'label': '11개월'},
-    #         2: {'label': '10개월'},
-    #         3: {'label': '9개월'},
-    #         4: {'label': '8개월'},
-    #         5: {'label': '7개월'},
-    #         6: {'label': '6개월'},
-    #         7: {'label': '5개월'},
-    #         8: {'label': '4개월'},
-    #         9: {'label': '3개월'},
-    #         10: {'label': '2개월'},
-    #         11: {'label': '1개월'},
-    #         12: {'label': '2주'},
-    #         13: {'label': '1주'},
-    #         14: {'label': '3일'},
-    #         15: {'label': '2일'},
-    #         16: {'label': '1일'},
-    #     }
-    # ),
+    dcc.RangeSlider(
+        id='predict-slider',
+        min=0,
+        max=16,
+        value=[0, 16],
+        marks={
+            0: {'label': '12개월'},
+            1: {'label': '11개월'},
+            2: {'label': '10개월'},
+            3: {'label': '9개월'},
+            4: {'label': '8개월'},
+            5: {'label': '7개월'},
+            6: {'label': '6개월'},
+            7: {'label': '5개월'},
+            8: {'label': '4개월'},
+            9: {'label': '3개월'},
+            10: {'label': '2개월'},
+            11: {'label': '1개월'},
+            12: {'label': '2주'},
+            13: {'label': '1주'},
+            14: {'label': '3일'},
+            15: {'label': '2일'},
+            16: {'label': '1일'},
+        }
+    ),
     html.Div(id='output-pos')
     ]
 
