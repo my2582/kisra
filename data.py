@@ -149,7 +149,7 @@ class Data:
         # -------------------------------------------
 
         start, end = point
-        standard_date = dt.today().strftime('%m/%d/%y')+' 1:00:00 AM'
+        standard_date = dt.today().strftime('%m/%d/%y')+' 4:00:00 PM'
 
         print('start: {}'.format(start))
         print('end: {}'.format(end))

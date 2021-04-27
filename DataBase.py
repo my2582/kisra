@@ -89,7 +89,7 @@ class databaseDF:
         return value[-1][0]
 
     def getRecord(self, user, dates):
-        # print('----in getRecord(), dates:{}, user:{}'.format(dates, user))
+        print('----in getRecord(), dates:{}, user:{}'.format(dates, user))
         record = self.query.BetweenDate('detail', dates, user)
 
         return record
