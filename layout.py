@@ -175,7 +175,7 @@ analysis = [
             },
             options=[],
 
-            value='투자자1'),
+            value='inv-0'),
 
         html.Label('종가반영 기준일'),
         html.Div(id='max-date')]

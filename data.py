@@ -53,6 +53,8 @@ class Data:
         result = self.db.getMaxDate(name)
         print('type(date): {}'.format(type(result)))
         print('date:', result)
+
+        result = '04/27/2021 4:00:00 PM' if len(result) == 0 else result
         return result[-1][0]
 
     def getRiskProfile(self, name):
@@ -126,9 +128,8 @@ class Data:
     def returnData(self, point, name=None, date=None, choice=False):
         # print('현재 시점 잔고 조회시작---returnData 시작')
         if name is None:
-            print('Your name is None!!')
-            name = '투자자1'
-            date='3/22/2021 4:00:00 PM'
+            name = 'inv-0'
+            date='4/27/2021 4:00:00 PM'
 
         user_id = self.check_name(name)
 
