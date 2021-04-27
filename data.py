@@ -50,8 +50,10 @@ class Data:
     def specificDate(self, name):
         # print('------------------in specificDate() name------------------------------')
         # print(name)
-        date = self.db.getMaxDate(name)
-        return date[-1][0]
+        result = self.db.getMaxDate(name)
+        print('type(date): {}'.format(type(result)))
+        print('date:', result)
+        return result[-1][0]
 
     def getRiskProfile(self, name):
         profile_code = self.db.getUserRiskProfile(name)

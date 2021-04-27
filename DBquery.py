@@ -115,6 +115,8 @@ class query:
                 "where to_timestamp(A.date, 'mm/dd/yyyy HH:M1:SS AM') = (select max(to_timestamp(B.date, 'mm/dd/yyyy HH:M1:SS AM')) from detail B group by B.name " \
                 "having B.name=%s) and A.name=%s and A.wt > 0.0"
 
+        print('----------in getUserBalanceByName, name: {}'.format(name))
+
         self.con.execute(query, [name, name])
         self.conn.commit()
         return self.con.fetchall()
