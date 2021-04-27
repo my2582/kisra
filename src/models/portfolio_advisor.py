@@ -394,11 +394,11 @@ if __name__ == '__main__':
     dates = df_dt.Dates.dt.strftime('%Y-%m-%d').to_list()
     
     for dt in dates:
-        pa.run(risk_profile=2, current_date=dt)
+        pa.run(risk_profile=2, current_date=dt, savefig=False)
         print(pa.w)
-        pa.run(risk_profile=3, current_date=dt)
+        pa.run(risk_profile=3, current_date=dt, savefig=False)
         print(pa.w)
-        pa.run(risk_profile=4, current_date=dt)
+        pa.run(risk_profile=4, current_date=dt, savefig=False)
         print(pa.w)
 
     pass
