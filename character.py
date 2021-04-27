@@ -543,27 +543,10 @@ class Character:
         new_port: DataFrame
         A new portfolio. Your current portfolio in `detail` will be rebalanced toward `new_port`.
         '''
-        trading_amt = detail.value.sum()
-        trading_amt2 = float(detail.value.sum())
-    
-
-        print('new_port', new_port)
-        print('detail', detail)
-        print('price_d', price_d)
-        print('rebal_date: {}'.format(rebal_date))
-        print('trading_amt: {}'.format(trading_amt))
-        print('type(trading_amt: {}'.format(type(trading_amt)))
-        print('trading_amt2: {}'.format(trading_amt2))
-        print('type(trading_amt2: {}'.format(type(trading_amt2)))
-        
+        trading_amt = detail.value.sum()       
         
         wt = new_port[['itemcode', 'weights']].set_index('itemcode').to_dict()['weights']
         pr = new_port[['itemcode', 'price']].set_index('itemcode').squeeze()
-
-        print('wt: {}'.format(wt))
-        print('type(wt): {}'.format(type(wt)))
-        print('pr: {}'.format(pr))
-        print('type(pr): {}'.format(type(pr)))
 
         da = DiscreteAllocation(weights=wt, latest_prices=pr, total_portfolio_value=trading_amt)
         

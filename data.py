@@ -38,8 +38,8 @@ class Data:
         result = self.db.getUserPerformance(userid)
         perf = result[0]
 
-        ret = perf[0] if perf[0] else '-'  # 누적수익률
-        vol = perf[1] if perf[0] else '-' # 변동성
+        ret = perf[0] if perf[0] else 0  # 누적수익률
+        vol = perf[1] if perf[0] else 0 # 변동성
         return ret, vol
 
     def getUserId(self, name):

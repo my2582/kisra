@@ -3,6 +3,8 @@ import dash_html_components as html
 import json
 import os
 from datetime import date
+from pandas.tseries.offsets import BDay
+
 
 with open(os.getcwd() + '/Styles.json', 'rb') as f:
     style = json.load(f)
@@ -215,7 +217,7 @@ info = [
             min_date_allowed=date.today(),
             max_date_allowed=date.today(),
             initial_visible_month=date.today(),
-            date=date.today()
+            date= (date.today() - BDay(1))
         )
     ],
         id='user-detail-info'),
