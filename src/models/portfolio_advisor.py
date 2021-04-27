@@ -389,16 +389,16 @@ if __name__ == '__main__':
     # # find where the two do not intersect
     # dates = df.loc[~df['Dates'].isin(busines_dates)].Dates.dt.strftime('%Y-%m-%d').to_list()
     # create a dataframe of dates
-    df_dt = pd.DataFrame({'Dates': pd.date_range("2021-03-20", "2021-04-23")})
+    df_dt = pd.DataFrame({'Dates': pd.date_range("2021-04-26", "2021-04-27")})
 
     dates = df_dt.Dates.dt.strftime('%Y-%m-%d').to_list()
     
     for dt in dates:
-        pa.run(risk_profile=2, current_date=dt, savefig=False)
+        pa.run(risk_profile=2, current_date=dt, savefig=True)
         print(pa.w)
-        pa.run(risk_profile=3, current_date=dt, savefig=False)
+        pa.run(risk_profile=3, current_date=dt, savefig=True)
         print(pa.w)
-        pa.run(risk_profile=4, current_date=dt, savefig=False)
+        pa.run(risk_profile=4, current_date=dt, savefig=True)
         print(pa.w)
 
     pass
