@@ -544,6 +544,12 @@ class Character:
         A new portfolio. Your current portfolio in `detail` will be rebalanced toward `new_port`.
         '''
         trading_amt = detail.value.sum()
+
+        print('new_port', new_port)
+        print('detail', detail)
+        print('price_d', price_d)
+        print('rebal_date: {}'.format(rebal_date))
+        print('trading_amt: {}'.format(trading_amt))
         
         wt = new_port[['itemcode', 'weights']].set_index('itemcode').to_dict()['weights']
         pr = new_port[['itemcode', 'price']].set_index('itemcode').squeeze()

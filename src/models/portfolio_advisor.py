@@ -379,15 +379,20 @@ if __name__ == '__main__':
     # biz days
     # dates = pd.bdate_range('2021-01-01', '2021-03-19', freq='B').strftime('%Y-%m-%d').to_list()
 
-    # weekends
+    # # weekends
+    # # create a dataframe of dates
+    # df = pd.DataFrame({'Dates': pd.date_range("2020-01-01", "2021-03-19")})
+
+    # # create a series of business days
+    # busines_dates = pd.bdate_range("2020-01-01", "2021-03-19")
+
+    # # find where the two do not intersect
+    # dates = df.loc[~df['Dates'].isin(busines_dates)].Dates.dt.strftime('%Y-%m-%d').to_list()
     # create a dataframe of dates
-    df = pd.DataFrame({'Dates': pd.date_range("2020-01-01", "2021-03-19")})
+    df_dt = pd.DataFrame({'Dates': pd.date_range("2021-03-20", "2021-04-23")})
 
-    # create a series of business days
-    busines_dates = pd.bdate_range("2020-01-01", "2021-03-19")
-
-    # find where the two do not intersect
-    dates = df.loc[~df['Dates'].isin(busines_dates)].Dates.dt.strftime('%Y-%m-%d').to_list()
+    dates = df_dt.Dates.dt.strftime('%Y-%m-%d').to_list()
+    
     for dt in dates:
         pa.run(risk_profile=2, current_date=dt)
         print(pa.w)
