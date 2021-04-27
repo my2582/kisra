@@ -270,18 +270,19 @@ def show_content(users):
                 "Equity"), html.Th("Fixed Income"), html.Th("Alternative"), html.Th("Total"), html.Th("누적수익률(%)"), html.Th("변동성(%)")]))
         ]
 
-
+        print('content.date: {}'.format(content.date))
+        print('date: {}'.format(date))
         latest_content = content.loc[content.date==date, :]
         latest_content.value = to_numeric(latest_content.value)
-        # print('content.columns: {}'.format(content.columns))
-        # print('content.shape: {}'.format(content.shape))
-        # print('content: {}'.format(content))
-        # print('----------------------------')
-        # print('latest_content.shape: {}'.format(latest_content.shape))
-        # print('latest_content.columns: {}'.format(latest_content.columns))
-        # print('latest_content: {}'.format(latest_content))
-        # print('latest_content.date: {}, date: {}'.format(latest_content.date, date))
-        # print('latest_content[latest_content[asset_class] == Cash][value]: {}'.format(latest_content.loc[latest_content.asset_class == 'Cash', 'value']))
+        print('content.columns: {}'.format(content.columns))
+        print('content.shape: {}'.format(content.shape))
+        print('content: {}'.format(content))
+        print('----------------------------')
+        print('latest_content.shape: {}'.format(latest_content.shape))
+        print('latest_content.columns: {}'.format(latest_content.columns))
+        print('latest_content: {}'.format(latest_content))
+        print('latest_content.date: {}, date: {}'.format(latest_content.date, date))
+        print('latest_content[latest_content[asset_class] == Cash][value]: {}'.format(latest_content.loc[latest_content.asset_class == 'Cash', 'value']))
         summary = latest_content.loc[:, ['asset_class', 'value']].groupby('asset_class').sum().reset_index()
 
         total = summary.value.sum()
@@ -489,8 +490,8 @@ def show_content(users):
         # result는 DataFrame 타입임.
         result = user.closeData(select, date, name, choice=True)
         ret, vol = user.getPerformance(name)
-        print('return: {}, vol: {}'.format(ret, vol))
-        #print('-----result of closeData---- result type is: {}'.format(type(result)))
+        # print('return: {}, vol: {}'.format(ret, vol))
+        # print('-----result of closeData---- result type is: {}'.format(type(result)))
         # print(result)
         return page2_result(result, date, ret, vol), date
 

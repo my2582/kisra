@@ -51,9 +51,6 @@ class Data:
         # print('------------------in specificDate() name------------------------------')
         # print(name)
         result = self.db.getMaxDate(name)
-        print('type(date): {}'.format(type(result)))
-        print('date:', result)
-
         result = '04/27/2021 4:00:00 PM' if len(result) == 0 else result
         return result[-1][0]
 
