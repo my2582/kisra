@@ -89,7 +89,7 @@ signup = [
         ),
         html.Hr(style={"width": "3000px"}),
 
-        html.Label('5. 금융자산의 비중'),
+        html.Label('5. 순자산 대비 위험 금융자산의 비중'),
         dcc.RadioItems(
             options=[
                 {'label': "순자산의 5%이하", "value": "lower-five"},
