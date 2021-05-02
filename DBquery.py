@@ -73,7 +73,7 @@ class query:
         ts = Timestamp(date)
         ts + BDay(-1)
         prev_date = ts + BDay(-1)
-        date = prev_date.strftime('%Y-%m-%d') + ' 4:00:00 PM'
+        date = prev_date.strftime('%m/%d/%Y') + ' 4:00:00 PM'
 
         userid='A' + ('00' + str(id))[-3:]
         query = "INSERT INTO userselection(userid, name, set_no, q_no, answer, risk_pref_value) values (%s, %s, %s, %s, %s, %s)"
