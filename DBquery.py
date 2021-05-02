@@ -1,4 +1,4 @@
-from pandas import DataFrame
+from pandas import DataFrame, Timestamp
 from pandas.tseries.offsets import BDay
 import numpy as np
 import datetime
