@@ -1,4 +1,5 @@
 from pandas import DataFrame
+from pandas.tseries.offsets import BDay
 import numpy as np
 import datetime
 
@@ -66,6 +67,13 @@ class query:
         else:
             dt = datetime.datetime.strptime(current_date, '%Y-%m-%d')
             date = str(dt.month)+'/'+str(dt.day)+'/'+str(dt.year)+' 4:00:00 PM'
+
+        # 신규 가입자는 바로 영업일에 현금을 입금했다고 가정한다.
+        # timestamp로 변환해서 직전 영업일을 얻고
+        ts = pd.Timestamp(date)
+        ts + BDay(-1)
+        prev_date = ts + BDay(-1)
+        date = prev_date.strftime('%Y-%m-%d') + ' 4:00:00 PM'
 
         userid='A' + ('00' + str(id))[-3:]
         query = "INSERT INTO userselection(userid, name, set_no, q_no, answer, risk_pref_value) values (%s, %s, %s, %s, %s, %s)"

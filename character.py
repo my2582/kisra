@@ -609,7 +609,7 @@ class Character:
 
         # 시뮬레이션 기간은 현재일(current_date) 다음 날부터 추천 포트폴리오가 존재하는 마지막날까지임.
         dates = self.advised_pf.loc[(self.advised_pf.risk_profile == self.risk_profile) & (
-            self.advised_pf.date > self.current_date), 'date'].unique()
+            self.advised_pf.date >= self.current_date), 'date'].unique()
         rebal_dates = dates[::30]
         print('리밸런싱 일자: ', rebal_dates)
 
