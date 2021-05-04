@@ -84,7 +84,7 @@ class databaseDF:
             self.conn.commit()
 
         for i in range(len(investors_m)):
-            temp = user.iloc[i, :].values.tolist()
+            temp = investors_m.iloc[i, :].values.tolist()
             self.con.execute(insert_query_investors.format('investors'), temp)
             self.conn.commit()
 
