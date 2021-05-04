@@ -10,12 +10,12 @@ class Data:
         self.usersel = pd.read_pickle('./data/processed/profiles_s.pkl')
         self.pre_data = pd.read_pickle('./data/processed/balance_m.pkl')
         self.detail_data = pd.read_pickle('./data/processed/balance_s.pkl')
-        # self.investors_m =  pd.read_pickle('./data/processed/investors_m.pkl')
+        self.investors_m =  pd.read_pickle('./data/processed/investors_m.pkl')
         self.advised_pf = AdvisedPortfolios.instance().data
         self.columns = list(self.detail_data.columns)
         self.db = databaseDF()
         # print('Data is initialized -------------------. detailed_data is')
-        self.db.createDefault((self.pre_data, self.detail_data, self.usersel))
+        self.db.createDefault((self.pre_data, self.detail_data, self.usersel, self.investors_m))
         # print(self.detail_data)
         
         #self.detail_data = pd.read_pickle('./data/processed/balance_s.pkl')
