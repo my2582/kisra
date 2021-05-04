@@ -25,7 +25,7 @@ class databaseDF:
         self.con.execute("CREATE TABLE IF NOT EXISTS investors(userid varchar(255), name varchar(255), acc_no varchar(20), profile_code float(4), principal float(24))")
         self.conn.commit()
 
-        self.con.execute("SELECT COUNT(*) FROM detail")
+        self.con.execute("SELECT COUNT(*) FROM investors")
         self.conn.commit()
 
         x = self.con.fetchall()
