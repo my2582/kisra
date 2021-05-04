@@ -21,6 +21,7 @@ class databaseDF:
                                   "wt float(24), group_by varchar(255), original varchar(15))")
         self.conn.commit()
         self.con.execute("CREATE TABLE IF NOT EXISTS userselection(userid varchar(255), name varchar(255), set_no float(24), q_no float(24), answer float(24), risk_pref_value float(24))")        
+
         self.conn.commit()
         self.con.execute("CREATE TABLE IF NOT EXISTS investors(userid varchar(255), name varchar(255), acc_no varchar(20), profile_code float(4), principal float(24))")
         self.conn.commit()
@@ -85,6 +86,7 @@ class databaseDF:
 
         for i in range(len(investors_m)):
             temp = investors_m.iloc[i, :].values.tolist()
+            print('temp: {}'.format(temp))
             self.con.execute(insert_query_investors.format('investors'), temp)
             self.conn.commit()
 
@@ -133,8 +135,8 @@ class databaseDF:
         # print(record)
         return record
 
-    def getUserRiskProfile(self, name):
-        record = self.query.getUserRiskProfile(name)
+    def getInvestorInfo(self, name):
+        record = self.query.getInvestorInfo(name)
         return record
 
     def insert_detail(self, new_detail):

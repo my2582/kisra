@@ -38,11 +38,11 @@ class query:
         self.conn.commit()
         return self.con.fetchall()
 
-    # def getUserRiskProfile(self, name):
-    #     query = "select distinct profile_code from investors where name=%s"
-    #     self.con.execute(query, [name])
-    #     self.conn.commit()
-    #     return self.con.fetchall()
+    def getInvestorInfo(self, name):
+        query = "select distinct profile_code, principal from investors where name=%s"
+        self.con.execute(query, [name])
+        self.conn.commit()
+        return self.con.fetchall()
 
     def newUser(self, answers, money, current_date=None, username=None):
         query = "select distinct userid from userselection"

@@ -54,9 +54,10 @@ class Data:
         result = '04/27/2021 4:00:00 PM' if len(result) == 0 else result
         return result[-1][0]
 
-    def getRiskProfile(self, name):
-        profile_code = self.db.getUserRiskProfile(name)
-        return profile_code
+    def getInvestorInfo(self, name):
+        data = self.db.getInvestorInfo(name)
+        profile_code, principal = data[0][0], data[0][1]
+        return profile_code, principal
 
     def getUserBalance(self, name, date=None, latest=True):
         userid = self.check_name(name)
