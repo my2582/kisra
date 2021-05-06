@@ -65,6 +65,7 @@ def show_content(users):
 
         if tab_input == 'info':
             layout.info[0].children[1].children = user.name
+            layout.info[1].children[1].value = user.getStartDate(user.name)
             return html.Div(layout.info)
 
     @app.callback(
@@ -521,17 +522,6 @@ def show_content(users):
         if open or not close:
             return not is_open, result
         return is_open, result
-
-    @app.callback(
-        Output('info-datetime', 'value'),
-        Input('tab-3-user-id', 'children'),
-    )
-    def page3DateResult(name):
-        user.name = name.children[0]
-        print('-------------------------------------')
-        print(user.name)
-        startPoint = user.getStartDate(name)
-        return startPoint
 
     @app.callback(
         Output('detail-info-output', 'children'),
