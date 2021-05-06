@@ -39,6 +39,7 @@ class User:
         return self.data.getSelection(name)
 
     def closeData(self, point, date=None, name=None, choice=False):
+        print(self.data.returnData(point, name, date, choice))
         result, user_id, name = self.data.returnData(point, name, date, choice)
         self.name = name
         self.userid = user_id
