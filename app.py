@@ -528,6 +528,8 @@ def show_content(users):
     )
     def page3DateResult(name):
         user.name = name.children[0]
+        print('-------------------------------------')
+        print(user.name)
         startPoint = user.getStartDate(name)
         return startPoint
 
