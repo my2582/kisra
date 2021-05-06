@@ -130,7 +130,7 @@ class Data:
             date='4/27/2021 4:00:00 PM'
 
         user_id = self.check_name(name)
-
+        print(user_id, name)
         if not user_id:
             return '존재하지 않는 사용자입니다. 가입 먼저 해주세요', '', ''
         # commented on 4/24 at 12:38PM ----------------
