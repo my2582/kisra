@@ -197,6 +197,7 @@ analysis = [
 info = [
     html.Div([
         html.Label('이름'),
+        html.Div(id='tab-3-user-id')
     ], id='selection'),
 
     html.Div([
