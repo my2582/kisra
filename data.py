@@ -59,6 +59,7 @@ class Data:
         profile_code, principal = data[0][0], data[0][1]
         return profile_code, principal
 
+
     def getUserBalance(self, name, date=None, latest=True):
         userid = self.check_name(name)
         self.balance = self.db.getUserBalance(userid, date, latest)
