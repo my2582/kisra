@@ -62,13 +62,13 @@ class Data:
     def getUserBalance(self, name, date=None, latest=True):
         userid = self.check_name(name)
         self.balance = self.db.getUserBalance(userid, date, latest)
-
+        print(self.balance)
         return self.balance
 
     def getUserGeneral(self, name, date=None, latest=True):
         userid = self.check_name(name)
         self.general = self.db.getUserGeneral(userid, date, latest)
-
+        print(self.general)
         return self.general
 
     def defaults(self):
