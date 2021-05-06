@@ -91,6 +91,7 @@ def show_content(users):
             # Create figure
             fig = go.Figure()
 
+
             # Constants
             img_width = width
             img_height = height
