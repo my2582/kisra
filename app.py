@@ -60,7 +60,7 @@ def show_content(users):
 
         if tab_input == 'analysis':
             layout.analysis[0].children[1].children = user.name
-            layout.analysis[0].children[3].children = user.getStartDate()
+            layout.analysis[0].children[3].children = user.getStartDate(user.name)
             return html.Div(layout.analysis)
 
         if tab_input == 'info':
@@ -151,7 +151,6 @@ def show_content(users):
             print(user.name, user.date)
             character = Character(tags_id)
             # print('tags_id: {}'.format(tags_id))
-            assert app.layout.children[-1] is not None, "app.layout is none."
             output = html.Div([
                 html.Div(id='character-result')
             ], id='output-div')
