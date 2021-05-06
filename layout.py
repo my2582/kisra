@@ -24,16 +24,6 @@ signup = [
 
         , id='user-information'),
 
-    html.Div([
-     html.Label('투자자목록'),
-     dcc.Dropdown(
-         id={
-             'type': 'users-dropdown'
-         },
-         options=[],
-
-         value='x')], id='user-selection'),
-
     html.Hr(style={"width": "3000px"}),
 
     html.Div([
@@ -164,20 +154,13 @@ signup = [
         html.Div(id='character-result')
     ], id='output-div')
 
-    ]
+]
 
 analysis = [
     html.Div([
         html.Label('이름'),
-        dcc.Dropdown(
-            id={
-                'type': 'filter-dropdown'
-            },
-            options=[],
-
-            value='inv-0'),
-
-        html.Label('종가반영 기준일'),
+        html.Div(id='tab-2-user-id'),
+        html.Label('자문기준일'),
         html.Div(id='max-date')]
 
         , id='user-information-analysis'),
@@ -209,27 +192,22 @@ analysis = [
         }
     ),
     html.Div(id='output-pos')
-    ]
+]
 
 info = [
     html.Div([
         html.Label('이름'),
-        dcc.Dropdown(
-            id={
-                'type': 'filter-dropdown'
-            },
-            options=[],
-
-        value='x')], id='selection'),
+        html.Div(id='tab-3-user-id')
+    ], id='selection'),
 
     html.Div([
-        html.Label('종가 반영일'),
+        html.Label('날짜'),
         dcc.Input(value='y', type='text', id='info-datetime'),
 
-        html.Label('잔고 기준일'),
+        html.Label('기준일'),
         dcc.DatePickerSingle(
             id='default-predict-date',
-            # min_date_allowed=date.today(),
+            min_date_allowed=date.today(),
             max_date_allowed=date.today(),
             initial_visible_month=date.today(),
             date=date.today()
@@ -244,7 +222,16 @@ tab = html.Div([
     dcc.Tabs(id=input_id, value='signup', children=[
         dcc.Tab(label='가입', value='signup', style=tab_style, selected_style=tab_selected_style),
         dcc.Tab(label='RA자문', value='analysis', style=tab_style, selected_style=tab_selected_style),
-        dcc.Tab(label='투자현황', value='info', style=tab_style, selected_style=tab_selected_style)
+        dcc.Tab(label='투자내역', value='info', style=tab_style, selected_style=tab_selected_style)
     ], style=tabs_styles),
     html.Div(id=output_id)
 ])
+
+main_login = html.Div([
+    html.Label('유저로그인'),
+    dcc.Input(value=None, type='text', id='user-id-main'),
+    html.Button('Log In', id='login-button', style={"background-color": "Yellow"}, n_clicks=0),
+    html.Br(),
+    html.Label('회원가입'),
+    html.Button('Sign Up', id='sign-up-button', style={"background-color": "Red"}, n_clicks=0)
+], id='login-tab-for-next')

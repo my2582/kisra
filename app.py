@@ -23,12 +23,9 @@ user = User()
 
 
 def show_content(users):
-    # app = self.app
     style = layout.style
-    tab = layout.tab
-    origin = tab
     user = users
-    app.layout = origin
+    app.layout = html.Div(layout.main_login, id='main-layout')
 
     # db = databaseDF()
     # advised_pf = AdvisedPortfolios.instance().data
@@ -38,29 +35,36 @@ def show_content(users):
     # db.insert_advised_pf(advised_pf)
 
     @app.callback(
+        Output('main-layout', 'children'),
+        [Input('login-button', 'n_clicks'),
+         Input('sign-up-button', 'n_clicks')],
+        State('user-id-main', 'value')
+    )
+    def show_layout(login, signup, user_id):
+        if 0 < login:
+            layout.tab.children[0].children = layout.tab.children[0].children[1:]
+            layout.tab.children[0].value = 'analysis'
+            user.name = user_id
+            return layout.tab
+        if 0 < signup:
+            return layout.tab
+        return layout.main_login
+
+    @app.callback(
         Output(layout.output_id, 'children'),
         Input(layout.input_id, "value"),
     )
     def show_page(tab_input):
         if tab_input == 'signup':
-            app.layout.children[-1] = html.Div(layout.signup)
-            userList = user.userList()
-            layout.signup[1].children[1].options = userList + ['x']
-
             return html.Div(layout.signup)
 
         if tab_input == 'analysis':
-            app.layout.children[-1] = html.Div(layout.analysis)
-            userList = user.userList()
-            layout.analysis[0].children[1].options = userList
-            layout.analysis[0].children[3].value = user.date
+            layout.analysis[0].children[1].children = user.name
+            layout.analysis[0].children[3].children = user.getStartDate()
             return html.Div(layout.analysis)
 
         if tab_input == 'info':
-            app.layout.children[-1] = html.Div(layout.info)
-            userList = user.userList()
-            layout.info[0].children[1].options = userList
-            layout.info[0].children[1].value = user.name
+            layout.info[0].children[1].children = user.name
             return html.Div(layout.info)
 
     @app.callback(
@@ -142,6 +146,8 @@ def show_content(users):
         if 0 < n_clicks:
             tags_id = [input_1, input_2, input_3, input_4, input_5, input_6, input_7, input_8, input_9,
                        input_10, input_11]
+            user.name = input_11
+            user.date = input_10
             character = Character(tags_id)
             # print('tags_id: {}'.format(tags_id))
             assert app.layout.children[-1] is not None, "app.layout is none."
@@ -227,36 +233,6 @@ def show_content(users):
             output.children[0].children = warning
             output.style = style['pie_chart_style']
             return output
-
-    @app.callback(
-        [
-            Output('invest-experience', 'value'),
-            Output('invest-purpose', 'value'),
-            Output('character-risk', 'value'),
-            Output('annual-income', 'value'),
-            Output('finance-ratio', 'value'),
-            Output('invest-terms', 'value'),
-            Output('age-check', 'value'),
-            Output('self-understand-degree', 'value')
-        ],
-        Input({'type': 'users-dropdown'}, 'value')
-    )
-    def selected(username):
-        if username == 'x':
-            return [None]*8
-        outputs = user.selections(username)
-        # print('-------------outputs----------------')
-        # print(outputs)
-        for_selected = layout.signup[3]
-        values = []
-        idx = 0
-        for i in range(1, len(for_selected.children), 3):
-            values.append(
-                for_selected.children[i].options[int(outputs[idx][0]-1)]['value'])
-            idx += 1
-        # print('-------------values-------------')
-        # print(values)
-        return values
 
     def page2_result(content, date, ret, vol):
         if type(content) == str:
@@ -478,18 +454,16 @@ def show_content(users):
     @app.callback(
         [Output('output-pos', 'children'),
          Output('max-date', 'children')],
-        Input('predict-slider', 'value'),
-        Input({'type': 'filter-dropdown'}, 'value')
+        Input('predict-slider', 'value')
     )
-    def show_prediction(select, name):
-        user.name = name
-        date = user.getStartDate(name)
+    def show_prediction(select):
+        date = user.getStartDate(user.name)
         # print('app.py show_prediction params: date {}, name {}, select {}'.format(date, name, select))
         user.date = date
         select = changePeriod(select)
         # result는 DataFrame 타입임.
-        result = user.closeData(select, date, name, choice=True)
-        ret, vol = user.getPerformance(name)
+        result = user.closeData(select, date, user.name, choice=True)
+        ret, vol = user.getPerformance(user.name)
         # print('return: {}, vol: {}'.format(ret, vol))
         # print('-----result of closeData---- result type is: {}'.format(type(result)))
         # print(result)
@@ -550,25 +524,23 @@ def show_content(users):
 
     @app.callback(
         Output('info-datetime', 'value'),
-        Input({'type': 'filter-dropdown'}, 'value'),
+        Input('tab-3-user-id', 'children'),
     )
     def page3DateResult(name):
-        user.name = name
+        user.name = name.children[0]
         startPoint = user.getStartDate(name)
         return startPoint
 
     @app.callback(
         Output('detail-info-output', 'children'),
-        [Input('default-predict-date', 'date'),
-         Input({'type': 'filter-dropdown'}, 'value')]
+        [Input('default-predict-date', 'date')]
     )
-    def page3OutputResult(pDate, userchoice):
+    def page3OutputResult(pDate):
         try:
             temp = pDate.split('-')
             pDate = temp[1]+'/'+temp[2]+'/'+temp[0]+' 4:00:00 PM'
         except:
             pDate += ' 4:00:00 PM'
-        user.name = userchoice
         
         print('Selected date: {}'.format(pDate))
         result = user.page3Data(pDate)
