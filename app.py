@@ -146,6 +146,7 @@ def show_content(users):
         if 0 < n_clicks:
             tags_id = [input_1, input_2, input_3, input_4, input_5, input_6, input_7, input_8, input_9,
                        input_10, input_11]
+            print(user.name, user.date)
             user.name = input_11
             user.date = input_10
             character = Character(tags_id)
