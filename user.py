@@ -4,7 +4,7 @@ from data import Data
 class User:
     def __init__(self):
         self.data = Data()
-        self.name, self.date, self.userid = self.data.defaults()
+        self.name, self.date, self.userid = '', '', ''
 
     def getStartDate(self, name):
         dt = self.data.specificDate(name)
