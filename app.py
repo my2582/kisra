@@ -269,6 +269,7 @@ def show_content(users):
             html.Thead(html.Tr([html.Th(col) for col in list(df_comp.columns)]))
         ]
 
+        print('table_header_comp is : {}'.format(table_header_comp))
         print('in page2_result, df_comp is', df_comp)
         rows = df_comp.values.tolist()
         # print(rows)
@@ -354,14 +355,17 @@ def show_content(users):
             temp = [html.Td(data) for data in row]
             table_row.extend([html.Tr(temp)])
 
-        # return html.Div(dbc.Table(table_header + [html.Tbody([row1, row2])], bordered=True))
+        # return html.Div([dbc.Table(table_title1, bordered=False),
+        #             dbc.Table(table_header_comp + [html.Tbody([comp_row])], bordered=True), 
+        #             dbc.Table(table_title2, bordered=False),
+        #             dbc.Table(table_header + [html.Tbody([row1])], bordered=True), 
+        #             dbc.Table(table_title3, bordered=False),
+        #             dbc.Table(table_header_detail + [html.Tbody(table_row)], bordered=True)])
+
         return html.Div([dbc.Table(table_title1, bordered=False),
-                    # dbc.Table(table_header_comp + [html.Tbody([comp_row])], bordered=True), 
-                    dbc.Table(table_header_detail + [html.Tbody([table_row])], bordered=True), 
+                    dbc.Table(table_header_comp + [html.Tbody([comp_row])], bordered=True), 
                     dbc.Table(table_title2, bordered=False),
-                    dbc.Table(table_header + [html.Tbody([row1])], bordered=True), 
-                    dbc.Table(table_title3, bordered=False),
-                    dbc.Table(table_header_detail + [html.Tbody(table_row)], bordered=True)])
+                    dbc.Table(table_header + [html.Tbody([row1])], bordered=True)])
 
     def changePeriod(select):
         for idx, sel in enumerate(select):
