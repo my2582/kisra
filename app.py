@@ -269,12 +269,15 @@ def show_content(users):
             html.Thead(html.Tr([html.Th(col) for col in list(df_comp.columns)]))
         ]
 
+        print('in page2_result, df_comp is', df_comp)
         rows = df_comp.values.tolist()
         # print(rows)
         comp_row = list()
         for row in rows:
             temp = [html.Td(record) for record in row]
             comp_row.extend([html.Tr(temp)])
+
+        print('in page2_result, comp_row is', comp_row)
 
 
         table_header = [
