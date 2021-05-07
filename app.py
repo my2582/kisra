@@ -355,6 +355,9 @@ def show_content(users):
             temp = [html.Td(data) for data in row]
             table_row.extend([html.Tr(temp)])
 
+        print('table_header_detail is {}'.format(table_header_detail))
+        print('in page2_result, table_row is', table_row)
+
         # return html.Div([dbc.Table(table_title1, bordered=False),
         #             dbc.Table(table_header_comp + [html.Tbody([comp_row])], bordered=True), 
         #             dbc.Table(table_title2, bordered=False),
@@ -364,8 +367,8 @@ def show_content(users):
 
         return html.Div([dbc.Table(table_title1, bordered=False),
                     dbc.Table(table_header_comp + [html.Tbody([comp_row])], bordered=True), 
-                    dbc.Table(table_title2, bordered=False),
-                    dbc.Table(table_header + [html.Tbody([row1])], bordered=True)])
+                    dbc.Table(table_title3, bordered=False),
+                    dbc.Table(table_header_detail + [html.Tbody(table_row)], bordered=True)])
 
     def changePeriod(select):
         for idx, sel in enumerate(select):
