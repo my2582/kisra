@@ -261,9 +261,9 @@ def show_content(users):
                 message=content
             )
 
-        table_title1 = [html.Thread(html.Tr(html.Th("리밸런싱 전/후 비교")))]
-        table_title2 = [html.Thread(html.Tr(html.Th("자산별 구성 및 운용성과")))]
-        table_title3 = [html.Thread(html.Tr(html.Th("리밸런싱 과거 내역")))]
+        table_title1 = [html.Thead(html.Tr([html.Th("리밸런싱 전/후 비교")]))]
+        table_title2 = [html.Thead(html.Tr([html.Th("자산별 구성 및 운용성과")]))]
+        table_title3 = [html.Thead(html.Tr([html.Th("리밸런싱 과거 내역")]))]
 
         table_header_comp = [
             html.Thead(html.Tr([html.Th(col) for col in list(df_comp.columns)]))
