@@ -207,7 +207,6 @@ info = [
         html.Label('기준일'),
         dcc.DatePickerSingle(
             id='default-predict-date',
-            min_date_allowed=date.today(),
             max_date_allowed=date.today(),
             initial_visible_month=date.today(),
             date=date.today()
