@@ -261,6 +261,9 @@ def show_content(users):
                 message=content
             )
 
+        table_title1 = [html.Thread(html.Tr(html.Th("리밸런싱 전/후 비교")))]
+        table_title2 = [html.Thread(html.Tr(html.Th("자산별 구성 및 운용성과")))]
+        table_title3 = [html.Thread(html.Tr(html.Th("리밸런싱 과거 내역")))]
 
         table_header_comp = [
             html.Thead(html.Tr([html.Th(col) for col in list(df_comp.columns)]))
@@ -270,7 +273,7 @@ def show_content(users):
         # print(rows)
         comp_row = list()
         for row in rows:
-            temp = [html.Td(data) for data in row]
+            temp = [html.Td(df_comp) for df_comp in row]
             comp_row.extend([html.Tr(temp)])
 
 
@@ -316,7 +319,9 @@ def show_content(users):
         # print('content 첫줄 보면..')
         # print(content.iloc[:1, :3])
 
-        result = content
+        # 과거 내역(detail) 중 리밸런싱이 발생한 날짜의 레코드만 가져온다.
+        result = content.loc[:, content.original == 'Rebal']
+        
         # RA자문 탭에서 상세잔고내역의 컬럼명/컬럼순서 변경
         result = result.loc[:, ['date', 'name', 'itemname', 'price', 'quantity', 'value', 'cost_price', 'cost_value', 'wt', 'original']]
         result.date = to_datetime(result.date).dt.strftime('%Y-%m-%d')
@@ -347,9 +352,11 @@ def show_content(users):
             table_row.extend([html.Tr(temp)])
 
         # return html.Div(dbc.Table(table_header + [html.Tbody([row1, row2])], bordered=True))
-        return html.Div([
+        return html.Div([dbc.Table(table_title1, bordered=True),
                     dbc.Table(table_header_comp + [html.Tbody([comp_row])], bordered=True), 
+                    dbc.Table(table_title2, bordered=True),
                     dbc.Table(table_header + [html.Tbody([row1])], bordered=True), 
+                    dbc.Table(table_title3, bordered=True),
                     dbc.Table(table_header_detail + [html.Tbody(table_row)], bordered=True)])
 
     def changePeriod(select):
