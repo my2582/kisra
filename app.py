@@ -45,7 +45,7 @@ def show_content(users):
         if 0 < login:
             print(login)
             temp = copy.deepcopy(layout.tab)
-            temp.children[0] = temp.children[0].children[1:]
+            temp.children[0].children = temp.children[0].children[1:]
             print(temp.children[0])
             temp.children[0].value = 'analysis'
             print(temp)
