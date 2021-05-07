@@ -261,9 +261,9 @@ def show_content(users):
                 message=content
             )
 
-        table_title1 = [html.Thead(html.Tr([html.Th("리밸런싱 전/후 비교")]))]
-        table_title2 = [html.Thead(html.Tr([html.Th("자산별 구성 및 운용성과")]))]
-        table_title3 = [html.Thead(html.Tr([html.Th("리밸런싱 과거 내역")]))]
+        table_title1 = [html.Thead(html.Tr([html.H3("리밸런싱 전/후 비교")]))]
+        table_title2 = [html.Thead(html.Tr([html.H3("자산별 구성 및 운용성과")]))]
+        table_title3 = [html.Thead(html.Tr([html.H3("리밸런싱 과거 내역")]))]
 
         table_header_comp = [
             html.Thead(html.Tr([html.Th(col) for col in list(df_comp.columns)]))
@@ -592,12 +592,12 @@ def show_content(users):
         
         # 컬럼값 포멧팅(소수점 1자리, 숫자에 컴마 넣기)
         df_comp.loc[:, ['mp_wt', 'wt_before', 'wt_after']] = df_comp.loc[:, ['mp_wt', 'wt_before', 'wt_after']]*100
-        df_comp.loc[:, ['wt_before', 'wt_after']] = df_comp.loc[:, ['wt_before', 'wt_after']].applymap(lambda x: '{:.1f}'.format(x))
+        df_comp.loc[:, ['mp_wt', 'wt_before', 'wt_after']] = df_comp.loc[:, ['mp_wt', 'wt_before', 'wt_after']].applymap(lambda x: '{:.1f}'.format(x))
         df_comp.loc[:, [
-            'quantity_before', 'wt_before', 'value_before', 'quantity_after',
+            'quantity_before', 'value_before', 'quantity_after',
             'price_after', 'value_after'
         ]] = df_comp.loc[:, [
-            'mp_wt', 'quantity_before', 'wt_before', 'value_before', 'quantity_after',
+            'quantity_before', 'value_before', 'quantity_after',
             'price_after', 'value_after'
         ]].astype(float).astype(int).applymap(lambda x: '{:,}'.format(x))
 

@@ -9,7 +9,7 @@ from models.portfolio_advisor import PortfolioAdvisor
 
 pa = PortfolioAdvisor(root_path='../../')
 path_to_save = './data/processed/'
-filename = 'advised_portfolios-0430.pkl'
+filename = 'advised_portfolios-0506.pkl'
 
 start_date = '2021-05-01'
 end_date = '2021-05-06'
