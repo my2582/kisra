@@ -14,6 +14,7 @@ from DataBase import databaseDF
 from src.models.load_data import AdvisedPortfolios, Singleton
 from skimage import io
 from pandas import to_numeric, to_datetime
+import copy
 
 sheet = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 app = dash.Dash(__name__, external_stylesheets=sheet,
@@ -42,8 +43,9 @@ def show_content(users):
     )
     def show_layout(login, signup, user_id):
         if 0 < login:
-            layout.tab.children[0].value = 'analysis'
-            temp = layout.tab.children[0].children[1:]
+            temp = copy.deepcopy(layout.tab)
+            temp.children[0] = temp.children[0].children[1:]
+            temp.children[0].value = 'analysis'
             user.name = user_id
             login = 0
             return temp
