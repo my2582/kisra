@@ -261,9 +261,9 @@ def show_content(users):
                 message=content
             )
 
-        table_title1 = [html.Thead(html.Tr([html.H3("리밸런싱 전/후 비교")]))]
-        table_title2 = [html.Thead(html.Tr([html.H3("자산별 구성 및 운용성과")]))]
-        table_title3 = [html.Thead(html.Tr([html.H3("리밸런싱 과거 내역")]))]
+        table_title1 = [html.Thead(html.Tr([html.H4("리밸런싱 전/후 비교")]))]
+        table_title2 = [html.Thead(html.Tr([html.H4("자산별 구성 및 운용성과")]))]
+        table_title3 = [html.Thead(html.Tr([html.H4("리밸런싱 과거 내역")]))]
 
         table_header_comp = [
             html.Thead(html.Tr([html.Th(col) for col in list(df_comp.columns)]))
@@ -357,7 +357,7 @@ def show_content(users):
         # return html.Div(dbc.Table(table_header + [html.Tbody([row1, row2])], bordered=True))
         return html.Div([dbc.Table(table_title1, bordered=False),
                     # dbc.Table(table_header_comp + [html.Tbody([comp_row])], bordered=True), 
-                    dbc.Table(table_header + [html.Tbody([row1])], bordered=True), 
+                    dbc.Table(table_header + [html.Tbody([table_row])], bordered=True), 
                     dbc.Table(table_title2, bordered=False),
                     dbc.Table(table_header + [html.Tbody([row1])], bordered=True), 
                     dbc.Table(table_title3, bordered=False),
