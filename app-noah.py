@@ -14,9 +14,6 @@ from DataBase import databaseDF
 from src.models.load_data import AdvisedPortfolios, Singleton, PriceDB
 from skimage import io
 from pandas import to_numeric, to_datetime
-import pandas as pd
-import copy
-from pypfopt.discrete_allocation import DiscreteAllocation
 
 sheet = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 app = dash.Dash(__name__, external_stylesheets=sheet,
@@ -26,18 +23,14 @@ user = User()
 
 
 def show_content(users):
+    # app = self.app
     style = layout.style
+    tab = layout.tab
+    origin = tab
     user = users
-    app.layout = html.Div(layout.main_login, id='main-layout')
-    check = False
+    app.layout = origin
 
-    # 3번째 탭용 테스트 데이터 세팅
-    risk_profile = 4
-    current_date = '2021-05-03'
-    userid = 'A006'
-    username = '위험중립형대규모'
-
-    db = databaseDF()
+    # db = databaseDF()
     # advised_pf = AdvisedPortfolios.instance().data
     # print('type(advised_pf)'.format(type(advised_pf)))
     # print('Here is your advised_pf:')
@@ -45,45 +38,29 @@ def show_content(users):
     # db.insert_advised_pf(advised_pf)
 
     @app.callback(
-        Output('main-layout', 'children'),
-        [Input('login-button', 'n_clicks'),
-         Input('sign-up-button', 'n_clicks')],
-        State('user-id-main', 'value')
-    )
-    def show_layout(login, signup, user_id):
-        if 0 < login:
-            print(login)
-            temp = copy.deepcopy(layout.tab)
-            temp.children[0].children = temp.children[0].children[1:]
-            temp.children[0].value = 'analysis'
-            user.name = user_id
-            layout.main_login.children[2].n_clicks = 0
-            check = False
-            return temp
-        if 0 < signup:
-            layout.main_login.children[5].n_clicks = 0
-            check = True
-            layout.tab.children[0].value = 'signup'
-            return layout.tab
-        return layout.main_login
-
-    @app.callback(
         Output(layout.output_id, 'children'),
         Input(layout.input_id, "value"),
     )
     def show_page(tab_input):
         if tab_input == 'signup':
+            app.layout.children[-1] = html.Div(layout.signup)
+            userList = user.userList()
+            layout.signup[1].children[1].options = userList + ['x']
+
             return html.Div(layout.signup)
 
         if tab_input == 'analysis':
-            if not check:
-                layout.analysis[0].children[1].children = user.name
-                layout.analysis[0].children[3].children = user.getStartDate(user.name)
+            app.layout.children[-1] = html.Div(layout.analysis)
+            userList = user.userList()
+            layout.analysis[0].children[1].options = userList
+            layout.analysis[0].children[3].value = user.date
             return html.Div(layout.analysis)
 
         if tab_input == 'info':
-            if not check:
-                layout.info[0].children[1].children = user.name
+            app.layout.children[-1] = html.Div(layout.info)
+            userList = user.userList()
+            layout.info[0].children[1].options = userList
+            layout.info[0].children[1].value = user.name
             return html.Div(layout.info)
 
     @app.callback(
@@ -108,7 +85,6 @@ def show_content(users):
         def get_fig(source, width, height):
             # Create figure
             fig = go.Figure()
-
 
             # Constants
             img_width = width
@@ -166,11 +142,9 @@ def show_content(users):
         if 0 < n_clicks:
             tags_id = [input_1, input_2, input_3, input_4, input_5, input_6, input_7, input_8, input_9,
                        input_10, input_11]
-            user.name = input_11
-            user.date = input_10
-            print(user.name, user.date)
             character = Character(tags_id)
             # print('tags_id: {}'.format(tags_id))
+            assert app.layout.children[-1] is not None, "app.layout is none."
             output = html.Div([
                 html.Div(id='character-result')
             ], id='output-div')
@@ -254,6 +228,36 @@ def show_content(users):
             output.style = style['pie_chart_style']
             return output
 
+    @app.callback(
+        [
+            Output('invest-experience', 'value'),
+            Output('invest-purpose', 'value'),
+            Output('character-risk', 'value'),
+            Output('annual-income', 'value'),
+            Output('finance-ratio', 'value'),
+            Output('invest-terms', 'value'),
+            Output('age-check', 'value'),
+            Output('self-understand-degree', 'value')
+        ],
+        Input({'type': 'users-dropdown'}, 'value')
+    )
+    def selected(username):
+        if username == 'x':
+            return [None]*8
+        outputs = user.selections(username)
+        # print('-------------outputs----------------')
+        # print(outputs)
+        for_selected = layout.signup[3]
+        values = []
+        idx = 0
+        for i in range(1, len(for_selected.children), 3):
+            values.append(
+                for_selected.children[i].options[int(outputs[idx][0]-1)]['value'])
+            idx += 1
+        # print('-------------values-------------')
+        # print(values)
+        return values
+
     def page2_result(content, date, ret, vol):
         if type(content) == str:
             return dcc.ConfirmDialog(
@@ -286,21 +290,6 @@ def show_content(users):
 
         latest_content.value = latest_content.value.astype(int).apply(lambda x : "{:,}".format(x))
         summary.value = summary.value.astype(int).apply(lambda x : "{:,}".format(x))
-
-        # row1 = html.Tr([html.Td("현재"), html.Td(content[content['asset_class'] == 'Cash']['value'].iloc[0]),
-        #                 html.Td(content[content['asset_class']
-        #                                == 'Equity']['value'].iloc[0]),
-        #                 html.Td(content[content['asset_class']
-        #                                == 'Fixed Income']['value'].iloc[0]),
-        #                 html.Td(content[content['asset_class']
-        #                                == 'Alternative']['value'].iloc[0]),
-        #                 html.Td(total)])
-
-        # before, after = content
-        # table_header = [
-        #     html.Thead(html.Tr([html.Th("시점"), html.Th("현금성"), html.Th(
-        #         "주식"), html.Th("채권"), html.Th("대체"), html.Th('상세정보')]))
-        # ]
 
         row1 = html.Tr([html.Td("현재"), html.Td(summary.loc[summary.asset_class == 'Cash', 'value']),
                         html.Td(summary.loc[summary.asset_class == 'Equity', 'value']),
@@ -365,39 +354,6 @@ def show_content(users):
 
 
         # row2 = html.Tr([html.Td(""), html.Td(""), html.Td(""), html.Td(""), html.Td(""), html.Td("")])
-
-
-        # row1 = html.Tr([html.Td("현재"), html.Td(before[before['asset_class'] == '현금성']['value'].iloc[0]),
-        #                 html.Td(before[before['asset_class']
-        #                                == '주식']['value'].iloc[0]),
-        #                 html.Td(before[before['asset_class']
-        #                                == '채권']['value'].iloc[0]),
-        #                 html.Td(before[before['asset_class']
-        #                                == '대체']['value'].iloc[0]),
-        #                 html.Td(html.Div([html.Button('상세정보', id='detail-info-button'),
-        #                                   dbc.Modal(
-        #                     [
-        #                         dbc.ModalHeader("상세정보"),
-        #                         dbc.ModalBody(
-        #                             "A small modal.", id='record'),
-        #                         dbc.ModalFooter(
-        #                             dbc.Button(
-        #                                 "Close", id="close-detail-info", className="ml-auto")
-        #                         ),
-        #                     ],
-        #                     id="modal-detail-info",
-        #                     size="sm"
-        #                 )]))])
-
-        # row2 = html.Tr([html.Td("미래"), html.Td(before[before['asset_class'] == '현금성']['value'].iloc[0]),
-        #                 html.Td(before[before['asset_class']
-        #                                == '주식']['value'].iloc[0]),
-        #                 html.Td(before[before['asset_class']
-        #                                == '채권']['value'].iloc[0]),
-        #                 html.Td(before[before['asset_class']
-        #                                == '대체']['value'].iloc[0]),
-        #                 html.Td('')],
-        #                style={'background-color': '#FFA500'})
 
         # if not content[-1]:
         #     row2.style['background-color'] = '#ddd'
@@ -471,235 +427,149 @@ def show_content(users):
         return html.Div([fig,
                          table_result])
 
-    def rebalance(rebal_date, price_d, detail, new_port):
-        '''
-        Rebalance a portfolio.
+    # def get_next_portfolio(first_trade=False, new_units=None, prices=None, remaining_cash=None):
+    #     price_db = PriceDB.instance().data
+    #     advised_pf = AdvisedPortfolios.instance().data
+    #     risk_profile = 4
+    #     current_date = '2021-05-03'
 
-        Parameters:
-        rebal_date: str
-            rebalancing date
+    #     # 시뮬레이션 기간은 현재일(current_date) 다음 날부터 추천 포트폴리오가 존재하는 마지막날까지임.
+    #     dates = advised_pf.loc[(advised_pf.risk_profile == risk_profile) & (
+    #         advised_pf.date > current_date), 'date'].min()
+    #     rebal_dates = dates
+    #     print('리밸런싱 일자: ', rebal_dates)
 
-        detail: DataFrame
-        current balance
+    #     # return할 때 필요한 첫날의 추천 포트 폴리오와 asset class별 정보 수집
+    #     new_port = advised_pf.loc[(advised_pf.date == rebal_dates) & (
+    #         advised_pf.risk_profile == risk_profile), :]
 
-        price_d: DataFrame
-        price data on rebal_date
-
-        new_port: DataFrame
-        A new portfolio. Your current portfolio in `detail` will be rebalanced toward `new_port`.
-        '''
-        trading_amt = detail.value.sum()       
-
-        wt = new_port[['itemcode', 'weights']].set_index('itemcode').to_dict()['weights']
-        pr = new_port[['itemcode', 'price']].set_index('itemcode').squeeze()
-
-        da = DiscreteAllocation(weights=wt, latest_prices=pr, total_portfolio_value=trading_amt)
-
-        allocation, remaining_cash = da.greedy_portfolio()
-        print("리밸런싱 결과:")
-        print("{}: 새 포트폴리오(종목코드:수량)-{}".format(rebal_date,allocation))
-        print(" - 매매 후 잔액: {:.2f} KRW".format(remaining_cash))
-
-        # 매매한 뒤의 레코드 생성
-        df_qty = pd.DataFrame.from_dict(allocation, orient='index', columns=['quantity'])
-        next_detail = new_port.merge(df_qty, left_on='itemcode', right_index=True, how='inner')
-        next_detail['cost_price'] = next_detail.price.copy()   
-        next_detail['cost_value'] = next_detail.cost_price*next_detail.quantity
-        next_detail['value'] = next_detail.cost_value.copy()
-
-        # 매매하고 남은 돈은 현금으로
-        df_cash = {
-            'itemcode': 'C000001',
-            'quantity': remaining_cash,
-            'cost_price': 1,
-            'price':1,
-            'cost_value': remaining_cash,
-            'value': remaining_cash,
-            'itemname': '현금',
-            'asset_class': 'Cash'
-        }
-        df_cash = pd.DataFrame.from_dict(df_cash, orient='index').T
-
-        next_detail = pd.concat((next_detail[['itemcode', 'quantity', 'cost_price', 'price', 'cost_value', 'value',
-        'itemname', 'asset_class']], df_cash), axis=0)
-
-        next_detail['wt'] = next_detail.value/next_detail.value.sum()
-        next_date = datetime.strptime(rebal_date, '%Y-%m-%d')
-        #next_date = str(next_date.month)+'/'+str(next_date.day)+'/'+str(next_date.year)+' 03:30:00 PM'
-        next_detail['date'] = next_date
-        next_detail.reset_index(drop=True, inplace=True)
-        next_detail['group_by'] = ''
-        next_detail = pd.merge(next_detail,
-                price_d.loc[price_d.date==rebal_date, ['date', 'itemcode']],
-                left_on=['date', 'itemcode'],
-                right_on=['date', 'itemcode'], how='left')
-        next_detail['username'] = username
-        next_detail['userid'] = userid
-        next_detail['original'] = 'Rebal'
-        next_detail = next_detail.rename(columns={'weights':'wt'})
-        next_detail = next_detail[['itemcode', 'quantity', 'cost_price', 'price', 'cost_value', 'value',
-            'itemname', 'asset_class', 'date', 'userid', 'username', 'group_by',
-            'original', 'wt']]
-
-        return next_detail
-
-    def get_next_portfolio(first_trade=False, new_units=None, prices=None, remaining_cash=None, detail=None):
-        price_db = PriceDB.instance().data
-        advised_pf = AdvisedPortfolios.instance().data
-
-        # 시뮬레이션 기간은 현재일(current_date) 다음 날부터 추천 포트폴리오가 존재하는 마지막날까지임.
-        dates = advised_pf.loc[(advised_pf.risk_profile == risk_profile) & (
-            advised_pf.date > current_date), 'date'].min()
-        rebal_dates = dates
-        dt = rebal_dates     # dt랑 rebal_dates, dates 다 똑같음. 
-        print('리밸런싱 일자: ', rebal_dates)
-
-        # return할 때 필요한 첫날의 추천 포트 폴리오와 asset class별 정보 수집
-        new_port = advised_pf.loc[(advised_pf.date == rebal_dates) & (
-            advised_pf.risk_profile == risk_profile), :]
-
-        first_advised_port = new_port.loc[:, ['weights', 'itemname', 'itemcode']].groupby(
-            ['itemname', 'itemcode']).sum().reset_index()
-        by_assetclass = new_port.loc[:, ['weights', 'asset_class']].groupby(
-            'asset_class').sum().sort_values('weights', ascending=False).reset_index()
+    #     first_advised_port = new_port.loc[:, ['weights', 'itemname', 'itemcode']].groupby(
+    #         ['itemname', 'itemcode']).sum().reset_index()
+    #     by_assetclass = new_port.loc[:, ['weights', 'asset_class']].groupby(
+    #         'asset_class').sum().sort_values('weights', ascending=False).reset_index()
 
 
-        # next_detail = copy.deepcopy(detail)
-        next_detail = detail
-        all_the_nexts = pd.DataFrame(columns=next_detail.columns)
-        nexts_list = []
-        price_db = price_db.loc[:, ['date', 'price', 'itemcode']]
-        price_d = price_db.loc[price_db.date==dt, ['date', 'price', 'itemcode']]
+    #     # next_detail = copy.deepcopy(detail)
+    #     next_detail = detail
+    #     all_the_nexts = pd.DataFrame(columns=next_detail.columns)
+    #     nexts_list = []
+    #     price_db = price_db.loc[:, ['date', 'price', 'itemcode']]
+    #     price_d = price_db.loc[price_db.date==dt, ['date', 'price', 'itemcode']]
 
-        # 리밸런싱한다.
-        new_port = advised_pf.loc[(advised_pf.risk_profile==risk_profile) & (advised_pf.date==dt), ['date', 'itemcode', 'weights', 'itemname', 'price', 'asset_class']]
-        next_detail = rebalance(rebal_date=dt, price_d=price_d, detail=next_detail, new_port=new_port)
+    #     # 리밸런싱한다.
+    #     new_port = advised_pf.loc[(advised_pf.risk_profile==risk_profile) & (advised_pf.date==dt), ['date', 'itemcode', 'weights', 'itemname', 'price', 'asset_class']]
+    #     next_detail = rebalance(rebal_date=dt, price_d=price_d, detail=next_detail, new_port=new_port)
 
-        # all_the_nexts = pd.concat((all_the_nexts, next_detail))
-        nexts_list.append(next_detail)
+    #     # all_the_nexts = pd.concat((all_the_nexts, next_detail))
+    #     nexts_list.append(next_detail)
 
-        all_the_nexts = pd.concat(nexts_list, axis=0)
+    #     all_the_nexts = pd.concat(nexts_list, axis=0)
 
-        print('리밸런싱 종료----')
-        # 불필요한 컬럼 및 행 삭제
-        all_the_nexts = all_the_nexts.loc[all_the_nexts.quantity > 0]
-        all_the_nexts = all_the_nexts.reset_index(drop=True)
-        all_the_nexts['username'] = username
+    #     print('리밸런싱 종료----')
+    #     # 불필요한 컬럼 및 행 삭제
+    #     all_the_nexts = all_the_nexts.loc[all_the_nexts.quantity > 0]
+    #     all_the_nexts = all_the_nexts.reset_index(drop=True)
+    #     all_the_nexts['username'] = username
 
-        all_the_generals = all_the_nexts.loc[:,['date', 'wt', 'value', 'asset_class']].sort_values(
-                                        ['date'], ascending=True).groupby([
-                                            'date', 'asset_class'
-                                        ]).sum().reset_index(drop=False)
-        print('자산군별 요약 계산 종료----')
+    #     all_the_generals = all_the_nexts.loc[:,['date', 'wt', 'value', 'asset_class']].sort_values(
+    #                                     ['date'], ascending=True).groupby([
+    #                                         'date', 'asset_class'
+    #                                     ]).sum().reset_index(drop=False)
+    #     print('자산군별 요약 계산 종료----')
 
-        all_the_generals['userid'] = userid
+    #     all_the_generals['userid'] = userid
 
-        return first_advised_port, by_assetclass, all_the_nexts, all_the_generals
+    #     return first_advised_port, by_assetclass, all_the_nexts, all_the_generals
 
-    def make_comparison(before, after):
-        before=before.set_index('itemcode', drop=True)
-        after=after.set_index('itemcode', drop=True)
+    # def make_comparison(before, after):
+    #     before=before.set_index('itemcode', drop=True)
+    #     after=after.set_index('itemcode', drop=True)
         
-        # 매매 전후 테이블 병합 (key: itemcode, which is already set to be the index.)
-        df_comp = pd.merge(before.loc[:, ['name', 'itemname', 'quantity', 'wt', 'price', 'value']],
-            after.loc[:, ['itemname', 'quantity', 'wt', 'mp_wt', 'price', 'value']],
-            left_index=True,
-            right_index=True,
-            how='outer',
-            suffixes=('_before', '_after'))
+    #     # 매매 전후 테이블 병합 (key: itemcode, which is already set to be the index.)
+    #     df_comp = pd.merge(before.loc[:, ['name', 'itemname', 'quantity', 'wt', 'price', 'value']],
+    #         after.loc[:, ['itemname', 'quantity', 'wt', 'mp_wt', 'price', 'value']],
+    #         left_index=True,
+    #         right_index=True,
+    #         how='outer',
+    #         suffixes=('_before', '_after'))
         
-        # nan 셀 채우기
-        df_comp.itemname_before = df_comp.itemname_before.combine_first(after.itemname)
-        df_comp.itemname_after = df_comp.itemname_after.combine_first(before.itemname)
-        df_comp.price_after = df_comp.price_after.combine_first(before.price)
-        df_comp.name = username
-        df_comp = df_comp.fillna(0)
-        df_comp = df_comp.assign(quantity_diff= df_comp.quantity_after-df_comp.quantity_before)
+    #     # nan 셀 채우기
+    #     df_comp.itemname_before = df_comp.itemname_before.combine_first(after.itemname)
+    #     df_comp.itemname_after = df_comp.itemname_after.combine_first(before.itemname)
+    #     df_comp.price_after = df_comp.price_after.combine_first(before.price)
+    #     df_comp.name = username
+    #     df_comp = df_comp.fillna(0)
+    #     df_comp = df_comp.assign(quantity_diff= df_comp.quantity_after-df_comp.quantity_before)
         
-        # 매수/매도 레이블링 조건 정의
-        conditions = [
-            df_comp.quantity_diff < 0,
-            df_comp.quantity_diff == 0,
-            df_comp.quantity_diff > 0
-        ]
-        outputs = ['매도', '-', '매수']
+    #     # 매수/매도 레이블링 조건 정의
+    #     conditions = [
+    #         df_comp.quantity_diff < 0,
+    #         df_comp.quantity_diff == 0,
+    #         df_comp.quantity_diff > 0
+    #     ]
+    #     outputs = ['매도', '-', '매수']
         
-        df_comp = df_comp.assign(trade=np.select(conditions, outputs))
-        df_comp = df_comp.assign(quantity_trade=np.abs(df_comp.quantity_diff.astype(int)))
+    #     df_comp = df_comp.assign(trade=np.select(conditions, outputs))
+    #     df_comp = df_comp.assign(quantity_trade=np.abs(df_comp.quantity_diff.astype(int)))
         
-        # 컬럼명 변경, 컬럼삭제 등 컬럼 정리
-        df_comp = df_comp.drop(['itemname_after'], axis=1)
-        df_comp = df_comp.sort_values(by='value_after', ascending=False)
-        df_comp = df_comp.reset_index()
+    #     # 컬럼명 변경, 컬럼삭제 등 컬럼 정리
+    #     df_comp = df_comp.drop(['itemname_after'], axis=1)
+    #     df_comp = df_comp.sort_values(by='value_after', ascending=False)
+    #     df_comp = df_comp.reset_index()
         
-        df_comp = df_comp[['name', 'itemcode', 'itemname_before', 'quantity_before', 'wt_before', 'value_before',
-                    'mp_wt', 'trade', 'quantity_trade', 'quantity_after', 'price_after', 'value_after', 'wt_after']]
+    #     df_comp = df_comp[['name', 'itemcode', 'itemname_before', 'quantity_before', 'wt_before', 'value_before',
+    #                 'mp_wt', 'trade', 'quantity_trade', 'quantity_after', 'price_after', 'value_after', 'wt_after']]
         
-        # 컬럼값 포멧팅(소수점 1자리, 숫자에 컴마 넣기)
-        df_comp.loc[:, ['mp_wt', 'wt_before', 'wt_after']] = df_comp.loc[:, ['mp_wt', 'wt_before', 'wt_after']]*100
-        df_comp.loc[:, ['wt_before', 'wt_after']] = df_comp.loc[:, ['wt_before', 'wt_after']].applymap(lambda x: '{:.1f}'.format(x))
-        df_comp.loc[:, [
-            'quantity_before', 'wt_before', 'value_before', 'quantity_after',
-            'price_after', 'value_after'
-        ]] = df_comp.loc[:, [
-            'mp_wt', 'quantity_before', 'wt_before', 'value_before', 'quantity_after',
-            'price_after', 'value_after'
-        ]].astype(float).astype(int).applymap(lambda x: '{:,}'.format(x))
+    #     # 컬럼값 포멧팅(소수점 1자리, 숫자에 컴마 넣기)
+    #     df_comp.loc[:, ['mp_wt', 'wt_before', 'wt_after']] = df_comp.loc[:, ['mp_wt', 'wt_before', 'wt_after']]*100
+    #     df_comp.loc[:, ['wt_before', 'wt_after']] = df_comp.loc[:, ['wt_before', 'wt_after']].applymap(lambda x: '{:.1f}'.format(x))
+    #     df_comp.loc[:, [
+    #         'quantity_before', 'wt_before', 'value_before', 'quantity_after',
+    #         'price_after', 'value_after'
+    #     ]] = df_comp.loc[:, [
+    #         'mp_wt', 'quantity_before', 'wt_before', 'value_before', 'quantity_after',
+    #         'price_after', 'value_after'
+    #     ]].astype(float).astype(int).applymap(lambda x: '{:,}'.format(x))
 
-        # 컬럼명 한글로
-        df_comp = df_comp.rename(columns = {
-            'name':'이름',
-            'itemcode':'종목코드',
-            'itemname_before':'종목명',
-            'quantity_before':'수량(전)',
-            'wt_before':'비중(전)',
-            'value_before':'평가액(전)',
-            'mp_wt':'MP비중',
-            'trade':'매매방향',
-            'quantity_trade':'매매수량',
-            'quantity_after':'수량(후)',
-            'price_after':'가격(후)',
-            'value_after':'평가액(후)',
-            'wt_after':'비중(후)'
-        })
+    #     # 컬럼명 한글로
+    #     df_comp = df_comp.rename(columns = {
+    #         'name':'이름',
+    #         'itemcode':'종목코드',
+    #         'itemname_before':'종목명',
+    #         'quantity_before':'수량(전)',
+    #         'wt_before':'비중(전)',
+    #         'value_before':'평가액(전)',
+    #         'mp_wt':'MP비중',
+    #         'trade':'매매방향',
+    #         'quantity_trade':'매매수량',
+    #         'quantity_after':'수량(후)',
+    #         'price_after':'가격(후)',
+    #         'value_after':'평가액(후)',
+    #         'wt_after':'비중(후)'
+    #     })
         
-        return df_comp
+    #     return df_comp
 
     @app.callback(
         [Output('output-pos', 'children'),
          Output('max-date', 'children')],
-        Input('predict-slider', 'value')
+        Input('predict-slider', 'value'),
+        Input({'type': 'filter-dropdown'}, 'value')
     )
-    def show_prediction(select):
-        date = user.getStartDate(user.name)
+    def show_prediction(select, name):
+        user.name = name
+        print('in show_prediction, name is {}'.format(name))
+        date = user.getStartDate(name)
         # print('app.py show_prediction params: date {}, name {}, select {}'.format(date, name, select))
         user.date = date
         select = changePeriod(select)
-
-        df_comp_pkl = pd.read_pickle('./data/processed/comparison.pkl')
-        print('리밸런싱 전/후 비교(1):', df_comp_pkl)
-
-        # 최근 잔고 가져옴
-        detail = db.getUserBalance(userid=userid)       
-        detail = pd.DataFrame(detail, columns=['date', 'userid', 'name', 'asset_class', 'itemcode', 'itemname',
-                                                'quantity', 'cost_price', 'cost_value', 'price', 'value', 'wt', 'group_by', 'original'])
-
-        # 리밸런싱 후 포트폴리오 가져오기
-        first_advised_port, by_assetclass, all_the_nexts, all_the_generals = get_next_portfolio(detail=detail)
-        
-        # 리밸런싱 전후 비교 테이블 생성
-        before = detail
-        after = all_the_nexts
-        after = after.merge(first_advised_port.loc[:, ['itemcode', 'weights']], left_on='itemcode', right_on='itemcode', how='left')
-        after.weights = after.weights.fillna(0)
-        after = after.rename(columns={'weights':'mp_wt'})
-        df_comp = make_comparison(before, after)
-
-        print('리밸런싱 전/후 비교(2):', df_comp)
-
         # result는 DataFrame 타입임.
-        result = user.closeData(select, date, user.name, choice=True)
-        ret, vol = user.getPerformance(user.name)
+
+        ## 리밸런싱 전후 비교 코드 시작 ----
+#        df_comp = make_comparison(before, after)
+
+        result = user.closeData(select, date, name, choice=True)
+        ret, vol = user.getPerformance(name)
         # print('return: {}, vol: {}'.format(ret, vol))
         # print('-----result of closeData---- result type is: {}'.format(type(result)))
         # print(result)
@@ -759,18 +629,29 @@ def show_content(users):
         return is_open, result
 
     @app.callback(
-        Output('detail-info-output', 'children'),
-        [Input('default-predict-date', 'date')]
+        Output('info-datetime', 'value'),
+        Input({'type': 'filter-dropdown'}, 'value'),
     )
-    def page3OutputResult(pDate):
+    def page3DateResult(name):
+        user.name = name
+        startPoint = user.getStartDate(name)
+        return startPoint
+
+    @app.callback(
+        Output('detail-info-output', 'children'),
+        [Input('default-predict-date', 'date'),
+         Input({'type': 'filter-dropdown'}, 'value')]
+    )
+    def page3OutputResult(pDate, userchoice):
         try:
             temp = pDate.split('-')
             pDate = temp[1]+'/'+temp[2]+'/'+temp[0]+' 4:00:00 PM'
         except:
             pDate += ' 4:00:00 PM'
-        
+        user.name = userchoice
+
+        print('in page3OutputResult(), user.date is {}'.format(user.date))
         print('Selected date: {}'.format(pDate))
-        print(user.name)
         result = user.page3Data(pDate)
 
         return page3Layout(result, datetime.strptime(pDate, '%m/%d/%Y %I:%M:%S %p'), datetime.strptime(pDate, '%m/%d/%Y %I:%M:%S %p'))

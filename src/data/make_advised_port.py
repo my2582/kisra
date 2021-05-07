@@ -11,8 +11,8 @@ pa = PortfolioAdvisor(root_path='../../')
 path_to_save = './data/processed/'
 filename = 'advised_portfolios-0430.pkl'
 
-start_date = '2021-04-28'
-end_date = '2021-04-30'
+start_date = '2021-05-01'
+end_date = '2021-05-06'
 
 for date in pd.date_range(start=start_date, end=end_date):
     for r in [2,3,4]:
