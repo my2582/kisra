@@ -201,8 +201,6 @@ info = [
     ], id='selection'),
 
     html.Div([
-        html.Label('날짜'),
-        dcc.Input(value='y', type='text', id='info-datetime'),
 
         html.Label('기준일'),
         dcc.DatePickerSingle(

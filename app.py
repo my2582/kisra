@@ -75,7 +75,6 @@ def show_content(users):
         if tab_input == 'info':
             if not check:
                 layout.info[0].children[1].children = user.name
-                layout.info[1].children[1].value = user.getStartDate(user.name)
             return html.Div(layout.info)
 
     @app.callback(
@@ -549,7 +548,7 @@ def show_content(users):
         print(user.name)
         result = user.page3Data(pDate)
 
-        return page3Layout(result, datetime.strptime(user.date, '%m/%d/%Y %I:%M:%S %p'), datetime.strptime(pDate, '%m/%d/%Y %I:%M:%S %p'))
+        return page3Layout(result, datetime.strptime(pDate, '%m/%d/%Y %I:%M:%S %p'), datetime.strptime(pDate, '%m/%d/%Y %I:%M:%S %p'))
 
 
 show_content(user)
