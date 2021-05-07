@@ -616,6 +616,9 @@ def show_content(users):
         Input('predict-slider', 'value')
     )
     def show_prediction(select):
+        user.name = username
+        user.user_id = userid
+        
         date = user.getStartDate(user.name)
         # print('app.py show_prediction params: date {}, name {}, select {}'.format(date, name, select))
         user.date = date
