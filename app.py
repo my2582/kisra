@@ -27,7 +27,7 @@ def show_content(users):
     style = layout.style
     user = users
     app.layout = html.Div(layout.main_login, id='main-layout')
-
+    check = False
     # db = databaseDF()
     # advised_pf = AdvisedPortfolios.instance().data
     # print('type(advised_pf)'.format(type(advised_pf)))
@@ -43,14 +43,18 @@ def show_content(users):
     )
     def show_layout(login, signup, user_id):
         if 0 < login:
+            print(login)
             temp = copy.deepcopy(layout.tab)
             temp.children[0] = temp.children[0].children[1:]
             temp.children[0].value = 'analysis'
+            print(temp)
             user.name = user_id
             login = 0
+            check = False
             return temp
         if 0 < signup:
             signup = 0
+            check = True
             layout.tab.children[0].value = 'signup'
             return layout.tab
         return layout.main_login
@@ -64,13 +68,15 @@ def show_content(users):
             return html.Div(layout.signup)
 
         if tab_input == 'analysis':
-            layout.analysis[0].children[1].children = user.name
-            layout.analysis[0].children[3].children = user.getStartDate(user.name)
+            if not check:
+                layout.analysis[0].children[1].children = user.name
+                layout.analysis[0].children[3].children = user.getStartDate(user.name)
             return html.Div(layout.analysis)
 
         if tab_input == 'info':
-            layout.info[0].children[1].children = user.name
-            layout.info[1].children[1].value = user.getStartDate(user.name)
+            if not check:
+                layout.info[0].children[1].children = user.name
+                layout.info[1].children[1].value = user.getStartDate(user.name)
             return html.Div(layout.info)
 
     @app.callback(
