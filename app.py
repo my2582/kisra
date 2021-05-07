@@ -42,11 +42,14 @@ def show_content(users):
     )
     def show_layout(login, signup, user_id):
         if 0 < login:
-            temp = layout.tab.children[0].children[1:]
             layout.tab.children[0].value = 'analysis'
+            temp = layout.tab.children[0].children[1:]
             user.name = user_id
+            login = 0
             return temp
         if 0 < signup:
+            signup = 0
+            layout.tab.children[0].value = 'signup'
             return layout.tab
         return layout.main_login
 
