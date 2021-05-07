@@ -273,7 +273,7 @@ def show_content(users):
         # print(rows)
         comp_row = list()
         for row in rows:
-            temp = [html.Td(df_comp) for df_comp in row]
+            temp = [html.Td(record) for record in row]
             comp_row.extend([html.Tr(temp)])
 
 
@@ -627,7 +627,8 @@ def show_content(users):
         user.user_id = userid
         
         date = user.getStartDate(user.name)
-        # print('app.py show_prediction params: date {}, name {}, select {}'.format(date, name, select))
+        print('app.py show_prediction params: date {}, name {}, select {}'.format(date, user.name, select))
+
         user.date = date
         select = changePeriod(select)
 
@@ -655,9 +656,9 @@ def show_content(users):
         # result는 DataFrame 타입임.
         result = user.closeData(select, date, user.name, choice=True)
         ret, vol = user.getPerformance(user.name)
-        # print('return: {}, vol: {}'.format(ret, vol))
-        # print('-----result of closeData---- result type is: {}'.format(type(result)))
-        # print(result)
+        print('return: {}, vol: {}'.format(ret, vol))
+        print('-----result of closeData---- result type is: {}'.format(type(result)))
+        print(result)
         return page2_result(result, date, ret, vol, df_comp_pkl), date
 
     @app.callback(

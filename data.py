@@ -158,8 +158,9 @@ class Data:
         # print('standard_date: {}'.format(standard_date))
 
         data = self.db.getRecord(user_id, (standard_date, start, end))
-        # print('현재 시점 잔고 데이터 가져옴. userid: {}, name: {}'.format(user_id, name))
+        print('현재 시점 잔고 데이터 가져옴. userid: {}, name: {}'.format(user_id, name))
         if not len(data):
+            print('#### data has zero length')
             return pd.DataFrame(columns=self.columns)
         data.columns = self.columns
 
