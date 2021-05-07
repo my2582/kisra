@@ -126,8 +126,9 @@ class Data:
     def returnData(self, point, name=None, date=None, choice=False):
         # print('현재 시점 잔고 조회시작---returnData 시작')
         if name is None:
-            name = 'inv-0'
-            date='4/27/2021 4:00:00 PM'
+            name = '위험중립형대규모'
+            date='5/03/2021 4:00:00 PM'
+            print('--name is None--')
 
         user_id = self.check_name(name)
 
