@@ -254,12 +254,25 @@ def show_content(users):
             output.style = style['pie_chart_style']
             return output
 
-    def page2_result(content, date, ret, vol):
+    def page2_result(content, date, ret, vol, df_comp):
         if type(content) == str:
             return dcc.ConfirmDialog(
                 id='confirm',
                 message=content
             )
+
+
+        table_header_comp = [
+            html.Thead(html.Tr([html.Th(col) for col in list(df_comp.columns)]))
+        ]
+
+        rows = df_comp.values.tolist()
+        # print(rows)
+        comp_row = list()
+        for row in rows:
+            temp = [html.Td(data) for data in row]
+            comp_row.extend([html.Tr(temp)])
+
 
         table_header = [
             html.Thead(html.Tr([html.Th("시점"), html.Th("Cash"), html.Th(
@@ -287,21 +300,6 @@ def show_content(users):
         latest_content.value = latest_content.value.astype(int).apply(lambda x : "{:,}".format(x))
         summary.value = summary.value.astype(int).apply(lambda x : "{:,}".format(x))
 
-        # row1 = html.Tr([html.Td("현재"), html.Td(content[content['asset_class'] == 'Cash']['value'].iloc[0]),
-        #                 html.Td(content[content['asset_class']
-        #                                == 'Equity']['value'].iloc[0]),
-        #                 html.Td(content[content['asset_class']
-        #                                == 'Fixed Income']['value'].iloc[0]),
-        #                 html.Td(content[content['asset_class']
-        #                                == 'Alternative']['value'].iloc[0]),
-        #                 html.Td(total)])
-
-        # before, after = content
-        # table_header = [
-        #     html.Thead(html.Tr([html.Th("시점"), html.Th("현금성"), html.Th(
-        #         "주식"), html.Th("채권"), html.Th("대체"), html.Th('상세정보')]))
-        # ]
-
         row1 = html.Tr([html.Td("현재"), html.Td(summary.loc[summary.asset_class == 'Cash', 'value']),
                         html.Td(summary.loc[summary.asset_class == 'Equity', 'value']),
                         html.Td(summary.loc[summary.asset_class == 'Fixed Income', 'value']),
@@ -309,21 +307,6 @@ def show_content(users):
                         html.Td(total),
                         html.Td('{:.1f}'.format(float(ret)*100)),
                         html.Td('{:.1f}'.format(float(vol)*100))
-                        # ,
-                        # html.Td(html.Div([html.Button('잔고내역보기', id='detail-info-button'),
-                        #                   dbc.Modal(
-                        #     [
-                        #         dbc.ModalHeader("상세 잔고내역"),
-                        #         dbc.ModalBody(
-                        #             "A small modal.", id='record'),
-                        #         dbc.ModalFooter(
-                        #             dbc.Button(
-                        #                 "Close", id="close-detail-info", className="ml-auto")
-                        #         ),
-                        #     ],
-                        #     id="modal-detail-info",
-                        #     size="sm"
-                        # )]))
                         ])
 
 
@@ -363,48 +346,10 @@ def show_content(users):
             temp = [html.Td(data) for data in row]
             table_row.extend([html.Tr(temp)])
 
-
-        # row2 = html.Tr([html.Td(""), html.Td(""), html.Td(""), html.Td(""), html.Td(""), html.Td("")])
-
-
-        # row1 = html.Tr([html.Td("현재"), html.Td(before[before['asset_class'] == '현금성']['value'].iloc[0]),
-        #                 html.Td(before[before['asset_class']
-        #                                == '주식']['value'].iloc[0]),
-        #                 html.Td(before[before['asset_class']
-        #                                == '채권']['value'].iloc[0]),
-        #                 html.Td(before[before['asset_class']
-        #                                == '대체']['value'].iloc[0]),
-        #                 html.Td(html.Div([html.Button('상세정보', id='detail-info-button'),
-        #                                   dbc.Modal(
-        #                     [
-        #                         dbc.ModalHeader("상세정보"),
-        #                         dbc.ModalBody(
-        #                             "A small modal.", id='record'),
-        #                         dbc.ModalFooter(
-        #                             dbc.Button(
-        #                                 "Close", id="close-detail-info", className="ml-auto")
-        #                         ),
-        #                     ],
-        #                     id="modal-detail-info",
-        #                     size="sm"
-        #                 )]))])
-
-        # row2 = html.Tr([html.Td("미래"), html.Td(before[before['asset_class'] == '현금성']['value'].iloc[0]),
-        #                 html.Td(before[before['asset_class']
-        #                                == '주식']['value'].iloc[0]),
-        #                 html.Td(before[before['asset_class']
-        #                                == '채권']['value'].iloc[0]),
-        #                 html.Td(before[before['asset_class']
-        #                                == '대체']['value'].iloc[0]),
-        #                 html.Td('')],
-        #                style={'background-color': '#FFA500'})
-
-        # if not content[-1]:
-        #     row2.style['background-color'] = '#ddd'
-        #     return html.Div(dbc.Table(table_header, html.Tbody([row1, row2]), bordered=True))
-
         # return html.Div(dbc.Table(table_header + [html.Tbody([row1, row2])], bordered=True))
-        return html.Div([dbc.Table(table_header + [html.Tbody([row1])], bordered=True), 
+        return html.Div([
+                    dbc.Table(table_header_comp + [html.Tbody([comp_row])], bordered=True), 
+                    dbc.Table(table_header + [html.Tbody([row1])], bordered=True), 
                     dbc.Table(table_header_detail + [html.Tbody(table_row)], bordered=True)])
 
     def changePeriod(select):
@@ -679,23 +624,23 @@ def show_content(users):
         df_comp_pkl = pd.read_pickle('./data/processed/comparison.pkl')
         print('리밸런싱 전/후 비교(1):', df_comp_pkl)
 
-        # 최근 잔고 가져옴
-        detail = db.getUserBalance(userid=userid)       
-        detail = pd.DataFrame(detail, columns=['date', 'userid', 'name', 'asset_class', 'itemcode', 'itemname',
-                                                'quantity', 'cost_price', 'cost_value', 'price', 'value', 'wt', 'group_by', 'original'])
+        # # 최근 잔고 가져옴
+        # detail = db.getUserBalance(userid=userid)       
+        # detail = pd.DataFrame(detail, columns=['date', 'userid', 'name', 'asset_class', 'itemcode', 'itemname',
+        #                                         'quantity', 'cost_price', 'cost_value', 'price', 'value', 'wt', 'group_by', 'original'])
 
-        # 리밸런싱 후 포트폴리오 가져오기
-        first_advised_port, by_assetclass, all_the_nexts, all_the_generals = get_next_portfolio(detail=detail)
+        # # 리밸런싱 후 포트폴리오 가져오기
+        # first_advised_port, by_assetclass, all_the_nexts, all_the_generals = get_next_portfolio(detail=detail)
         
-        # 리밸런싱 전후 비교 테이블 생성
-        before = detail
-        after = all_the_nexts
-        after = after.merge(first_advised_port.loc[:, ['itemcode', 'weights']], left_on='itemcode', right_on='itemcode', how='left')
-        after.weights = after.weights.fillna(0)
-        after = after.rename(columns={'weights':'mp_wt'})
-        df_comp = make_comparison(before, after)
+        # # 리밸런싱 전후 비교 테이블 생성
+        # before = detail
+        # after = all_the_nexts
+        # after = after.merge(first_advised_port.loc[:, ['itemcode', 'weights']], left_on='itemcode', right_on='itemcode', how='left')
+        # after.weights = after.weights.fillna(0)
+        # after = after.rename(columns={'weights':'mp_wt'})
+        # df_comp = make_comparison(before, after)
 
-        print('리밸런싱 전/후 비교(2):', df_comp)
+        # print('리밸런싱 전/후 비교(2):', df_comp)
 
         # result는 DataFrame 타입임.
         result = user.closeData(select, date, user.name, choice=True)
@@ -703,7 +648,7 @@ def show_content(users):
         # print('return: {}, vol: {}'.format(ret, vol))
         # print('-----result of closeData---- result type is: {}'.format(type(result)))
         # print(result)
-        return page2_result(result, date, ret, vol), date
+        return page2_result(result, date, ret, vol, df_comp_pkl), date
 
     @app.callback(
         Output('modal-detail-info', 'is_open'),
