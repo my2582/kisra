@@ -46,15 +46,13 @@ def show_content(users):
             print(login)
             temp = copy.deepcopy(layout.tab)
             temp.children[0].children = temp.children[0].children[1:]
-            print(temp.children[0])
             temp.children[0].value = 'analysis'
-            print(temp)
             user.name = user_id
-            app.layout.children[2].n_clicks = 0
+            layout.main_login.children[2].n_clicks = 0
             check = False
             return temp
         if 0 < signup:
-            app.layout.children[5].n_clicks = 0
+            layout.main_login.children[5].n_clicks = 0
             check = True
             layout.tab.children[0].value = 'signup'
             return layout.tab
