@@ -33,9 +33,9 @@ def show_content(users):
 
     # 3번째 탭용 테스트 데이터 세팅
     risk_profile = 4
-    current_date = '2021-05-03'
-    userid = 'A006'
-    username = '위험중립형대규모'
+    current_date = '2021-06-01'
+    userid = 'A001'
+    username = '안정추구형소규모'
 
     db = databaseDF()
     # advised_pf = AdvisedPortfolios.instance().data
@@ -643,7 +643,7 @@ def show_content(users):
         user.date = date
         select = changePeriod(select)
 
-        df_comp_pkl = pd.read_pickle('./data/processed/comparison.pkl')
+        df_comp_pkl = pd.read_pickle('./data/processed/comparison_0601_A001.pkl')
         print('리밸런싱 전/후 비교(1):', df_comp_pkl)
 
         # # 최근 잔고 가져옴
