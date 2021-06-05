@@ -78,7 +78,8 @@ def show_content(users):
         if tab_input == 'analysis':
             if not check:
                 layout.analysis[0].children[1].children = user.name
-                layout.analysis[0].children[3].children = user.getStartDate(user.name)
+                # layout.analysis[0].children[3].children = user.getStartDate(user.name)
+                layout.analysis[0].children[3].children = '6/2/2021 4:00:00 PM'
             return html.Div(layout.analysis)
 
         if tab_input == 'info':
@@ -640,7 +641,7 @@ def show_content(users):
         '''
         # user.name = username
         # user.userid = userid
-        print('app.py show_prediction params: user.userid: {}'.format(user.userid))
+        # print('app.py show_prediction params: user.userid: {}'.format(user.userid))
 
         # date = user.getStartDate(user.name)
         date = '6/2/2021 4:00:00 PM'
@@ -648,8 +649,10 @@ def show_content(users):
 
         # userid를 얻는다.
         user_list = db.getUserList()
+
+        # user_list가 (userid, name) 순으로 되어 있어서, 이 순서를 바꿔서 딕셔너리를 만든다(key가 name이 되도록 한다)
         user_dict = dict((user_tuple[1], user_tuple[0]) for user_tuple in user_list)
-        user.name = user_dict[user.userid]
+        user.userid = user_dict[user.name]
 
         user.date = date
         select = changePeriod(select)
