@@ -637,13 +637,14 @@ def show_content(users):
         user.name = username
         user.user_id = userid
         
-        date = user.getStartDate(user.name)
+        # date = user.getStartDate(user.name)
+        date = '6/2/2021 4:00:00 PM'
         print('app.py show_prediction params: date {}, name {}, select {}'.format(date, user.name, select))
 
         user.date = date
         select = changePeriod(select)
 
-        df_comp_pkl = pd.read_pickle('./data/processed/comparison_0601_A001.pkl')
+        df_comp_pkl = pd.read_pickle('./data/processed/comparison_0601_{}.pkl'.format(userid))
         print('리밸런싱 전/후 비교(1):', df_comp_pkl)
 
         # # 최근 잔고 가져옴
