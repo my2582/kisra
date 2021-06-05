@@ -635,8 +635,8 @@ def show_content(users):
     )
     def show_prediction(select):
         # user.name = username
-        # user.user_id = userid
-        print('app.py show_prediction params: user_id: {}'.format(user.user_id))
+        # user.userid = userid
+        print('app.py show_prediction params: user.userid: {}'.format(user.userid))
 
         # date = user.getStartDate(user.name)
         date = '6/2/2021 4:00:00 PM'
