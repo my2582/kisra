@@ -634,6 +634,10 @@ def show_content(users):
         Input('predict-slider', 'value')
     )
     def show_prediction(select):
+        '''
+        user.name: 로그인 시 입력한 사용자 이름을 갖고 있음
+        user.userid: null. not available here.
+        '''
         # user.name = username
         # user.userid = userid
         print('app.py show_prediction params: user.userid: {}'.format(user.userid))
@@ -641,6 +645,9 @@ def show_content(users):
         # date = user.getStartDate(user.name)
         date = '6/2/2021 4:00:00 PM'
         print('app.py show_prediction params: date {}, name {}, select {}'.format(date, user.name, select))
+
+        user_list = db.getUserList()
+        print('user_list: {}'.format(user_list))
 
         user.date = date
         select = changePeriod(select)
