@@ -80,6 +80,7 @@ def show_content(users):
                 layout.analysis[0].children[1].children = user.name
                 # layout.analysis[0].children[3].children = user.getStartDate(user.name)
                 layout.analysis[0].children[3].children = '6/2/2021 4:00:00 PM'
+                user.date = '6/2/2021 4:00:00 PM'
             return html.Div(layout.analysis)
 
         if tab_input == 'info':
