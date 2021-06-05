@@ -646,8 +646,10 @@ def show_content(users):
         date = '6/2/2021 4:00:00 PM'
         print('app.py show_prediction params: date {}, name {}, select {}'.format(date, user.name, select))
 
+        # userid를 얻는다.
         user_list = db.getUserList()
-        print('user_list: {}'.format(user_list))
+        user_dict = dict((user_tuple[1], user_tuple[0]) for user_tuple in user_list)
+        user.name = user_dict[user.userid]
 
         user.date = date
         select = changePeriod(select)
