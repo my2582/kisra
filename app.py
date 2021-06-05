@@ -32,10 +32,10 @@ def show_content(users):
     check = False
 
     # 3번째 탭용 테스트 데이터 세팅
-    risk_profile = 4
-    current_date = '2021-06-01'
-    userid = 'A001'
-    username = '안정추구형소규모'
+    # risk_profile = 4
+    # current_date = '2021-06-01'
+    # userid = 'A001'
+    # username = '안정추구형소규모'
 
     db = databaseDF()
     # advised_pf = AdvisedPortfolios.instance().data
