@@ -643,8 +643,6 @@ def show_content(users):
         # user.userid = userid
         # print('app.py show_prediction params: user.userid: {}'.format(user.userid))
 
-        # date = user.getStartDate(user.name)
-        date = '6/2/2021 4:00:00 PM'
         print('app.py show_prediction params: date {}, name {}, select {}'.format(date, user.name, select))
 
         # userid를 얻는다.
@@ -653,11 +651,9 @@ def show_content(users):
         # user_list가 (userid, name) 순으로 되어 있어서, 이 순서를 바꿔서 딕셔너리를 만든다(key가 name이 되도록 한다)
         user_dict = dict((user_tuple[1], user_tuple[0]) for user_tuple in user_list)
         user.userid = user_dict[user.name]
-
-        user.date = date
         select = changePeriod(select)
 
-        df_comp_pkl = pd.read_pickle('./data/processed/comparison_0601_{}.pkl'.format(userid))
+        df_comp_pkl = pd.read_pickle('./data/processed/comparison_0601_{}.pkl'.format(user.userid))
         print('리밸런싱 전/후 비교(1):', df_comp_pkl)
 
         # # 최근 잔고 가져옴
