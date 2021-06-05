@@ -642,9 +642,8 @@ def show_content(users):
         '''
         # user.name = username
         # user.userid = userid
-        print('app.py show_prediction params: date: {}'.format(date))
 
-        print('app.py show_prediction params: user.date {}, name {}, select {}'.format(user.date, user.name, select))
+        print('app.py show_prediction params: user.date {}, user.name {}, select {}'.format(user.date, user.name, select))
 
         # userid를 얻는다.
         user_list = db.getUserList()
