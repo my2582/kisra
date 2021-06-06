@@ -78,14 +78,14 @@ def show_content(users):
         if tab_input == 'signup':
             return html.Div(layout.signup)
 
-
         if tab_input == 'analysis':
-            # if not check:
-            #     # 로그인을 했을 경우
-            #     layout.analysis[0].children[1].children = user.name
-            #     layout.analysis[0].children[3].children = user.getStartDate(user.name)
-            layout.analysis[0].children[1].children = user.name
-            layout.analysis[0].children[3].children = '6/2/2021 4:00:00 PM'
+            if not check:
+                # 로그인을 했을 경우
+                layout.analysis[0].children[1].children = user.name
+                layout.analysis[0].children[3].children = '6/2/2021 4:00:00 PM'
+                # layout.analysis[0].children[3].children = user.getStartDate(user.name)
+            # layout.analysis[0].children[1].children = user.name
+            # layout.analysis[0].children[3].children = '6/2/2021 4:00:00 PM'
             
             # 처음 로그인할 때 이게 user.name이 none이었음.
             # 다른 브라우저로 다른 아이디로 로그인할 때는 이 값이 사용자가 입력한 값을 가짐.
@@ -93,8 +93,8 @@ def show_content(users):
             # 네 번째 로그인도 잘 작동.
             print('This is user.name: {}'.format(user.name))
             
-            user.name = '이게 이름이야'
-            user.date = '6/2/2021 4:00:00 PM'
+            # user.name = '이게 이름이야'
+            # user.date = '6/2/2021 4:00:00 PM'
             return html.Div(layout.analysis)
 
         if tab_input == 'info':
