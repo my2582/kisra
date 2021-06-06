@@ -22,7 +22,7 @@ sheet = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 app = dash.Dash(__name__, external_stylesheets=sheet,
                 suppress_callback_exceptions=True)
 server = app.server
-user = User()
+_user = User()
 
 
 def show_content(users):
@@ -768,7 +768,8 @@ def show_content(users):
         return page3Layout(result, datetime.strptime(pDate, '%m/%d/%Y %I:%M:%S %p'), datetime.strptime(pDate, '%m/%d/%Y %I:%M:%S %p'))
 
 
-show_content(user)
+# _user is a global variable. This name is changed from user for less confusion.
+show_content(_user)
 
 if __name__ == '__main__':
     app.run_server(debug=True)
