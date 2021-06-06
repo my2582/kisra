@@ -51,8 +51,8 @@ def show_content(users):
         State('user-id-main', 'value')
     )
     def show_layout(login, signup, user_id):
+        print('in show_layout, login: {}, signup: {}, user_id: {}'.format(login, signup, user_id))
         if 0 < login:
-            print(login)
             temp = copy.deepcopy(layout.tab)
             temp.children[0].children = temp.children[0].children[1:]
             temp.children[0].value = 'analysis'
@@ -65,6 +65,9 @@ def show_content(users):
             check = True
             layout.tab.children[0].value = 'signup'
             return layout.tab
+        
+        print('login and signup >= 0!! Despite of this, let me set user.name to be user_id.')
+        user.name = user_id
         return layout.main_login
 
     @app.callback(
@@ -83,7 +86,13 @@ def show_content(users):
             #     layout.analysis[0].children[3].children = user.getStartDate(user.name)
             layout.analysis[0].children[1].children = user.name
             layout.analysis[0].children[3].children = '6/2/2021 4:00:00 PM'
+            
+            # 처음 로그인할 때 이게 user.name이 none이었음.
+            # 다른 브라우저로 다른 아이디로 로그인할 때는 이 값이 사용자가 입력한 값을 가짐.
+            # 세 번째 로그인도 잘 작동.
+            # 네 번째 로그인도 잘 작동.
             print('This is user.name: {}'.format(user.name))
+            
             user.name = '이게 이름이야'
             user.date = '6/2/2021 4:00:00 PM'
             return html.Div(layout.analysis)
