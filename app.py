@@ -76,7 +76,7 @@ def show_content(users):
 
     @app.callback(
         Output(layout.output_id, 'children'),
-        Input(layout.input_id, "value")
+        Input(layout.input_id, 'value')
     )
     def show_page(tab_input):
         # global _user
@@ -709,7 +709,7 @@ def show_content(users):
         print('return: {}, vol: {}'.format(ret, vol))
         print('-----result of closeData---- result type is: {}'.format(type(result)))
         print(result)
-        return page2_result(result, date, ret, vol, df_comp_pkl), date
+        return page2_result(result, user.date, ret, vol, df_comp_pkl), user.date
 
     @app.callback(
         Output('modal-detail-info', 'is_open'),
