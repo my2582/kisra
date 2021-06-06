@@ -27,9 +27,9 @@ _user = User()
 
 def show_content(users):
     style = layout.style
-    # user = users
+    user = users
     # user = User()
-    global _user
+    # global _user
     app.layout = html.Div(layout.main_login, id='main-layout')
     check = False
 
@@ -53,14 +53,14 @@ def show_content(users):
         State('user-id-main', 'value')
     )
     def show_layout(login, signup, user_id):
-        global _user
+        # global _user
         print('#1. in show_layout, login: {}, signup: {}, user_id: {}'.format(login, signup, user_id))
         if 0 < login:
             temp = copy.deepcopy(layout.tab)
             temp.children[0].children = temp.children[0].children[1:]
             temp.children[0].value = 'analysis'
-            _user.name = user_id
-            print('#3. in show_layout, login: {}, signup: {}, _user.name: {}'.format(login, signup, _user.name))
+            user.name = user_id
+            print('#3. in show_layout, login: {}, signup: {}, user.name: {}'.format(login, signup, user.name))
             layout.main_login.children[2].n_clicks = 0
             check = False
             return temp
@@ -70,8 +70,8 @@ def show_content(users):
             layout.tab.children[0].value = 'signup'
             return layout.tab
         
-        print('login and signup >= 0!! Despite of this, let me set _user.name to be user_id.')
-        _user.name = user_id
+        print('login and signup >= 0!! Despite of this, let me set user.name to be user_id.')
+        user.name = user_id
         return layout.main_login
 
     @app.callback(
@@ -79,7 +79,7 @@ def show_content(users):
         Input(layout.input_id, "value")
     )
     def show_page(tab_input):
-        global _user
+        # global _user
         if tab_input == 'signup':
             return html.Div(layout.signup)
 
@@ -87,9 +87,9 @@ def show_content(users):
             if not check:
                 # 로그인을 했을 경우
                 # RA자문 탭의 이름과 자문기준일 값을 설정함.
-                layout.analysis[0].children[1].children = _user.name
+                layout.analysis[0].children[1].children = user.name
                 layout.analysis[0].children[3].children = '6/2/2021 4:00:00 PM'
-                _user.date = '6/2/2021 4:00:00 PM'
+                user.date = '6/2/2021 4:00:00 PM'
                 # layout.analysis[0].children[3].children = user.getStartDate(user.name)
             # layout.analysis[0].children[1].children = user.name
             # layout.analysis[0].children[3].children = '6/2/2021 4:00:00 PM'
@@ -100,7 +100,7 @@ def show_content(users):
             # 네 번째 로그인도 잘 작동.
 
             # 관찰결과: user.name에 한 세션 이전의 사용자명이 저장되어 있음.
-            print('This is _user.name: {}'.format(_user.name))
+            print('This is user.name: {}'.format(user.name))
 
             
             # user.name = '이게 이름이야'
@@ -665,24 +665,24 @@ def show_content(users):
         user.name: 로그인 시 입력한 사용자 이름을 갖고 있음
         user.userid: null. not available here.
         '''
-        global _user
+        # global _user
 
         # user.name = username
         # user.userid = userid
 
         # 안정추구형중규모로 접속 시 -> user.name이 이전 세션 값이다. 
         # 안정추구형대규모로 접속 시 -> 정상
-        print('app.py show_prediction params: user.date {}, _user.name {}, select {}'.format(_user.date, _user.name, select))
+        print('app.py show_prediction params: user.date {}, user.name {}, select {}'.format(user.date, user.name, select))
 
         # userid를 얻는다.
         user_list = db.getUserList()
 
         # user_list가 (userid, name) 순으로 되어 있어서, 이 순서를 바꿔서 딕셔너리를 만든다(key가 name이 되도록 한다)
         user_dict = dict((user_tuple[1], user_tuple[0]) for user_tuple in user_list)
-        _user.userid = user_dict[_user.name]
+        user.userid = user_dict[user.name]
         select = changePeriod(select)
 
-        df_comp_pkl = pd.read_pickle('./data/processed/comparison_0601_{}.pkl'.format(_user.userid))
+        df_comp_pkl = pd.read_pickle('./data/processed/comparison_0601_{}.pkl'.format(user.userid))
         print('리밸런싱 전/후 비교(1):', df_comp_pkl)
 
         # # 최근 잔고 가져옴
@@ -704,8 +704,8 @@ def show_content(users):
         # print('리밸런싱 전/후 비교(2):', df_comp)
 
         # result는 DataFrame 타입임.
-        result = _user.closeData(select, _user.date, _user.name, choice=True)
-        ret, vol = _user.getPerformance(_user.name)
+        result = user.closeData(select, user.date, user.name, choice=True)
+        ret, vol = user.getPerformance(user.name)
         print('return: {}, vol: {}'.format(ret, vol))
         print('-----result of closeData---- result type is: {}'.format(type(result)))
         print(result)
