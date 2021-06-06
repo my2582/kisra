@@ -27,7 +27,8 @@ _user = User()
 
 def show_content(users):
     style = layout.style
-    user = users
+    # user = users
+    user = User()
     _user_id = 'test_id'
     app.layout = html.Div(layout.main_login, id='main-layout')
     check = False
@@ -52,6 +53,7 @@ def show_content(users):
         State('user-id-main', 'value')
     )
     def show_layout(login, signup, user_id):
+        global user
         global _user_id
         print('#1. in show_layout, login: {}, signup: {}, user_id: {}'.format(login, signup, user_id))
         if 0 < login:
@@ -61,7 +63,7 @@ def show_content(users):
             print('#2. in show_layout, login: {}, signup: {}, user_id: {}'.format(login, signup, user_id))
             user.name = user_id
             _user_id = user_id
-            print('#3. in show_layout, login: {}, signup: {}, _user_id: {}, user.name'.format(login, signup, _user_id, user.name))
+            print('#3. in show_layout, login: {}, signup: {}, _user_id: {}, user.name: {}'.format(login, signup, _user_id, user.name))
             layout.main_login.children[2].n_clicks = 0
             check = False
             return temp
@@ -80,6 +82,7 @@ def show_content(users):
         Input(layout.input_id, "value"),
     )
     def show_page(tab_input):
+        global user
         if tab_input == 'signup':
             return html.Div(layout.signup)
 
@@ -667,6 +670,8 @@ def show_content(users):
         # user.name = username
         # user.userid = userid
 
+        # 안정추구형중규모로 접속 시 -> user.name이 이전 세션 값이다. 
+        # 안정추구형대규모로 접속 시 -> 정상
         print('app.py show_prediction params: user.date {}, user.name {}, select {}'.format(user.date, user.name, select))
 
         # userid를 얻는다.
