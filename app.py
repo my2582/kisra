@@ -87,7 +87,7 @@ def show_content(users):
             if not check:
                 # 로그인을 했을 경우
                 # RA자문 탭의 이름과 자문기준일 값을 설정함.
-                layout.analysis[0].children[1].children = user.name
+                layout.analysis[0].children[1].children = ''
                 layout.analysis[0].children[3].children = '6/2/2021 4:00:00 PM'
                 user.date = '6/2/2021 4:00:00 PM'
                 # layout.analysis[0].children[3].children = user.getStartDate(user.name)
@@ -100,11 +100,8 @@ def show_content(users):
             # 네 번째 로그인도 잘 작동.
 
             # 관찰결과: user.name에 한 세션 이전의 사용자명이 저장되어 있음.
-            print('This is user.name: {}'.format(user.name))
+            # print('This is user.name: {}'.format(user.name))
 
-            
-            # user.name = '이게 이름이야'
-            # user.date = '6/2/2021 4:00:00 PM'
             return html.Div(layout.analysis)
 
         if tab_input == 'info':

@@ -158,7 +158,7 @@ signup = [
 
 analysis = [
     html.Div([
-        html.Label('이름'),
+        html.Label('제공정보: 자문 포트폴리오, 현재 포트폴리오 및 과거 리밸런싱 내역'),
         html.Div(id='tab-2-user-id'),
         html.Label('자문기준일'),
         html.Div(id='max-date')]
