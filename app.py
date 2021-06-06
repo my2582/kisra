@@ -75,18 +75,22 @@ def show_content(users):
         if tab_input == 'signup':
             return html.Div(layout.signup)
 
+
         if tab_input == 'analysis':
-            if not check:
-                layout.analysis[0].children[1].children = user.name
-                # layout.analysis[0].children[3].children = user.getStartDate(user.name)
-                layout.analysis[0].children[3].children = '6/2/2021 4:00:00 PM'
-                print('This is user.name: {}'.format(user.name))
-                user.name = '이게 이름이야'
-                user.date = '6/2/2021 4:00:00 PM'
+            # if not check:
+            #     # 로그인을 했을 경우
+            #     layout.analysis[0].children[1].children = user.name
+            #     layout.analysis[0].children[3].children = user.getStartDate(user.name)
+            layout.analysis[0].children[1].children = user.name
+            layout.analysis[0].children[3].children = '6/2/2021 4:00:00 PM'
+            print('This is user.name: {}'.format(user.name))
+            user.name = '이게 이름이야'
+            user.date = '6/2/2021 4:00:00 PM'
             return html.Div(layout.analysis)
 
         if tab_input == 'info':
             if not check:
+                # 로그인을 했을 경우
                 layout.info[0].children[1].children = user.name
             return html.Div(layout.info)
 
