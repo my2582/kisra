@@ -28,7 +28,7 @@ _user = User()
 def show_content(users):
     style = layout.style
     # user = users
-    user = User()
+    # user = User()
     _user_id = 'test_id'
     app.layout = html.Div(layout.main_login, id='main-layout')
     check = False
@@ -53,17 +53,15 @@ def show_content(users):
         State('user-id-main', 'value')
     )
     def show_layout(login, signup, user_id):
-        global user
-        global _user_id
         print('#1. in show_layout, login: {}, signup: {}, user_id: {}'.format(login, signup, user_id))
         if 0 < login:
             temp = copy.deepcopy(layout.tab)
             temp.children[0].children = temp.children[0].children[1:]
             temp.children[0].value = 'analysis'
             print('#2. in show_layout, login: {}, signup: {}, user_id: {}'.format(login, signup, user_id))
-            user.name = user_id
+            _user.name = user_id
             _user_id = user_id
-            print('#3. in show_layout, login: {}, signup: {}, _user_id: {}, user.name: {}'.format(login, signup, _user_id, user.name))
+            print('#3. in show_layout, login: {}, signup: {}, _user_id: {}, user.name: {}'.format(login, signup, _user_id, _user.name))
             layout.main_login.children[2].n_clicks = 0
             check = False
             return temp
@@ -74,7 +72,7 @@ def show_content(users):
             return layout.tab
         
         print('login and signup >= 0!! Despite of this, let me set user.name to be user_id.')
-        user.name = user_id
+        _user.name = user_id
         return layout.main_login
 
     @app.callback(
@@ -82,7 +80,6 @@ def show_content(users):
         Input(layout.input_id, "value"),
     )
     def show_page(tab_input):
-        global user
         if tab_input == 'signup':
             return html.Div(layout.signup)
 
@@ -90,7 +87,7 @@ def show_content(users):
             if not check:
                 # 로그인을 했을 경우
                 # RA자문 탭의 이름과 자문기준일 값을 설정함.
-                layout.analysis[0].children[1].children = user.name
+                layout.analysis[0].children[1].children = _user.name
                 layout.analysis[0].children[3].children = '6/2/2021 4:00:00 PM'
                 # layout.analysis[0].children[3].children = user.getStartDate(user.name)
             # layout.analysis[0].children[1].children = user.name
@@ -102,7 +99,7 @@ def show_content(users):
             # 네 번째 로그인도 잘 작동.
 
             # 관찰결과: user.name에 한 세션 이전의 사용자명이 저장되어 있음.
-            print('This is user.name: {}'.format(user.name))
+            print('This is _user.name: {}'.format(_user.name))
             print('However, this is _user_id: {}'.format(_user_id))
             
             # user.name = '이게 이름이야'
