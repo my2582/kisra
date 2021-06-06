@@ -28,6 +28,7 @@ _user = User()
 def show_content(users):
     style = layout.style
     user = users
+    _user_id = 'test_id'
     app.layout = html.Div(layout.main_login, id='main-layout')
     check = False
 
