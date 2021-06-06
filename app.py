@@ -53,6 +53,7 @@ def show_content(users):
         State('user-id-main', 'value')
     )
     def show_layout(login, signup, user_id):
+        global _user_id
         print('#1. in show_layout, login: {}, signup: {}, user_id: {}'.format(login, signup, user_id))
         if 0 < login:
             temp = copy.deepcopy(layout.tab)
@@ -702,7 +703,7 @@ def show_content(users):
         # print('리밸런싱 전/후 비교(2):', df_comp)
 
         # result는 DataFrame 타입임.
-        result = _user.closeData(select, date, _user.name, choice=True)
+        result = _user.closeData(select, _user.date, _user.name, choice=True)
         ret, vol = _user.getPerformance(_user.name)
         print('return: {}, vol: {}'.format(ret, vol))
         print('-----result of closeData---- result type is: {}'.format(type(result)))
