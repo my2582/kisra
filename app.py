@@ -76,7 +76,7 @@ def show_content(users):
 
     @app.callback(
         Output(layout.output_id, 'children'),
-        Input(layout.input_id, "value"),
+        Input(layout.input_id, "value")
     )
     def show_page(tab_input):
         global _user
@@ -101,7 +101,7 @@ def show_content(users):
 
             # 관찰결과: user.name에 한 세션 이전의 사용자명이 저장되어 있음.
             print('This is _user.name: {}'.format(_user.name))
-            print('However, this is _user_id: {}'.format(_user_id))
+
             
             # user.name = '이게 이름이야'
             # user.date = '6/2/2021 4:00:00 PM'
@@ -666,7 +666,7 @@ def show_content(users):
         user.userid: null. not available here.
         '''
         global _user
-        
+
         # user.name = username
         # user.userid = userid
 
