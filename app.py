@@ -52,13 +52,16 @@ def show_content(users):
         State('user-id-main', 'value')
     )
     def show_layout(login, signup, user_id):
-        print('in show_layout, login: {}, signup: {}, user_id: {}'.format(login, signup, user_id))
+        global _user_id
+        print('#1. in show_layout, login: {}, signup: {}, user_id: {}'.format(login, signup, user_id))
         if 0 < login:
             temp = copy.deepcopy(layout.tab)
             temp.children[0].children = temp.children[0].children[1:]
             temp.children[0].value = 'analysis'
+            print('#2. in show_layout, login: {}, signup: {}, user_id: {}'.format(login, signup, user_id))
             user.name = user_id
             _user_id = user_id
+            print('#3. in show_layout, login: {}, signup: {}, _user_id: {}, user.name'.format(login, signup, _user_id, user.name))
             layout.main_login.children[2].n_clicks = 0
             check = False
             return temp
