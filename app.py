@@ -679,7 +679,7 @@ def show_content(users):
         user.userid = user_dict[user.name]
         select = changePeriod(select)
 
-        df_comp_pkl = pd.read_pickle('./data/processed/comparison_0601_{}.pkl'.format(user.userid))
+        df_comp_pkl = pd.read_pickle('./data/processed/comparison_0702_{}.pkl'.format(user.userid))
         print('리밸런싱 전/후 비교(1):', df_comp_pkl)
 
         # # 최근 잔고 가져옴
