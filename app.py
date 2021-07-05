@@ -88,8 +88,8 @@ def show_content(users):
                 # 로그인을 했을 경우
                 # RA자문 탭의 이름과 자문기준일 값을 설정함.
                 layout.analysis[0].children[1].children = ''
-                layout.analysis[0].children[3].children = '6/2/2021 4:00:00 PM'
-                user.date = '6/2/2021 4:00:00 PM'
+                layout.analysis[0].children[3].children = '7/2/2021 4:00:00 PM'
+                user.date = '7/2/2021 4:00:00 PM'
                 # layout.analysis[0].children[3].children = user.getStartDate(user.name)
             # layout.analysis[0].children[1].children = user.name
             # layout.analysis[0].children[3].children = '6/2/2021 4:00:00 PM'
@@ -669,7 +669,7 @@ def show_content(users):
 
         # 안정추구형중규모로 접속 시 -> user.name이 이전 세션 값이다. 
         # 안정추구형대규모로 접속 시 -> 정상
-        print('app.py show_prediction params: user.date {}, user.name {}, select {}'.format(user.date, user.name, select))
+        print('app.py show_prediction params: user.date {}, user.userid{}, user.name {}'.format(user.date, user.userid, user.name))
 
         # userid를 얻는다.
         user_list = db.getUserList()
