@@ -669,7 +669,7 @@ def show_content(users):
 
         # 안정추구형중규모로 접속 시 -> user.name이 이전 세션 값이다. 
         # 안정추구형대규모로 접속 시 -> 정상
-        print('app.py show_prediction params: user.date {}, user.userid{}, user.name {}'.format(user.date, user.userid, user.name))
+        print('app.py show_prediction params: user.date {}, user.userid {}, user.name {}'.format(user.date, user.userid, user.name))
 
         # userid를 얻는다.
         user_list = db.getUserList()
