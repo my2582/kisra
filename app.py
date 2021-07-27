@@ -352,9 +352,9 @@ def show_content(users):
         print('content.shape: {}, result.shape: {}'.format(content.shape, result.shape))
         
         # RA자문 탭에서 상세잔고내역의 컬럼명/컬럼순서 변경
-        result = result.loc[:, ['date', 'name', 'itemname', 'price', 'quantity', 'value', 'cost_price', 'cost_value', 'wt', 'original']]
+        result = result.loc[:, ['date', 'name', 'itemname', 'price', 'quantity', 'value', 'wt', 'original']]
         result.date = to_datetime(result.date).dt.strftime('%Y-%m-%d')
-        result.loc[:, ['price', 'quantity', 'value', 'cost_price', 'cost_value']] = result.loc[:, ['price', 'quantity', 'value', 'cost_price', 'cost_value']].astype(float).astype(int).applymap(lambda x : "{:,}".format(x))
+        result.loc[:, ['price', 'quantity', 'value']] = result.loc[:, ['price', 'quantity', 'value']].astype(float).astype(int).applymap(lambda x : "{:,}".format(x))
         result.loc[:, ['wt']] = (result.loc[:, ['wt']].astype(float)*100).applymap(lambda x : "{:.1f}".format(x))
         result = result.rename(columns={
             'date':'날짜',
@@ -363,8 +363,6 @@ def show_content(users):
             'price': '종가',
             'quantity': '보유수량',
             'value': '평가금액',
-            'cost_price': '매수단가',
-            'cost_value': '매수가격',
             'wt': '비중(%)',
             'original': '납입금여부'
         })
