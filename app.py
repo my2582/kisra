@@ -314,9 +314,9 @@ def show_content(users):
         # print('date: {}'.format(date))
         latest_content = content.loc[content.date==date, :]
         latest_content.value = to_numeric(latest_content.value)
-        # print('content.columns: {}'.format(content.columns))
-        # print('content.shape: {}'.format(content.shape))
-        # print('content: {}'.format(content))
+        print('content.columns: {}'.format(content.columns))
+        print('content.shape: {}'.format(content.shape))
+        print('content: {}'.format(content))
         # print('----------------------------')
         # print('latest_content.shape: {}'.format(latest_content.shape))
         # print('latest_content.columns: {}'.format(latest_content.columns))
@@ -347,8 +347,9 @@ def show_content(users):
         # print('content 첫줄 보면..')
         # print(content.iloc[:1, :3])
 
-        # 과거 내역(detail) 중 리밸런싱이 발생한 날짜의 레코드만 가져온다.
+        # 과거 내역(detail) 중 리밸런싱이 발생한 날짜의 레코드만
         result = content.loc[content.original == 'Rebal', :]
+        print('content.shape: {}, result.shape: {}'.format(content.shape, result.shape))
         
         # RA자문 탭에서 상세잔고내역의 컬럼명/컬럼순서 변경
         result = result.loc[:, ['date', 'name', 'itemname', 'price', 'quantity', 'value', 'cost_price', 'cost_value', 'wt', 'original']]
