@@ -88,8 +88,8 @@ def show_content(users):
                 # 로그인을 했을 경우
                 # RA자문 탭의 이름과 자문기준일 값을 설정함.
                 layout.analysis[0].children[1].children = ''
-                layout.analysis[0].children[3].children = '7/2/2021 4:00:00 PM'
-                user.date = '7/2/2021 4:00:00 PM'
+                layout.analysis[0].children[3].children = '8/1/2021 4:00:00 PM'
+                user.date = '8/1/2021 4:00:00 PM'
                 # layout.analysis[0].children[3].children = user.getStartDate(user.name)
             # layout.analysis[0].children[1].children = user.name
             # layout.analysis[0].children[3].children = '6/2/2021 4:00:00 PM'
@@ -678,7 +678,7 @@ def show_content(users):
         user.userid = user_dict[user.name]
         select = changePeriod(select)
 
-        df_comp_pkl = pd.read_pickle('./data/processed/comparison_0702_{}.pkl'.format(user.userid))
+        df_comp_pkl = pd.read_pickle('./data/processed/comparison_0801_{}.pkl'.format(user.userid))
         print('리밸런싱 전/후 비교(1):', df_comp_pkl)
 
         # # 최근 잔고 가져옴
