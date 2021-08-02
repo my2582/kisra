@@ -382,11 +382,23 @@ def show_content(user):
         print('in page2_result, table_row is', table_row)
 
         return html.Div([dbc.Table(table_title1, bordered=False),
-                    dbc.Table(table_header_comp + [html.Tbody(comp_row)], bordered=True), 
+                    dbc.Table(table_header_comp + [html.Tbody(comp_row)], bordered=True, style_header={
+                'backgroundColor': '#119DFF',
+                'fontWeight': 'bold',
+                'fontColor': 'black'
+            }), 
                     dbc.Table(table_title2, bordered=False),
-                    dbc.Table(table_header + [html.Tbody([row1])], bordered=True), 
+                    dbc.Table(table_header + [html.Tbody([row1])], bordered=True, style_header={
+                'backgroundColor': '#119DFF',
+                'fontWeight': 'bold',
+                'fontColor': 'black'
+            }), 
                     dbc.Table(table_title3, bordered=False),
-                    dbc.Table(table_header_detail + [html.Tbody(table_row)], bordered=True)])
+                    dbc.Table(table_header_detail + [html.Tbody(table_row)], bordered=True, style_header={
+                'backgroundColor': '#119DFF',
+                'fontWeight': 'bold',
+                'fontColor': 'black'
+            })])
 
         # return html.Div([dbc.Table(table_title1, bordered=False),
         #             dbc.Table(table_header_comp + [html.Tbody(comp_row)], bordered=True), 
@@ -435,7 +447,11 @@ def show_content(user):
             table_row.extend([html.Tr(temp)])
         table_row.extend([html.Tr(sumOfInfo)])
         table_result = html.Div(
-            dbc.Table(table_header + [html.Tbody(table_row)], bordered=True))
+            dbc.Table(table_header + [html.Tbody(table_row)], bordered=True, style_header={
+                'backgroundColor': '#119DFF',
+                'fontWeight': 'bold',
+                'fontColor': 'black'
+            }))
 
         x_axis = [from_date]
         now = from_date
