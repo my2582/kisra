@@ -426,6 +426,8 @@ def show_content(user):
 
     def page3Layout(result, from_date, allowable):
         chart, table = result
+        print('chart: {}, chart.keys(): {}'.format(chart, chart.keys()))
+        print('table: {}'.format(table))
         pie = px.pie(
             chart, names=chart['asset_class'].tolist(), values=chart['wt'].tolist())
         fig = dcc.Graph(id='pie-chart-page3')
