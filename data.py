@@ -59,17 +59,16 @@ class Data:
         profile_code, principal = data[0][0], data[0][1]
         return profile_code, principal
 
-
     def getUserBalance(self, name, date=None, latest=True):
         userid = self.check_name(name)
         self.balance = self.db.getUserBalance(userid, date, latest)
-        print(self.balance)
+
         return self.balance
 
     def getUserGeneral(self, name, date=None, latest=True):
         userid = self.check_name(name)
         self.general = self.db.getUserGeneral(userid, date, latest)
-        print(self.general)
+
         return self.general
 
     def defaults(self):
@@ -127,10 +126,12 @@ class Data:
     def returnData(self, point, name=None, date=None, choice=False):
         # print('현재 시점 잔고 조회시작---returnData 시작')
         if name is None:
-            name = 'inv-0'
-            date='4/27/2021 4:00:00 PM'
+            name = '위험중립형대규모'
+            date='5/03/2021 4:00:00 PM'
+            print('--name is None--')
 
         user_id = self.check_name(name)
+
         if not user_id:
             return '존재하지 않는 사용자입니다. 가입 먼저 해주세요', '', ''
         # commented on 4/24 at 12:38PM ----------------
@@ -152,14 +153,15 @@ class Data:
         start, end = point
         standard_date = dt.today().strftime('%m/%d/%y')+' 4:00:00 PM'
 
-        # print('start: {}'.format(start))
-        # print('end: {}'.format(end))
-        # print('standard_date: {}'.format(standard_date))
+        print('start: {}'.format(start))
+        print('end: {}'.format(end))
+        print('standard_date: {}'.format(standard_date))
 
         data = self.db.getRecord(user_id, (standard_date, start, end))
-        # print('현재 시점 잔고 데이터 가져옴. userid: {}, name: {}'.format(user_id, name))
+        print('현재 시점 잔고 데이터 가져옴. userid: {}, name: {}'.format(user_id, name))
         if not len(data):
-            return pd.DataFrame(columns=self.columns)
+            print('#### data has zero length')
+            data = pd.DataFrame(columns=self.columns)
         data.columns = self.columns
 
         # 날짜 역순 정렬

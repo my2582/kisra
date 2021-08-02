@@ -28,7 +28,8 @@ class User:
         # print(general)
         # print('--------------------detail-----------------------------')
         # print(detail)
-        return self.fullCond(general), detail
+        # return self.fullCond(general), detail
+        return general, detail
 
     def userList(self):
         users = self.data.uniqueUser()
@@ -39,11 +40,9 @@ class User:
         return self.data.getSelection(name)
 
     def closeData(self, point, date=None, name=None, choice=False):
-        print(self.data.returnData(point, name, date, choice))
         result, user_id, name = self.data.returnData(point, name, date, choice)
         self.name = name
         self.userid = user_id
-
         # print('returnData() 에서 리턴한 userid: {}, name: {}'.format(self.userid, self.name))
 
         return result

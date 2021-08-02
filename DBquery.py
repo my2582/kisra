@@ -20,9 +20,13 @@ class query:
         standard, start, end = dates
         standard = standard[:6]+'2021'+standard[8:]
         # print(standard)
-        query = "select distinct * from {0} where to_timestamp(%s, 'mm/dd/yyyy HH:M1:SS AM') - interval %s <= to_timestamp(date, 'mm/dd/yyyy HH:M1:SS AM') " \
-                "and to_timestamp(%s, 'mm/dd/yyyy HH:M1:SS AM') - interval %s <= to_timestamp(date, 'mm/dd/yyyy HH:M1:SS AM') and userid=%s"
-        self.con.execute(query.format(table),  [standard, str(start)+' days', standard, str(end) +' days', user])
+        # query = "select distinct * from {0} where to_timestamp(%s, 'mm/dd/yyyy HH:M1:SS AM') - interval %s <= to_timestamp(date, 'mm/dd/yyyy HH:M1:SS AM') " \
+        #         "and to_timestamp(%s, 'mm/dd/yyyy HH:M1:SS AM') - interval %s <= to_timestamp(date, 'mm/dd/yyyy HH:M1:SS AM') and userid=%s"
+        # select distinct * from detail where to_timestamp(date, 'mm/dd/yyyy HH:M1:SS AM') < to_timestamp('07/02/2021', 'mm/dd/yyyy HH:M1:SS AM') and userid='A001'
+        query = "select distinct * from {0} where to_timestamp(date, 'mm/dd/yyyy HH:M1:SS AM') <= to_timestamp(%s, 'mm/dd/yyyy HH:M1:SS AM') and userid=%s"
+        self.con.execute(query.format(table),  [standard, user])
+        # self.con.execute(query.format(table),  [standard, str(start)+' days', standard, str(end) +' days', user])
+
         self.conn.commit()
         return DataFrame(np.array(self.con.fetchall()))
 
