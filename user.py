@@ -28,7 +28,8 @@ class User:
         # print(general)
         # print('--------------------detail-----------------------------')
         # print(detail)
-        return self.fullCond(general), detail
+        # return self.fullCond(general), detail
+        return general, detail
 
     def userList(self):
         users = self.data.uniqueUser()
