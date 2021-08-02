@@ -378,7 +378,7 @@ def show_content(user):
         print('in page2_result, table_row is', table_row)
 
         return html.Div([dbc.Table(table_title1, bordered=False),
-                    dbc.Table(table_header_comp + [html.Tbody(comp_row)], bordered=True),
+                    dbc.Table(table_header_comp + [html.Tbody(comp_row)], bordered=True, dark=True),
                     dbc.Table(table_title2, bordered=False),
                     dbc.Table(table_header + [html.Tbody([row1])], bordered=True),
                     dbc.Table(table_title3, bordered=False),
