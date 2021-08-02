@@ -24,6 +24,7 @@ app = dash.Dash(__name__, external_stylesheets=sheet,
 server = app.server
 
 def show_content(user):
+    user = user
     style = layout.style
     app.layout = html.Div(layout.main_login, id='main-layout')
     check = False
