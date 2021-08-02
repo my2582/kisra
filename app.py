@@ -23,8 +23,8 @@ app = dash.Dash(__name__, external_stylesheets=sheet,
                 suppress_callback_exceptions=True)
 server = app.server
 
-def show_content(user):
-    user = user
+def show_content(_user):
+    user = _user
     style = layout.style
     app.layout = html.Div(layout.main_login, id='main-layout')
     check = False
