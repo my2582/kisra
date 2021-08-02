@@ -22,6 +22,7 @@ sheet = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 app = dash.Dash(__name__, external_stylesheets=sheet,
                 suppress_callback_exceptions=True)
 server = app.server
+user = None
 
 def show_content(_user):
     user = _user
