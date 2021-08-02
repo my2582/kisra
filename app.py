@@ -377,12 +377,30 @@ def show_content(user):
         print('table_header_detail is {}'.format(table_header_detail))
         print('in page2_result, table_row is', table_row)
 
-        return html.Div([dbc.Table(table_title1, bordered=False),
-                    dbc.Table(table_header_comp + [html.Tbody(comp_row)], bordered=True),
-                    dbc.Table(table_title2, bordered=False),
-                    dbc.Table(table_header + [html.Tbody([row1])], bordered=True),
-                    dbc.Table(table_title3, bordered=False),
-                    dbc.Table(table_header_detail + [html.Tbody(table_row)], bordered=True)])
+        return html.Div([dbc.Table(table_title1, bordered=False, style = {'margin-top' : '10px',
+                            'margin-bottom' : '5px',
+                            'text-align' : 'left',
+                            'paddingLeft': 5}),
+                    dbc.Table(table_header_comp + [html.Tbody(comp_row)], bordered=True, style = {'margin-top' : '10px',
+                            'margin-bottom' : '5px',
+                            'text-align' : 'left',
+                            'paddingLeft': 5}),
+                    dbc.Table(table_title2, bordered=False, style = {'margin-top' : '10px',
+                            'margin-bottom' : '5px',
+                            'text-align' : 'left',
+                            'paddingLeft': 5}),
+                    dbc.Table(table_header + [html.Tbody([row1])], bordered=True, style = {'margin-top' : '10px',
+                            'margin-bottom' : '5px',
+                            'text-align' : 'left',
+                            'paddingLeft': 5}),
+                    dbc.Table(table_title3, bordered=False, style = {'margin-top' : '10px',
+                            'margin-bottom' : '5px',
+                            'text-align' : 'left',
+                            'paddingLeft': 5}),
+                    dbc.Table(table_header_detail + [html.Tbody(table_row)], bordered=True, style = {'margin-top' : '10px',
+                            'margin-bottom' : '5px',
+                            'text-align' : 'left',
+                            'paddingLeft': 5})])
 
         # return html.Div([dbc.Table(table_title1, bordered=False),
         #             dbc.Table(table_header_comp + [html.Tbody(comp_row)], bordered=True), 
