@@ -22,12 +22,12 @@ sheet = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 app = dash.Dash(__name__, external_stylesheets=sheet,
                 suppress_callback_exceptions=True)
 server = app.server
-_user = User()
 
 
-def show_content(users):
+
+def show_content(user):
     style = layout.style
-    user = users
+    #user = users
     # user = User()
     # global _user
     app.layout = html.Div(layout.main_login, id='main-layout')
@@ -779,7 +779,7 @@ def show_content(users):
 
 
 # _user is a global variable. This name is changed from user for less confusion.
-show_content(_user)
+show_content(User())
 
 if __name__ == '__main__':
     app.run_server(debug=True)
