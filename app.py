@@ -432,11 +432,7 @@ def show_content(user):
             table_row.extend([html.Tr(temp)])
         table_row.extend([html.Tr(sumOfInfo)])
         table_result = html.Div(
-            dbc.Table(table_header + [html.Tbody(table_row)], bordered=True, style_header={
-                'backgroundColor': '#119DFF',
-                'fontWeight': 'bold',
-                'fontColor': 'black'
-            }))
+            dbc.Table(table_header + [html.Tbody(table_row)], bordered=True))
 
         x_axis = [from_date]
         now = from_date
