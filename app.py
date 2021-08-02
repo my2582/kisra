@@ -286,7 +286,7 @@ def show_content(user):
 
         table_header_comp = [
 
-            html.Thead(html.Tr([html.Th(col) for col in list(df_comp.columns)]), style=style["style_table_header"])
+            html.Thead(html.Tr([html.Th(col) for col in list(df_comp.columns)]))
         ]
 
         print('table_header_comp is : {}'.format(table_header_comp))
@@ -303,7 +303,7 @@ def show_content(user):
 
         table_header = [
             html.Thead(html.Tr([html.Th("시점"), html.Th("Cash"), html.Th(
-                "Equity"), html.Th("Fixed Income"), html.Th("Alternative"), html.Th("Total"), html.Th("누적수익률(%)"), html.Th("변동성(%)")]), style=style["style_table_header"])
+                "Equity"), html.Th("Fixed Income"), html.Th("Alternative"), html.Th("Total"), html.Th("누적수익률(%)"), html.Th("변동성(%)")]))
         ]
 
         # print('content.date: {}'.format(content.date))
@@ -364,7 +364,7 @@ def show_content(user):
         })
 
         table_header_detail = [
-            html.Thead(html.Tr([html.Th(col) for col in list(result.columns)]), style=style["style_table_header"])
+            html.Thead(html.Tr([html.Th(col) for col in list(result.columns)]))
         ]
 
         rows = result.values.tolist()
@@ -378,7 +378,7 @@ def show_content(user):
         print('in page2_result, table_row is', table_row)
 
         return html.Div([dbc.Table(table_title1, bordered=False),
-                    dbc.Table(table_header_comp + [html.Tbody(comp_row)], bordered=True, dark=True),
+                    dbc.Table(table_header_comp + [html.Tbody(comp_row)], bordered=True),
                     dbc.Table(table_title2, bordered=False),
                     dbc.Table(table_header + [html.Tbody([row1])], bordered=True),
                     dbc.Table(table_title3, bordered=False),
@@ -415,7 +415,7 @@ def show_content(user):
 
         table_header = [
             html.Thead(html.Tr([html.Th("종목명"), html.Th(
-                "평가액"), html.Th("비중(%)"), html.Th("자산군")]), style=style["style_table_header"])
+                "평가액"), html.Th("비중(%)"), html.Th("자산군")]))
         ]
         informations = table.loc[:, ['itemname', 'value', 'wt', 'asset_class']]
         
