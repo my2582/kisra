@@ -56,7 +56,7 @@ def show_content(user):
             temp = copy.deepcopy(layout.tab)
             temp.children[0].children = temp.children[0].children[1:]
             temp.children[0].value = 'analysis'
-            user.name = user_id
+            user.name = copy.deepcopy(user_id)
             print('#3. in show_layout, login: {}, signup: {}, user.name: {}'.format(login, signup, user.name))
             layout.main_login.children[2].n_clicks = 0
             check = False
@@ -67,8 +67,7 @@ def show_content(user):
             layout.tab.children[0].value = 'signup'
             return layout.tab
         
-        print('login and signup >= 0!! Despite of this, let me set user.name to be user_id.')
-        user.name = user_id
+        print('login and signup >= 0!! Despite of this, let me set user.name to be user_id {}.'.format(user.name))
         return layout.main_login
 
     @app.callback(
@@ -104,7 +103,7 @@ def show_content(user):
         if tab_input == 'info':
             if not check:
                 # 로그인을 했을 경우
-                layout.info[0].children[1].children = user.name
+                layout.info[0].children[1].children = copy.deepcopy(user.name)
             return html.Div(layout.info)
 
     @app.callback(
@@ -654,6 +653,7 @@ def show_content(user):
         Input('predict-slider', 'value')
     )
     def show_prediction(select):
+
         '''
         user.name: 로그인 시 입력한 사용자 이름을 갖고 있음
         user.userid: null. not available here.
