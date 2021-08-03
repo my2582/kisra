@@ -23,6 +23,7 @@ sheet = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 app = dash.Dash(__name__, external_stylesheets=sheet,
                 suppress_callback_exceptions=True)
 server = app.server
+user = None
 
 def show_content():
     style = layout.style
@@ -292,7 +293,8 @@ def show_content():
         table_title3 = [html.Thead(html.Tr([html.H4("리밸런싱 과거 내역")]))]
 
         table_header_comp = [
-            html.Thead(html.Tr([html.Th(col) for col in list(df_comp.columns)]), style=style["style_table_header"])
+
+            html.Thead(html.Tr([html.Th(col) for col in list(df_comp.columns)]))
         ]
 
         print('table_header_comp is : {}'.format(table_header_comp))
@@ -309,7 +311,7 @@ def show_content():
 
         table_header = [
             html.Thead(html.Tr([html.Th("시점"), html.Th("Cash"), html.Th(
-                "Equity"), html.Th("Fixed Income"), html.Th("Alternative"), html.Th("Total"), html.Th("누적수익률(%)"), html.Th("변동성(%)")]), style=style["style_table_header"])
+                "Equity"), html.Th("Fixed Income"), html.Th("Alternative"), html.Th("Total"), html.Th("누적수익률(%)"), html.Th("변동성(%)")]))
         ]
 
         # print('content.date: {}'.format(content.date))
@@ -370,7 +372,7 @@ def show_content():
         })
 
         table_header_detail = [
-            html.Thead(html.Tr([html.Th(col) for col in list(result.columns)]), style=style["style_table_header"])
+            html.Thead(html.Tr([html.Th(col) for col in list(result.columns)]))
         ]
 
         rows = result.values.tolist()
@@ -383,12 +385,36 @@ def show_content():
         print('table_header_detail is {}'.format(table_header_detail))
         print('in page2_result, table_row is', table_row)
 
-        return html.Div([dbc.Table(table_title1, bordered=False),
-                    dbc.Table(table_header_comp + [html.Tbody(comp_row)], bordered=True),
-                    dbc.Table(table_title2, bordered=False),
-                    dbc.Table(table_header + [html.Tbody([row1])], bordered=True),
-                    dbc.Table(table_title3, bordered=False),
-                    dbc.Table(table_header_detail + [html.Tbody(table_row)], bordered=True)])
+        return html.Div([dbc.Table(table_title1, bordered=False, style = {'margin-top' : '18px',
+                            'margin-bottom' : '10px',
+                            'text-align' : 'left',
+                            'paddingLeft': 12}),
+                    dbc.Table(table_header_comp + [html.Tbody(comp_row)], bordered=True, style = {'margin-top' : '18px',
+                            'margin-bottom' : '10px',
+                            'text-align' : 'left',
+                            'paddingLeft': 12}),
+                    dbc.Table(table_title2, bordered=False, style = {'margin-top' : '18px',
+                            'margin-bottom' : '10px',
+                            'text-align' : 'left',
+                            'paddingLeft': 12}),
+                    dbc.Table(table_header + [html.Tbody([row1])], bordered=True, style = {'margin-top' : '18px',
+                            'margin-bottom' : '10px',
+                            'text-align' : 'left',
+                            'paddingLeft': 12}),
+                    dbc.Table(table_title3, bordered=False, style = {'margin-top' : '18px',
+                            'margin-bottom' : '10px',
+                            'text-align' : 'left',
+                            'paddingLeft': 12}),
+                    dbc.Table(table_header_detail + [html.Tbody(table_row)], bordered=True, style = {'margin-top' : '18px',
+                            'margin-bottom' : '10px',
+                            'text-align' : 'left',
+                            'paddingLeft': 12})])
+
+        # return html.Div([dbc.Table(table_title1, bordered=False),
+        #             dbc.Table(table_header_comp + [html.Tbody(comp_row)], bordered=True), 
+        #             dbc.Table(table_title3, bordered=False),
+        #             dbc.Table(table_header_detail + [html.Tbody(table_row)], bordered=True)])
+
 
         # return html.Div([dbc.Table(table_title1, bordered=False),
         #             dbc.Table(table_header_comp + [html.Tbody(comp_row)], bordered=True), 
@@ -408,6 +434,8 @@ def show_content():
 
     def page3Layout(result, from_date, allowable):
         chart, table = result
+        print('chart: {}, chart.keys(): {}'.format(chart, chart.keys()))
+        print('table: {}'.format(table))
         pie = px.pie(
             chart, names=chart['asset_class'].tolist(), values=chart['wt'].tolist())
         fig = dcc.Graph(id='pie-chart-page3')
@@ -415,7 +443,7 @@ def show_content():
 
         table_header = [
             html.Thead(html.Tr([html.Th("종목명"), html.Th(
-                "평가액"), html.Th("비중(%)"), html.Th("자산군")]), style=style["style_table_header"])
+                "평가액"), html.Th("비중(%)"), html.Th("자산군")]))
         ]
         informations = table.loc[:, ['itemname', 'value', 'wt', 'asset_class']]
         
