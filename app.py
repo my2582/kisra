@@ -6,6 +6,7 @@ import plotly.express as px
 import dash_core_components as dcc
 import dash_bootstrap_components as dbc
 import layout
+from data import Data
 from user import User
 import numpy as np
 from datetime import timedelta, datetime
@@ -23,9 +24,9 @@ app = dash.Dash(__name__, external_stylesheets=sheet,
                 suppress_callback_exceptions=True)
 server = app.server
 
-def show_content(user):
+def show_content():
     style = layout.style
-    # user = User()
+    user = User()
     # global _user
     app.layout = html.Div(layout.main_login, id='main-layout')
     check = False
@@ -50,7 +51,12 @@ def show_content(user):
         State('user-id-main', 'value')
     )
     def show_layout(login, signup, user_id):
-        # global _user
+        if user.name:
+            user.name = ""
+            user.userid = ""
+            user.data = Data()
+            user.date = ""
+
         print('#1. in show_layout, login: {}, signup: {}, user_id: {}'.format(login, signup, user_id))
         if 0 < login:
             temp = copy.deepcopy(layout.tab)
@@ -671,7 +677,7 @@ def show_content(user):
         user_list = db.getUserList()
 
         # user_list가 (userid, name) 순으로 되어 있어서, 이 순서를 바꿔서 딕셔너리를 만든다(key가 name이 되도록 한다)
-        user_dict = dict((user_tuple[1], user_tuple[0]) for user_tuple in user_list)
+        user_dict = user_dict = {u[1]: u[0] for u in user_list}
         user.userid = user_dict[user.name]
         select = changePeriod(select)
 
@@ -776,7 +782,7 @@ def show_content(user):
 
 
 # _user is a global variable. This name is changed from user for less confusion.
-show_content(User())
+show_content()
 
 if __name__ == '__main__':
     app.run_server(debug=True)
