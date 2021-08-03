@@ -6,6 +6,7 @@ import plotly.express as px
 import dash_core_components as dcc
 import dash_bootstrap_components as dbc
 import layout
+from data import Data
 from user import User
 import numpy as np
 from datetime import timedelta, datetime
@@ -24,9 +25,10 @@ app = dash.Dash(__name__, external_stylesheets=sheet,
 server = app.server
 user = None
 
-def show_content(_user):
-    user = _user
+def show_content():
     style = layout.style
+    user = User()
+    # global _user
     app.layout = html.Div(layout.main_login, id='main-layout')
     check = False
 
@@ -50,13 +52,18 @@ def show_content(_user):
         State('user-id-main', 'value')
     )
     def show_layout(login, signup, user_id):
-        # global _user
+        if user.name:
+            user.name = ""
+            user.userid = ""
+            user.data = Data()
+            user.date = ""
+
         print('#1. in show_layout, login: {}, signup: {}, user_id: {}'.format(login, signup, user_id))
         if 0 < login:
             temp = copy.deepcopy(layout.tab)
             temp.children[0].children = temp.children[0].children[1:]
             temp.children[0].value = 'analysis'
-            user.name = user_id
+            user.name = copy.deepcopy(user_id)
             print('#3. in show_layout, login: {}, signup: {}, user.name: {}'.format(login, signup, user.name))
             layout.main_login.children[2].n_clicks = 0
             check = False
@@ -67,8 +74,7 @@ def show_content(_user):
             layout.tab.children[0].value = 'signup'
             return layout.tab
         
-        print('login and signup >= 0!! Despite of this, let me set user.name to be user_id.')
-        user.name = user_id
+        print('login and signup >= 0!! Despite of this, let me set user.name to be user_id {}.'.format(user.name))
         return layout.main_login
 
     @app.callback(
@@ -104,7 +110,7 @@ def show_content(_user):
         if tab_input == 'info':
             if not check:
                 # 로그인을 했을 경우
-                layout.info[0].children[1].children = user.name
+                layout.info[0].children[1].children = copy.deepcopy(user.name)
             return html.Div(layout.info)
 
     @app.callback(
@@ -681,6 +687,7 @@ def show_content(_user):
         Input('predict-slider', 'value')
     )
     def show_prediction(select):
+
         '''
         user.name: 로그인 시 입력한 사용자 이름을 갖고 있음
         user.userid: null. not available here.
@@ -698,7 +705,7 @@ def show_content(_user):
         user_list = db.getUserList()
 
         # user_list가 (userid, name) 순으로 되어 있어서, 이 순서를 바꿔서 딕셔너리를 만든다(key가 name이 되도록 한다)
-        user_dict = dict((user_tuple[1], user_tuple[0]) for user_tuple in user_list)
+        user_dict = user_dict = {u[1]: u[0] for u in user_list}
         user.userid = user_dict[user.name]
         select = changePeriod(select)
 
@@ -803,7 +810,7 @@ def show_content(_user):
 
 
 # _user is a global variable. This name is changed from user for less confusion.
-show_content(User())
+show_content()
 
 if __name__ == '__main__':
     app.run_server(debug=True)

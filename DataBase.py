@@ -1,6 +1,7 @@
-import psycopg2
 import os
+import psycopg2
 from DBquery import query
+
 
 class databaseDF:
     def __init__(self):
