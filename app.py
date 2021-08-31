@@ -91,8 +91,8 @@ def show_content():
                 # 로그인을 했을 경우
                 # RA자문 탭의 이름과 자문기준일 값을 설정함.
                 layout.analysis[0].children[1].children = ''
-                layout.analysis[0].children[3].children = '8/1/2021 4:00:00 PM'
-                user.date = '8/1/2021 4:00:00 PM'
+                layout.analysis[0].children[3].children = '8/31/2021 4:00:00 PM'
+                user.date = '8/31/2021 4:00:00 PM'
                 # layout.analysis[0].children[3].children = user.getStartDate(user.name)
             # layout.analysis[0].children[1].children = user.name
             # layout.analysis[0].children[3].children = '6/2/2021 4:00:00 PM'
