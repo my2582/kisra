@@ -24,11 +24,10 @@ app = dash.Dash(__name__, external_stylesheets=sheet,
                 suppress_callback_exceptions=True,
                 prevent_initial_callbacks=True)
 server = app.server
-user = None
 
 def show_content():
     style = layout.style
-    # user = User()
+    user = User()
     # global _user
     app.layout = html.Div(layout.main_login, id='main-layout')
     check = False
@@ -54,6 +53,7 @@ def show_content():
     )
     def show_layout(login, signup, user_id):
         user = User(userid=user_id)
+        user.date = '8/31/2021 4:00:00 PM'
         # if user.name:
         #     user.name = ""
         #     user.userid = ""
@@ -65,7 +65,7 @@ def show_content():
             temp = copy.deepcopy(layout.tab)
             temp.children[0].children = temp.children[0].children[1:]
             temp.children[0].value = 'analysis'
-            user.name = copy.deepcopy(user_id)
+            # user.name = copy.deepcopy(user_id)
             print('#3. in show_layout, login: {}, signup: {}, user.name: {}'.format(login, signup, user.name))
             layout.main_login.children[2].n_clicks = 0
             check = False
@@ -94,7 +94,6 @@ def show_content():
                 # RA자문 탭의 이름과 자문기준일 값을 설정함.
                 layout.analysis[0].children[1].children = ''
                 layout.analysis[0].children[3].children = '8/31/2021 4:00:00 PM'
-                user.date = '8/31/2021 4:00:00 PM'
                 # layout.analysis[0].children[3].children = user.getStartDate(user.name)
             # layout.analysis[0].children[1].children = user.name
             # layout.analysis[0].children[3].children = '6/2/2021 4:00:00 PM'
