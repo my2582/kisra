@@ -721,8 +721,15 @@ def show_content():
 
         # user_list가 (userid, name) 순으로 되어 있어서, 이 순서를 바꿔서 딕셔너리를 만든다(key가 name이 되도록 한다)
         # user_dict = user_dict = {u[1]: u[0] for u in user_list}
-        user_dict = {u[1]: u[0] for u in user_list}
-        user.userid = user_dict[user.name]
+        if (user.name == '') or (user.name is None):
+            # userid로 username 얻기.
+            user_dict = {u[0]: u[1] for u in user_list}
+            user.name = user_dict[user.userid]
+        else:
+            # username으로 userid 얻기.
+            user_dict = {u[1]: u[0] for u in user_list}
+            user.userid = user_dict[user.name]
+        
         select = changePeriod(select)
 
         df_comp_pkl = pd.read_pickle('./data/processed/comparison_0901_{}.pkl'.format(user.userid))
