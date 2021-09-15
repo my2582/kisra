@@ -213,7 +213,7 @@ def show_content():
                 for n in range(0, len(layout.signup)):
                     print('layout.signup[{}]: {}'.format(n, layout.signup[n]))
 
-                for_selected = layout.signup[3]
+                for_selected = layout.signup[2]   # 투자자 성향분석 선택지값들.
                 for id in tags_id:
                     check = False
                     for i in range(1, len(for_selected.children), 3):
