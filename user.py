@@ -2,11 +2,11 @@ from data import Data
 
 
 class User:
-    def __init__(self, userid=None):
+    def __init__(self, name=None):
         self.data = Data()
-        self.name, self.date = '', ''
-        self.userid = '' if userid is None else userid
-        print('a user is created with its userid being {}'.format(self.userid))
+        self.userid, self.date = '', ''
+        self.name = '' if name is None else name
+        print('a user is created with its name being {}'.format(self.name))
 
     def getStartDate(self, name):
         dt = self.data.specificDate(name)

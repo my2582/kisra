@@ -53,7 +53,7 @@ def show_content():
     def show_layout(login, signup, user_id):
         nonlocal user
 
-        user = User(userid=user_id)
+        user = User(name=user_id)
         # user.date = '8/31/2021 4:00:00 PM'
         # if user.name:
         #     user.name = ""
