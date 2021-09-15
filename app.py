@@ -68,7 +68,7 @@ def show_content():
             # user.name = copy.deepcopy(user_id)
             print('#3. in show_layout, login: {}, signup: {}, user.name: {}, user_id: {}'.format(login, signup, user.name, user_id))
             # layout.main_login.children[2].n_clicks = 0
-            temp.main_login.children[2].n_clicks = 0
+            layout.main_login.children[2].n_clicks = 0
             check = False
             return temp
         if 0 < signup:
