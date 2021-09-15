@@ -28,7 +28,7 @@ user = None
 
 def show_content():
     style = layout.style
-    user = User()
+    # user = User()
     # global _user
     app.layout = html.Div(layout.main_login, id='main-layout')
     check = False
@@ -50,14 +50,16 @@ def show_content():
         Output('main-layout', 'children'),
         [Input('login-button', 'n_clicks'),
          Input('sign-up-button', 'n_clicks')],
-        State('user-id-main', 'value')
+        [State('user-id-main', 'value'),
+         State('user', 'data')]
     )
-    def show_layout(login, signup, user_id):
-        if user.name:
-            user.name = ""
-            user.userid = ""
-            user.data = Data()
-            user.date = ""
+    def show_layout(login, signup, user_id, user_layout):
+        user = user_layout['user']
+        # if user.name:
+        #     user.name = ""
+        #     user.userid = ""
+        #     user.data = Data()
+        #     user.date = ""
 
         print('#1. in show_layout, login: {}, signup: {}, user_id: {}'.format(login, signup, user_id))
         if 0 < login:
