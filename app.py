@@ -210,6 +210,9 @@ def show_content():
                 # fig_rpt3 = go.Figure().add_layout_image(source='./reports/figures/ef-4_2021-02-26.png')
 
                 answer = []
+                for n in range(0, len(layout.signup)):
+                    print('layout.signup[{}]: {}'.format(n, layout.signup[n]))
+
                 for_selected = layout.signup[3]
                 for id in tags_id:
                     check = False
@@ -224,13 +227,13 @@ def show_content():
 
                 risk_avg, df, by_assetclass, score, current_date, risk_profile = character.predict(
                     answer, first_trade=True)
-                rpt_url = 'https://raw.githubusercontent.com/my2582/kisra_storage/main/report-{}_{}.png'.format(risk_profile, current_date)
-                rpt2_url = 'https://raw.githubusercontent.com/my2582/kisra_storage/main/ef_area-{}_{}.png'.format(risk_profile, current_date)
-                rpt3_url = 'https://raw.githubusercontent.com/my2582/kisra_storage/main/ef-{}_{}.png'.format(risk_profile, current_date)
+                # rpt_url = 'https://raw.githubusercontent.com/my2582/kisra_storage/main/report-{}_{}.png'.format(risk_profile, current_date)
+                # rpt2_url = 'https://raw.githubusercontent.com/my2582/kisra_storage/main/ef_area-{}_{}.png'.format(risk_profile, current_date)
+                # rpt3_url = 'https://raw.githubusercontent.com/my2582/kisra_storage/main/ef-{}_{}.png'.format(risk_profile, current_date)
                 # print('URLs:', rpt_url, rpt2_url, rpt3_url)
-                fig_rpt = get_fig(source=rpt_url, width=1008, height=2592)
-                fig_rpt2 = get_fig(source=rpt2_url, width=1000, height=600)
-                fig_rpt3 = get_fig(source=rpt3_url, width=640, height=480)
+                # fig_rpt = get_fig(source=rpt_url, width=1008, height=2592)
+                # fig_rpt2 = get_fig(source=rpt2_url, width=1000, height=600)
+                # fig_rpt3 = get_fig(source=rpt3_url, width=640, height=480)
                 
                 result = '당신의 점수는 {0}이며 {1}형 투자자입니다. 당신에게 맞는 포트폴리오를 확인해 보세요'.format(
                     score, risk_avg)
@@ -269,9 +272,9 @@ def show_content():
                 # fig_rpt['layout'].update(width=1008, height=2592, autosize=False)
                 # fig_rpt2['layout'].update(width=1000, height=600, autosize=False)
                 # fig_rpt3['layout'].update(width=640, height=480, autosize=False)
-                output.children.append(dcc.Graph(id="fig-image", figure=fig_rpt, config={'doubleClick': 'reset'}))
-                output.children.append(dcc.Graph(id="fig2-image", figure=fig_rpt2, config={'doubleClick': 'reset'}))
-                output.children.append(dcc.Graph(id="fig3-image", figure=fig_rpt3, config={'doubleClick': 'reset'}))
+                # output.children.append(dcc.Graph(id="fig-image", figure=fig_rpt, config={'doubleClick': 'reset'}))
+                # output.children.append(dcc.Graph(id="fig2-image", figure=fig_rpt2, config={'doubleClick': 'reset'}))
+                # output.children.append(dcc.Graph(id="fig3-image", figure=fig_rpt3, config={'doubleClick': 'reset'}))
                 return output
 
             warning = '비어있는 항목이 있습니다! 전부 체크해 주세요'
