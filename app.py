@@ -21,7 +21,8 @@ from pypfopt.discrete_allocation import DiscreteAllocation
 
 sheet = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 app = dash.Dash(__name__, external_stylesheets=sheet,
-                suppress_callback_exceptions=True)
+                suppress_callback_exceptions=True,
+                prevent_initial_callbacks=True)
 server = app.server
 user = None
 
@@ -816,5 +817,5 @@ def show_content():
 show_content()
 
 if __name__ == '__main__':
-    app.secret_key = 'sgoijio3221SIkldOIDs'
+    # app.secret_key = 'sgoijio3221SIkldOIDs'
     app.run_server(debug=True)
