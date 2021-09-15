@@ -3,7 +3,6 @@ import dash_html_components as html
 import json
 import os
 from datetime import date
-from user import User
 
 with open(os.getcwd() + '/Styles.json', 'rb') as f:
     style = json.load(f)

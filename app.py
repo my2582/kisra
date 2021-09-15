@@ -52,6 +52,8 @@ def show_content():
         State('user-id-main', 'value')
     )
     def show_layout(login, signup, user_id):
+        nonlocal user
+
         user = User(userid=user_id)
         user.date = '8/31/2021 4:00:00 PM'
         # if user.name:
@@ -85,6 +87,8 @@ def show_content():
         Input(layout.input_id, 'value')
     )
     def show_page(tab_input):
+        nonlocal user
+
         # global _user
         if tab_input == 'signup':
             return html.Div(layout.signup)
@@ -192,6 +196,8 @@ def show_content():
 
             return fig
 
+        nonlocal user
+
         if 0 < n_clicks:
             tags_id = [input_1, input_2, input_3, input_4, input_5, input_6, input_7, input_8, input_9,
                        input_10, input_11]
@@ -287,6 +293,8 @@ def show_content():
             return output
 
     def page2_result(content, date, ret, vol, df_comp):
+        nonlocal user
+
         if type(content) == str:
             return dcc.ConfirmDialog(
                 id='confirm',
@@ -702,6 +710,8 @@ def show_content():
         # user.name = username
         # user.userid = userid
 
+        nonlocal user
+
         # 안정추구형중규모로 접속 시 -> user.name이 이전 세션 값이다. 
         # 안정추구형대규모로 접속 시 -> 정상
         print('app.py show_prediction params: user.date {}, user.userid {}, user.name {}'.format(user.date, user.userid, user.name))
@@ -752,6 +762,7 @@ def show_content():
         State('predict-slider', 'value')
     )
     def detailInfo(open, close, is_open, select):
+        nonlocal user
         # print('----in detailInfo. close: {}, is_open: {}, select is {}'.format(close, is_open, select))
         select = changePeriod(select)
         # print('After-{}'.format(select))
@@ -801,6 +812,7 @@ def show_content():
         [Input('default-predict-date', 'date')]
     )
     def page3OutputResult(pDate):
+        nonlocal user
         try:
             temp = pDate.split('-')
             pDate = temp[1]+'/'+temp[2]+'/'+temp[0]+' 4:00:00 PM'
