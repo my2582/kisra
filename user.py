@@ -6,7 +6,7 @@ class User:
         self.data = Data()
         self.name, self.date = '', ''
         self.userid = '' if userid is None else userid
-        print('a user is created with its userid being {}'.format(userid))
+        print('a user is created with its userid being {}'.format(self.userid))
 
     def getStartDate(self, name):
         dt = self.data.specificDate(name)

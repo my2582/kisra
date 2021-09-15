@@ -21,8 +21,7 @@ from pypfopt.discrete_allocation import DiscreteAllocation
 
 sheet = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 app = dash.Dash(__name__, external_stylesheets=sheet,
-                suppress_callback_exceptions=True,
-                prevent_initial_callbacks=True)
+                suppress_callback_exceptions=True)
 server = app.server
 
 def show_content():
@@ -55,7 +54,7 @@ def show_content():
         nonlocal user
 
         user = User(userid=user_id)
-        user.date = '8/31/2021 4:00:00 PM'
+        # user.date = '8/31/2021 4:00:00 PM'
         # if user.name:
         #     user.name = ""
         #     user.userid = ""
@@ -99,6 +98,7 @@ def show_content():
                 # RA자문 탭의 이름과 자문기준일 값을 설정함.
                 layout.analysis[0].children[1].children = ''
                 layout.analysis[0].children[3].children = '8/31/2021 4:00:00 PM'
+                user.date = '8/31/2021 4:00:00 PM'
                 # layout.analysis[0].children[3].children = user.getStartDate(user.name)
             # layout.analysis[0].children[1].children = user.name
             # layout.analysis[0].children[3].children = '6/2/2021 4:00:00 PM'
