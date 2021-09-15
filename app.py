@@ -50,11 +50,10 @@ def show_content():
         Output('main-layout', 'children'),
         [Input('login-button', 'n_clicks'),
          Input('sign-up-button', 'n_clicks')],
-        [State('user-id-main', 'value'),
-         State('user', 'data')]
+        State('user-id-main', 'value')
     )
-    def show_layout(login, signup, user_id, user_layout):
-        user = user_layout['user']
+    def show_layout(login, signup, user_id):
+        user = User(userid=user_id)
         # if user.name:
         #     user.name = ""
         #     user.userid = ""

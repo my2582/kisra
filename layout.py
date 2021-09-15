@@ -231,6 +231,5 @@ main_login = html.Div([
     html.Button('Log In', id='login-button', style={"background-color": "Yellow"}, n_clicks=0),
     html.Br(),
     html.Label('회원가입'),
-    html.Button('Sign Up', id='sign-up-button', style={"background-color": "Red"}, n_clicks=0),
-    dcc.Store(id="user_layout", data=dict(user=User()))
+    html.Button('Sign Up', id='sign-up-button', style={"background-color": "Red"}, n_clicks=0)
 ], id='login-tab-for-next')

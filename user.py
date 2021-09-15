@@ -2,9 +2,10 @@ from data import Data
 
 
 class User:
-    def __init__(self):
+    def __init__(self, userid=None):
         self.data = Data()
-        self.name, self.date, self.userid = '', '', ''
+        self.name, self.date = '', ''
+        self.userid = '' if userid is None else userid
 
     def getStartDate(self, name):
         dt = self.data.specificDate(name)
