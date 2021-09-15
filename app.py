@@ -816,4 +816,5 @@ def show_content():
 show_content()
 
 if __name__ == '__main__':
+    app.secret_key = 'sgoijio3221SIkldOIDs'
     app.run_server(debug=True)
