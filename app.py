@@ -53,7 +53,7 @@ def show_content():
     def show_layout(login, signup, user_id):
         nonlocal user
 
-        user = User(name=user_id)
+        user.name=user_id
         # user.date = '8/31/2021 4:00:00 PM'
         # if user.name:
         #     user.name = ""
@@ -720,7 +720,8 @@ def show_content():
         user_list = db.getUserList()
 
         # user_list가 (userid, name) 순으로 되어 있어서, 이 순서를 바꿔서 딕셔너리를 만든다(key가 name이 되도록 한다)
-        user_dict = user_dict = {u[1]: u[0] for u in user_list}
+        # user_dict = user_dict = {u[1]: u[0] for u in user_list}
+        user_dict = {u[1]: u[0] for u in user_list}
         user.userid = user_dict[user.name]
         select = changePeriod(select)
 
