@@ -65,7 +65,7 @@ def show_content():
         if 0 < login:
             temp = copy.deepcopy(layout.tab)
             temp.children[0].children = temp.children[0].children[1:]
-            temp.children[0].value = 'analysis'
+            temp.children[0].value = 'analysis' + '-' + user_id
             # user.name = copy.deepcopy(user_id)
             print('#3. in show_layout, login: {}, signup: {}, user.name: {}, user_id: {}'.format(login, signup, user.name, user_id))
             # layout.main_login.children[2].n_clicks = 0
@@ -88,17 +88,21 @@ def show_content():
     def show_page(tab_input):
         nonlocal user
 
+        tab_selected = tab_input.split('-')[0]
+
         # global _user
         if tab_input == 'signup':
             return html.Div(layout.signup)
 
-        if tab_input == 'analysis':
+        if tab_selected == 'analysis':
+            user_id = tab_input.split('-')[1]
             if not check:
                 # 로그인을 했을 경우
                 # RA자문 탭의 이름과 자문기준일 값을 설정함.
                 layout.analysis[0].children[1].children = ''
                 layout.analysis[0].children[3].children = '8/31/2021 4:00:00 PM'
                 user.date = '8/31/2021 4:00:00 PM'
+                user.userid = user_id
                 # layout.analysis[0].children[3].children = user.getStartDate(user.name)
             # layout.analysis[0].children[1].children = user.name
             # layout.analysis[0].children[3].children = '6/2/2021 4:00:00 PM'
