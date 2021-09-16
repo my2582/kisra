@@ -707,8 +707,8 @@ def show_content():
         [Output('output-pos', 'children'),
          Output('max-date', 'children')],
         [Input('predict-slider', 'value'),
-        Input('tab-2-user-id', 'value')],
-        State('user-information-analysis', 'value')
+        Input('tab-2-user-id', 'value'),
+        State('user-information-analysis', 'value')]
     )
     def show_prediction(select, user_id):
 
