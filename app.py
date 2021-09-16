@@ -706,11 +706,11 @@ def show_content():
     @app.callback(
         [Output('output-pos', 'children'),
          Output('max-date', 'children')],
-        [Input('predict-slider', 'value'),
+        Input('predict-slider', 'value'),
         Input('tab-2-user-id', 'value'),
-        State('user-information-analysis', 'value')]
+        Input('user-information-analysis', 'value')
     )
-    def show_prediction(select, user_id):
+    def show_prediction(select, user_id, user_info):
 
         '''
         user.name: 로그인 시 입력한 사용자 이름을 갖고 있음
@@ -725,7 +725,7 @@ def show_content():
 
         print('app.py select: {}'.format(select))
         print('app.py user_id: {}'.format(user_id))
-        # print('app.py user_info: {}'.format(user_info))
+        print('app.py user_info: {}'.format(user_info))
         # 안정추구형중규모로 접속 시 -> user.name이 이전 세션 값이다. 
         # 안정추구형대규모로 접속 시 -> 정상
         print('app.py show_prediction params: user.date {}, user.userid {}, user.name {}'.format(user.date, user.userid, user.name))
