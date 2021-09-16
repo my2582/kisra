@@ -707,9 +707,10 @@ def show_content():
     @app.callback(
         [Output('output-pos', 'children'),
          Output('max-date', 'children')],
-        Input('predict-slider', 'value')
+        Input('predict-slider', 'value'),
+        Input('user-information-analysis', 'children')
     )
-    def show_prediction(select):
+    def show_prediction(select, user_info):
 
         '''
         user.name: 로그인 시 입력한 사용자 이름을 갖고 있음
@@ -724,7 +725,7 @@ def show_content():
 
         # 안정추구형중규모로 접속 시 -> user.name이 이전 세션 값이다. 
         # 안정추구형대규모로 접속 시 -> 정상
-        print('app.py show_prediction params: user.date {}, user.userid {}, user.name {}'.format(user.date, user.userid, user.name))
+        print('app.py show_prediction params: user.date {}, user.userid {}, user.name {}, user_info {}'.format(user.date, user.userid, user.name, user_info))
 
         # userid를 얻는다.
         user_list = db.getUserList()
@@ -748,13 +749,17 @@ def show_content():
         
         select = changePeriod(select)
 
-        df_comp_pkl = pd.read_pickle('./data/processed/comparison_0901_{}.pkl'.format(user.userid))
-        print('리밸런싱 전/후 비교(1):', df_comp_pkl)
-
-        # # 최근 잔고 가져옴
-        # detail = db.getUserBalance(userid=userid)       
-        # detail = pd.DataFrame(detail, columns=['date', 'userid', 'name', 'asset_class', 'itemcode', 'itemname',
-        #                                         'quantity', 'cost_price', 'cost_value', 'price', 'value', 'wt', 'group_by', 'original'])
+        try:
+            df_comp_pkl = pd.read_pickle('./data/processed/comparison_0901_{}.pkl'.format(user.userid))
+            print('리밸런싱 전/후 비교(1):', df_comp_pkl)
+        except:
+            # 최근 잔고 가져옴
+            detail = db.getUserBalance(userid=user.userid)
+            if len(detail) == 0:
+                detail = db.getUserBalanceByName(userid=user.userid)
+            detail = pd.DataFrame(detail, columns=['date', 'userid', 'name', 'asset_class', 'itemcode', 'itemname',
+                                                    'quantity', 'cost_price', 'cost_value', 'price', 'value', 'wt', 'group_by', 'original'])
+            print('exception___최근잔고:', detail)
 
         # # 리밸런싱 후 포트폴리오 가져오기
         # first_advised_port, by_assetclass, all_the_nexts, all_the_generals = get_next_portfolio(detail=detail)
