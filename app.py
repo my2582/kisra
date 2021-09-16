@@ -104,11 +104,11 @@ def show_content():
 #            if not check:
             # 로그인을 했을 경우
             # RA자문 탭의 이름과 자문기준일 값을 설정함.
-            layout.analysis[0].children[1] = user.name
-            layout.analysis[0].children[3] = '8/31/2021 4:00:00 PM'
+            layout.analysis[0].children[1].children = user.name
+            layout.analysis[0].children[3].children = '8/31/2021 4:00:00 PM'
             user.date = '8/31/2021 4:00:00 PM'
-            print('type(layout.analysis[0].children[1]): {}, value: {}'.format(type(layout.analysis[0].children[1]), layout.analysis[0].children[1]))
-            print('type(layout.analysis[0].children[3]): {}, value: {}'.format(type(layout.analysis[0].children[3]), layout.analysis[0].children[3]))
+            print('type(layout.analysis[0].children[1]): {}, .value: {}'.format(type(layout.analysis[0].children[1]), layout.analysis[0].children[1].children))
+            print('type(layout.analysis[0].children[3]): {}, .value: {}'.format(type(layout.analysis[0].children[3]), layout.analysis[0].children[3].children))
             # layout.analysis[0].children[3].children = user.getStartDate(user.name)
             # layout.analysis[0].children[1].children = user_id
             # layout.analysis[0].children[3].children = '6/2/2021 4:00:00 PM'
