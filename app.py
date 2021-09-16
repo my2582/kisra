@@ -90,14 +90,15 @@ def show_content():
         nonlocal user
         nonlocal check
 
-        tab_selected = tab_input.split('-')[0]
+        tokens = tab_input.split('-')
+        tab_selected = tokens[0]
 
         # global _user
         if tab_input == 'signup':
             return html.Div(layout.signup)
 
         if tab_selected == 'analysis':
-            user_id = tab_input.split('-')[1]
+            user_id = tab_input.split('-')[1] if len(tokens) > 0 else user.userid
 #            if not check:
             # 로그인을 했을 경우
             # RA자문 탭의 이름과 자문기준일 값을 설정함.
