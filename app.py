@@ -52,6 +52,7 @@ def show_content():
     )
     def show_layout(login, signup, user_id):
         nonlocal user
+        nonlocal check
 
         user.name=user_id
         # user.date = '8/31/2021 4:00:00 PM'
@@ -87,6 +88,7 @@ def show_content():
     )
     def show_page(tab_input):
         nonlocal user
+        nonlocal check
 
         tab_selected = tab_input.split('-')[0]
 
@@ -96,15 +98,15 @@ def show_content():
 
         if tab_selected == 'analysis':
             user_id = tab_input.split('-')[1]
-            if not check:
-                # 로그인을 했을 경우
-                # RA자문 탭의 이름과 자문기준일 값을 설정함.
-                layout.analysis[0].children[1].children = ''
-                layout.analysis[0].children[3].children = '8/31/2021 4:00:00 PM'
-                user.date = '8/31/2021 4:00:00 PM'
-                user.name = user_id
-                # layout.analysis[0].children[3].children = user.getStartDate(user.name)
-            # layout.analysis[0].children[1].children = user.name
+#            if not check:
+            # 로그인을 했을 경우
+            # RA자문 탭의 이름과 자문기준일 값을 설정함.
+            layout.analysis[0].children[1].children = user_id
+            layout.analysis[0].children[3].children = '8/31/2021 4:00:00 PM'
+            user.date = '8/31/2021 4:00:00 PM'
+            user.name = user_id
+            # layout.analysis[0].children[3].children = user.getStartDate(user.name)
+            # layout.analysis[0].children[1].children = user_id
             # layout.analysis[0].children[3].children = '6/2/2021 4:00:00 PM'
             
             # 처음 로그인할 때 이게 user.name이 none이었음.
@@ -701,9 +703,10 @@ def show_content():
     @app.callback(
         [Output('output-pos', 'children'),
          Output('max-date', 'children')],
-        Input('predict-slider', 'value')
+        Input('predict-slider', 'value',
+        Input('user-information-analysis', 'value'))
     )
-    def show_prediction(select):
+    def show_prediction(select, user_info):
 
         '''
         user.name: 로그인 시 입력한 사용자 이름을 갖고 있음
@@ -716,6 +719,7 @@ def show_content():
 
         nonlocal user
 
+        print('app.py user_info: {}'.format(user_info))
         # 안정추구형중규모로 접속 시 -> user.name이 이전 세션 값이다. 
         # 안정추구형대규모로 접속 시 -> 정상
         print('app.py show_prediction params: user.date {}, user.userid {}, user.name {}'.format(user.date, user.userid, user.name))
