@@ -727,6 +727,11 @@ def show_content():
         # 안정추구형대규모로 접속 시 -> 정상
         print('app.py show_prediction params: user.date {}, user.userid {}, user.name {}, user_info {}'.format(user.date, user.userid, user.name, user_info))
 
+        user.userid = user_info[1]['props']['children']
+        user.date = user_info[3]['props']['children']
+        print('user_info is read.')
+        print('app.py show_prediction params: user.date {}, user.userid {}, user.name {}, user_info {}'.format(user.date, user.userid, user.name, user_info))
+
         # userid를 얻는다.
         user_list = db.getUserList()
 
