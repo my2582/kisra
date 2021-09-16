@@ -703,7 +703,7 @@ def show_content():
     @app.callback(
         [Output('output-pos', 'children'),
          Output('max-date', 'children')],
-        Input('predict-slider', 'value',
+        Input('predict-slider', 'value'),
         Input('user-information-analysis', 'value'))
     )
     def show_prediction(select, user_info):
