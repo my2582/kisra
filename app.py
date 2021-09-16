@@ -707,11 +707,9 @@ def show_content():
     @app.callback(
         [Output('output-pos', 'children'),
          Output('max-date', 'children')],
-        Input('predict-slider', 'value'),
-        Input('tab-2-user-id', 'value'),
-        Input('user-information-analysis', 'value')
+        Input('predict-slider', 'value')
     )
-    def show_prediction(select, user_id, user_info):
+    def show_prediction(select):
 
         '''
         user.name: 로그인 시 입력한 사용자 이름을 갖고 있음
@@ -724,9 +722,6 @@ def show_content():
 
         nonlocal user
 
-        print('app.py select: {}'.format(select))
-        print('app.py user_id: {}'.format(user_id))
-        print('app.py user_info: {}'.format(user_info))
         # 안정추구형중규모로 접속 시 -> user.name이 이전 세션 값이다. 
         # 안정추구형대규모로 접속 시 -> 정상
         print('app.py show_prediction params: user.date {}, user.userid {}, user.name {}'.format(user.date, user.userid, user.name))
@@ -740,6 +735,12 @@ def show_content():
             # userid로 username 얻기.
             user_dict = {u[0]: u[1] for u in user_list}
             user.name = user_dict[user.userid]
+        elif user.name.startswith('A'):
+            # user.name에 user ID가 저장돼 있을 경우.
+            user_dict = {u[0]: u[1] for u in user_list}
+            temp = user.name
+            user.name = user_dict[user.name]
+            user.userid = temp
         else:
             # username으로 userid 얻기.
             user_dict = {u[1]: u[0] for u in user_list}
