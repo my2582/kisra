@@ -98,7 +98,11 @@ def show_content():
             return html.Div(layout.signup)
 
         if tab_selected == 'analysis':
-            user_id = tokens[1] if len(tokens) > 0 else user.userid
+            print('tokens: {}, len(tokens): {}'.format(tokens, len(tokens)))
+            if len(tokens) > 0:
+                user_id = tokens[1]
+            else:
+                user_id = user.userid
 #            if not check:
             # 로그인을 했을 경우
             # RA자문 탭의 이름과 자문기준일 값을 설정함.
