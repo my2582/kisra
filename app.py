@@ -99,16 +99,16 @@ def show_content():
 
         if tab_selected == 'analysis':
             print('tokens: {}, len(tokens): {}'.format(tokens, len(tokens)))
-            user_id = tokens[1] if len(tokens) >= 2 else user.userid
+            if len(tokens) >= 2:
+                user.name = tokens[1]
 #            if not check:
             # 로그인을 했을 경우
             # RA자문 탭의 이름과 자문기준일 값을 설정함.
-            layout.analysis[0].children[1].value = user_id
+            layout.analysis[0].children[1].value = user.name
             layout.analysis[0].children[3].value = '8/31/2021 4:00:00 PM'
             user.date = '8/31/2021 4:00:00 PM'
-            user.name = user_id
-            print('type(layout.analysis[0].children[1]): {}, {}'.format(type(layout.analysis[0].children[1]), layout.analysis[0].children[1]))
-            print('type(layout.analysis[0].children[3]): {}, {}'.format(type(layout.analysis[0].children[3]), layout.analysis[0].children[3]))
+            print('type(layout.analysis[0].children[1]): {}, .value: {}'.format(type(layout.analysis[0].children[1]), layout.analysis[0].children[1].value))
+            print('type(layout.analysis[0].children[3]): {}, .value: {}'.format(type(layout.analysis[0].children[3]), layout.analysis[0].children[3].value))
             # layout.analysis[0].children[3].children = user.getStartDate(user.name)
             # layout.analysis[0].children[1].children = user_id
             # layout.analysis[0].children[3].children = '6/2/2021 4:00:00 PM'
