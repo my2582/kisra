@@ -524,8 +524,8 @@ def show_content():
         investor = db.getInvestorInfo(name=user.name)
         print('type(investor): {}, investor: {}'.format(type(investor), investor))
 
-        risk_profile = investor[0]
-        principal = investor[1]
+        risk_profile = investor[0][0]
+        principal = investor[0][1]
 
         rebal_dates = advised_pf.loc[(advised_pf.risk_profile == risk_profile) & (
                 advised_pf.date >= user.date), 'date'].min()
