@@ -87,7 +87,7 @@ class query:
 
         query = "INSERT INTO investors (userid, name, acc_no, profile_code, principal) values (%s, %s, %s, %s, %s)"
         self.con.execute(query, [userid, username, '', int(risk_profile), float(money)])
-        self.con.commit()
+        self.conn.commit()
 
         query = "INSERT INTO detail (date, userid, name, asset_class, itemcode, itemname, quantity, cost_price, cost_value, price, value, wt, group_by, original) " \
                 "values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
