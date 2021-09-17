@@ -524,18 +524,19 @@ def show_content():
         investor = db.getInvestorInfo(name=user.name)
         print('type(investor): {}, investor: {}'.format(type(investor), investor))
 
-        risk_profile = investor[0][0]
+        risk_profile = int(investor[0][0])
         principal = investor[0][1]
+        current_date = pd.to_datetime(user.date, format='%m/%d/%Y %I:%M:%S %p').strftime('%Y-%m-%d')
 
-        print('user.userid: {}, user.name: {}, user.date: {}, risk_profile: {}, principal: {}'.format(user.userid, user.name, user.date, risk_profile, principal))
+        print('user.userid: {}, user.name: {}, user.date: {}, current_date: {}, risk_profile: {}, principal: {}'.format(user.userid, user.name, user.date, current_date, risk_profile, principal))
 
         rebal_dates = advised_pf.loc[(advised_pf.risk_profile == risk_profile) & (
-                advised_pf.date >= user.date), 'date'].min()
+                advised_pf.date >= current_date), 'date'].min()
         dt = rebal_dates
 
         # 시뮬레이션 기간은 현재일(current_date) 다음 날부터 추천 포트폴리오가 존재하는 마지막날까지임.
         dates = advised_pf.loc[(advised_pf.risk_profile == risk_profile) & (
-            advised_pf.date == user.date), 'date'].min()
+            advised_pf.date == current_date), 'date'].min()
         rebal_dates = dates
         print('리밸런싱 일자: ', rebal_dates)
 
