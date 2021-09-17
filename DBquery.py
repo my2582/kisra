@@ -109,7 +109,7 @@ class query:
         self.conn.commit()
         return self.con.fetchall()
 
-    def getUserBalance(self, userid, date=None, latest=True):
+    def getUserBalance(self, userid, date=None, latest=True, original=False):
         # 마지막 날짜의 잔고를 detail 테이블에서 가져온다.
         # print('----in getUserBalance(), userid is {}'.format(userid))
         if latest:
@@ -117,6 +117,11 @@ class query:
                     "where to_timestamp(A.date, 'mm/dd/yyyy HH:M1:SS AM') = (select max(to_timestamp(B.date, 'mm/dd/yyyy HH:M1:SS AM')) from detail B group by B.userid " \
                     "having B.userid=%s) and A.userid=%s and A.wt > 0.0"
             self.con.execute(query, [userid, userid])
+        elif original:
+            query = "select distinct * from detail " \
+                    "where original='Y' " \
+                    "and userid=%s"
+            self.con.execute(query, [userid])
         else:
             query = "select distinct * from detail " \
                     "where to_timestamp(date, 'mm/dd/yyyy HH:M1:SS AM') = to_timestamp(%s, 'mm/dd/yyyy HH:M1:SS AM') " \

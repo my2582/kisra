@@ -122,8 +122,8 @@ class databaseDF:
     #     print(record)
     #     return record
 
-    def getUserBalance(self, userid, date=None, latest=True):
-        record = self.query.getUserBalance(userid=userid, date=date, latest=latest)
+    def getUserBalance(self, userid, date=None, latest=True, original=False):
+        record = self.query.getUserBalance(userid=userid, date=date, latest=latest, original=original)
         # print('-------------balance------------------')
         # print(userid)
         # print(record)

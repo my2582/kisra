@@ -780,13 +780,21 @@ def show_content():
             df_comp_pkl = pd.read_pickle('./data/processed/comparison_0901_{}.pkl'.format(user.userid))
             print('리밸런싱 전/후 비교(1):', df_comp_pkl)
         except:
-            # 최근 잔고 가져옴
-            detail = db.getUserBalance(userid=user.userid)
-            if len(detail) == 0:
-                detail = db.getUserBalanceByName(userid=user.userid)
-            detail = pd.DataFrame(detail, columns=['date', 'userid', 'name', 'asset_class', 'itemcode', 'itemname',
+            # 최초 입금일 잔고를 가져옴
+            before = db.getUserBalance(userid=user.userid, original=True)
+            if len(before) == 0:
+                before = db.getUserBalanceByName(userid=user.userid, original=True)
+            before = pd.DataFrame(before, columns=['date', 'userid', 'name', 'asset_class', 'itemcode', 'itemname',
                                                     'quantity', 'cost_price', 'cost_value', 'price', 'value', 'wt', 'group_by', 'original'])
-            print('exception___최근잔고:', detail)
+            print('exception___최근잔고:', before)
+
+            first_advised_port, by_assetclass, all_the_nexts, all_the_generals = run_simulation(detail=before)
+            after = all_the_nexts
+            after = after.merge(first_advised_port.loc[:, ['itemcode', 'weights']], left_on='itemcode', right_on='itemcode', how='left')
+            after.weights = after.weights.fillna(0)
+            after = after.rename(columns={'weights':'mp_wt'})
+            df_comp_pkl = get_rebal_comp(before, after)
+            print('리밸런싱 전/후 비교(2):', df_comp_pkl)
 
         # # 리밸런싱 후 포트폴리오 가져오기
         # first_advised_port, by_assetclass, all_the_nexts, all_the_generals = get_next_portfolio(detail=detail)
