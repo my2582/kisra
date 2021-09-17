@@ -48,7 +48,7 @@ class query:
         self.conn.commit()
         return self.con.fetchall()
 
-    def newUser(self, answers, money, current_date=None, username=None):
+    def newUser(self, answers, money, current_date=None, username=None, risk_profile=None):
         query = "select distinct userid from userselection"
         self.con.execute(query)
         self.conn.commit()
@@ -84,6 +84,10 @@ class query:
         for i in range(8):
             self.con.execute(query, [userid, username, float(1), float(i+1), float(answers[i][0]), float(answers[i][1])])
             self.conn.commit()
+
+        query = "INSERT INTO investors (userid, name, acc_no, profile_code, principal) values (%s, %s, %s, %s, %s)"
+        self.con.execute(query, [userid, username, '', int(risk_profile), float(money)])
+        self.con.commit()
 
         query = "INSERT INTO detail (date, userid, name, asset_class, itemcode, itemname, quantity, cost_price, cost_value, price, value, wt, group_by, original) " \
                 "values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"

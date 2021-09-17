@@ -38,7 +38,7 @@ def show_content():
     # username = '안정추구형소규모'
 
     db = databaseDF()
-    # advised_pf = AdvisedPortfolios.instance().data
+    advised_pf = AdvisedPortfolios.instance().data
     # print('type(advised_pf)'.format(type(advised_pf)))
     # print('Here is your advised_pf:')
     # print(advised_pf.tail(3))
@@ -510,6 +510,75 @@ def show_content():
         return html.Div([fig,
                          table_result])
 
+    def run_simulation(detail=None, first_trade=False, new_units=None, prices=None, remaining_cash=None):
+        nonlocal advised_pf
+        nonlocal user
+        price_db = PriceDB.instance().data
+
+        # 최근 잔고 가져오기
+        # 아직 어떤 타입으로 가져오는지 모름
+        #detail = self.db.getUserBalance(userid=self.userid)       
+        #detail = pd.DataFrame(detail, columns=['date', 'userid', 'name', 'asset_class', 'itemcode', 'itemname',
+    #                                            'quantity', 'cost_price', 'cost_value', 'price', 'value', 'wt', 'group_by', 'original'])
+
+        investor = db.getInvestorInfo(name=user.name)
+        print('type(investor): {}, investor: {}'.format(type(investor), investor))
+
+        risk_profile = investor[0]
+        principal = investor[1]
+
+        rebal_dates = advised_pf.loc[(advised_pf.risk_profile == risk_profile) & (
+                advised_pf.date >= user.date), 'date'].min()
+        dt = rebal_dates
+
+        # 시뮬레이션 기간은 현재일(current_date) 다음 날부터 추천 포트폴리오가 존재하는 마지막날까지임.
+        dates = advised_pf.loc[(advised_pf.risk_profile == risk_profile) & (
+            advised_pf.date == user.date), 'date'].min()
+        rebal_dates = dates
+        print('리밸런싱 일자: ', rebal_dates)
+
+        # return할 때 필요한 첫날의 추천 포트 폴리오와 asset class별 정보 수집
+        new_port = advised_pf.loc[(advised_pf.date == rebal_dates) & (
+            advised_pf.risk_profile == risk_profile), :]
+
+        first_advised_port = new_port.loc[:, ['weights', 'itemname', 'itemcode']].groupby(
+            ['itemname', 'itemcode']).sum().reset_index()
+        by_assetclass = new_port.loc[:, ['weights', 'asset_class']].groupby(
+            'asset_class').sum().sort_values('weights', ascending=False).reset_index()
+
+
+        # next_detail = copy.deepcopy(detail)
+        next_detail = detail
+        all_the_nexts = pd.DataFrame(columns=next_detail.columns)
+        nexts_list = []
+        price_db = price_db.loc[:, ['date', 'price', 'itemcode']]
+        price_d = price_db.loc[price_db.date==dt, ['date', 'price', 'itemcode']]
+
+        # 리밸런싱한다.
+        new_port = advised_pf.loc[(advised_pf.risk_profile==risk_profile) & (advised_pf.date==dt), ['date', 'itemcode', 'weights', 'itemname', 'price', 'asset_class']]
+        next_detail = rebalance(rebal_date=dt, price_d=price_d, detail=next_detail, new_port=new_port)
+
+        # all_the_nexts = pd.concat((all_the_nexts, next_detail))
+        nexts_list.append(next_detail)
+
+        all_the_nexts = pd.concat(nexts_list, axis=0)
+
+        print('리밸런싱 종료----')
+        # 불필요한 컬럼 및 행 삭제
+        all_the_nexts = all_the_nexts.loc[all_the_nexts.quantity > 0]
+        all_the_nexts = all_the_nexts.reset_index(drop=True)
+        all_the_nexts['username'] = user.userid
+
+        all_the_generals = all_the_nexts.loc[:,['date', 'wt', 'value', 'asset_class']].sort_values(
+                                        ['date'], ascending=True).groupby([
+                                            'date', 'asset_class'
+                                        ]).sum().reset_index(drop=False)
+        print('자산군별 요약 계산 종료----')
+
+        all_the_generals['userid'] = user.userid
+
+        return first_advised_port, by_assetclass, all_the_nexts, all_the_generals
+
     def rebalance(rebal_date, price_d, detail, new_port):
         '''
         Rebalance a portfolio.
@@ -527,7 +596,9 @@ def show_content():
         new_port: DataFrame
         A new portfolio. Your current portfolio in `detail` will be rebalanced toward `new_port`.
         '''
-        trading_amt = detail.value.sum()       
+        nonlocal user
+
+        trading_amt = detail.value.sum()
 
         wt = new_port[['itemcode', 'weights']].set_index('itemcode').to_dict()['weights']
         pr = new_port[['itemcode', 'price']].set_index('itemcode').squeeze()
@@ -572,8 +643,8 @@ def show_content():
                 price_d.loc[price_d.date==rebal_date, ['date', 'itemcode']],
                 left_on=['date', 'itemcode'],
                 right_on=['date', 'itemcode'], how='left')
-        next_detail['username'] = username
-        next_detail['userid'] = userid
+        next_detail['username'] = user.name
+        next_detail['userid'] = user.userid
         next_detail['original'] = 'Rebal'
         next_detail = next_detail.rename(columns={'weights':'wt'})
         next_detail = next_detail[['itemcode', 'quantity', 'cost_price', 'price', 'cost_value', 'value',
@@ -582,60 +653,10 @@ def show_content():
 
         return next_detail
 
-    def get_next_portfolio(first_trade=False, new_units=None, prices=None, remaining_cash=None, detail=None):
-        price_db = PriceDB.instance().data
-        advised_pf = AdvisedPortfolios.instance().data
 
-        # 시뮬레이션 기간은 현재일(current_date) 다음 날부터 추천 포트폴리오가 존재하는 마지막날까지임.
-        dates = advised_pf.loc[(advised_pf.risk_profile == risk_profile) & (
-            advised_pf.date > current_date), 'date'].min()
-        rebal_dates = dates
-        dt = rebal_dates     # dt랑 rebal_dates, dates 다 똑같음. 
-        print('리밸런싱 일자: ', rebal_dates)
+    def get_rebal_comp(before, after):
+        nonlocal user
 
-        # return할 때 필요한 첫날의 추천 포트 폴리오와 asset class별 정보 수집
-        new_port = advised_pf.loc[(advised_pf.date == rebal_dates) & (
-            advised_pf.risk_profile == risk_profile), :]
-
-        first_advised_port = new_port.loc[:, ['weights', 'itemname', 'itemcode']].groupby(
-            ['itemname', 'itemcode']).sum().reset_index()
-        by_assetclass = new_port.loc[:, ['weights', 'asset_class']].groupby(
-            'asset_class').sum().sort_values('weights', ascending=False).reset_index()
-
-
-        # next_detail = copy.deepcopy(detail)
-        next_detail = detail
-        all_the_nexts = pd.DataFrame(columns=next_detail.columns)
-        nexts_list = []
-        price_db = price_db.loc[:, ['date', 'price', 'itemcode']]
-        price_d = price_db.loc[price_db.date==dt, ['date', 'price', 'itemcode']]
-
-        # 리밸런싱한다.
-        new_port = advised_pf.loc[(advised_pf.risk_profile==risk_profile) & (advised_pf.date==dt), ['date', 'itemcode', 'weights', 'itemname', 'price', 'asset_class']]
-        next_detail = rebalance(rebal_date=dt, price_d=price_d, detail=next_detail, new_port=new_port)
-
-        # all_the_nexts = pd.concat((all_the_nexts, next_detail))
-        nexts_list.append(next_detail)
-
-        all_the_nexts = pd.concat(nexts_list, axis=0)
-
-        print('리밸런싱 종료----')
-        # 불필요한 컬럼 및 행 삭제
-        all_the_nexts = all_the_nexts.loc[all_the_nexts.quantity > 0]
-        all_the_nexts = all_the_nexts.reset_index(drop=True)
-        all_the_nexts['username'] = username
-
-        all_the_generals = all_the_nexts.loc[:,['date', 'wt', 'value', 'asset_class']].sort_values(
-                                        ['date'], ascending=True).groupby([
-                                            'date', 'asset_class'
-                                        ]).sum().reset_index(drop=False)
-        print('자산군별 요약 계산 종료----')
-
-        all_the_generals['userid'] = userid
-
-        return first_advised_port, by_assetclass, all_the_nexts, all_the_generals
-
-    def make_comparison(before, after):
         before=before.set_index('itemcode', drop=True)
         after=after.set_index('itemcode', drop=True)
         
@@ -651,7 +672,7 @@ def show_content():
         df_comp.itemname_before = df_comp.itemname_before.combine_first(after.itemname)
         df_comp.itemname_after = df_comp.itemname_after.combine_first(before.itemname)
         df_comp.price_after = df_comp.price_after.combine_first(before.price)
-        df_comp.name = username
+        df_comp.name = user.name
         df_comp = df_comp.fillna(0)
         df_comp = df_comp.assign(quantity_diff= df_comp.quantity_after-df_comp.quantity_before)
         
@@ -684,6 +705,9 @@ def show_content():
             'quantity_before', 'value_before', 'quantity_after',
             'price_after', 'value_after'
         ]].astype(float).astype(int).applymap(lambda x: '{:,}'.format(x))
+        
+        # 현금은 매매방향 개념이 없으니까 무조건 -로 처리
+        df_comp.loc[df_comp.itemcode=='C000001', 'trade'] = '-'
 
         # 컬럼명 한글로
         df_comp = df_comp.rename(columns = {
