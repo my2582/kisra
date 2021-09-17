@@ -111,8 +111,8 @@ class databaseDF:
         record = self.query.getUserList()
         return record
 
-    def newUser(self, answer, money, current_date=None, username=None):
-        userid = self.query.newUser(answer, money, current_date, username)
+    def newUser(self, answer, money, current_date=None, username=None, risk_profile=None):
+        userid = self.query.newUser(answer, money, current_date, username, risk_profile)
         return userid
 
     # def getDetail(self, userid):
