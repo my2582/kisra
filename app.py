@@ -527,6 +527,8 @@ def show_content():
         risk_profile = investor[0][0]
         principal = investor[0][1]
 
+        print('user.userid: {}, user.name: {}, user.date: {}, risk_profile: {}, principal: {}'.format(user.userid, user.name, user.date, risk_profile, principal))
+
         rebal_dates = advised_pf.loc[(advised_pf.risk_profile == risk_profile) & (
                 advised_pf.date >= user.date), 'date'].min()
         dt = rebal_dates
@@ -781,7 +783,7 @@ def show_content():
             print('리밸런싱 전/후 비교(1):', df_comp_pkl)
         except:
             # 최초 입금일 잔고를 가져옴
-            before = db.getUserBalance(userid=user.userid, original=True)
+            before = db.getUserBalance(userid=user.userid, latest=False, original=True)
             if len(before) == 0:
                 before = db.getUserBalanceByName(userid=user.userid, original=True)
             before = pd.DataFrame(before, columns=['date', 'userid', 'name', 'asset_class', 'itemcode', 'itemname',
