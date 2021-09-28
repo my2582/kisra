@@ -2,7 +2,7 @@ import dash_core_components as dcc
 import dash_html_components as html
 import json
 import os
-from datetime import date
+from datetime import date, timedelta
 
 with open(os.getcwd() + '/Styles.json', 'rb') as f:
     style = json.load(f)
@@ -205,9 +205,9 @@ info = [
         html.Label('기준일'),
         dcc.DatePickerSingle(
             id='default-predict-date',
-            max_date_allowed=date.today(),
-            initial_visible_month=date.today(),
-            date=date.today()
+            max_date_allowed=date.today() - timedelta(days=1),
+            initial_visible_month=date.today() - timedelta(days=1),
+            date=date.today() - timedelta(days=1)
         )
     ],
         id='user-detail-info'),

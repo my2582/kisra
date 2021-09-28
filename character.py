@@ -215,13 +215,10 @@ class Character:
 
         self.score = 0
         for idx, choice in enumerate(self.options[:-3]):
-#            print(choice)
-#            print(data[data['choice-id'] == choice])
             risk_value = data[data['choice-id'] == choice]['risk_pref_value'].values[0]
-#            print('risk_value : ', risk_value)
             self.score += risk_value
             answers[idx] = (answers[idx], risk_value)
-        # print('----------------날짜------------------')
+
         self.current_date = self.options[-2]  # 날짜.
         # print(self.current_date)
         self.current_date = datetime.strptime(
