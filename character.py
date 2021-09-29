@@ -125,9 +125,9 @@ class Character:
         rebal_dates = dates[::30]
         print('리밸런싱 일자: ', rebal_dates)
 
-        if len(dates) < 1:
-            dates[0] = '2021-09-27'
-            rebal_dates[0] = '2021-09-27'
+        if len(dates) == 0:
+            dates.append('2021-09-27')
+            rebal_dates.append('2021-09-27')
 
         # return할 때 필요한 첫날의 추천 포트 폴리오와 asset class별 정보 수집
         df_temp = self.advised_pf.loc[(self.advised_pf.date == dates[0]) & (
