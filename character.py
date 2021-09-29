@@ -126,6 +126,8 @@ class Character:
         print('리밸런싱 일자: ', rebal_dates)
 
         if len(dates) == 0:
+            dates = []
+            rebal_dates = []
             dates.append('2021-09-27')
             rebal_dates.append('2021-09-27')
 
