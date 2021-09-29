@@ -117,7 +117,7 @@ class Character:
         detail = pd.DataFrame(detail, columns=['date', 'userid', 'name', 'asset_class', 'itemcode', 'itemname',
                                                 'quantity', 'cost_price', 'cost_value', 'price', 'value', 'wt', 'group_by', 'original'])
 
-        print('self.advised_pf.risk_profile: {}, self.risk_profile: {}, self.current_date: {}'.format(self.advised_pf.risk_profile, self.risk_profile, self.current_date))
+        print('self.advised_pf.risk_profile: {}, self.advised_pf.date: {}, self.risk_profile: {}, self.current_date: {}'.format(self.advised_pf.risk_profile, self.advised_pf.date, self.risk_profile, self.current_date))
 
         # 시뮬레이션 기간은 현재일(current_date) 다음 날부터 추천 포트폴리오가 존재하는 마지막날까지임.
         dates = self.advised_pf.loc[(self.advised_pf.risk_profile == self.risk_profile) & (

@@ -16,7 +16,7 @@
     "padding": "6px"
   },
   "pie_chart_style": {
-    "backgroundColor": "#a1a197",
+    "backgroundColor": "#F3F6F4",
     "textAlign": "center",
     "font-size": "2rem",
     "height": "800px"
