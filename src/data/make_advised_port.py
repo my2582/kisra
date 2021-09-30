@@ -9,10 +9,10 @@ from models.portfolio_advisor import PortfolioAdvisor
 
 pa = PortfolioAdvisor(root_path='../../')
 path_to_save = './data/processed/'
-filename = 'advised_portfolios-0831.pkl'
+filename = 'advised_portfolios-0930.pkl'  # MP종가반영일
 
-start_date = '2021-08-02'
-end_date = '2021-08-31'
+start_date = '2021-09-01'   # 이전 MP발생일
+end_date = '2021-09-30'     # MP종가 반영일
 
 for date in pd.date_range(start=start_date, end=end_date):
     for r in [2,3,4]:

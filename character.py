@@ -128,8 +128,8 @@ class Character:
         if len(dates) == 0:
             dates = []
             rebal_dates = []
-            dates.append('2021-09-29')
-            rebal_dates.append('2021-09-29')
+            dates.append('2021-09-30')
+            rebal_dates.append('2021-09-30')
 
         # return할 때 필요한 첫날의 추천 포트 폴리오와 asset class별 정보 수집
         df_temp = self.advised_pf.loc[(self.advised_pf.date == dates[0]) & (
