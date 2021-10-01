@@ -105,8 +105,8 @@ def show_content():
             # 로그인을 했을 경우
             # RA자문 탭의 이름과 자문기준일 값을 설정함.
             layout.analysis[0].children[1].children = user.name
-            layout.analysis[0].children[3].children = '9/29/2021 4:00:00 PM'
-            user.date = '9/29/2021 4:00:00 PM'
+            layout.analysis[0].children[3].children = '9/30/2021 4:00:00 PM'
+            user.date = '9/30/2021 4:00:00 PM'
             print('type(layout.analysis[0].children[1]): {}, .value: {}'.format(type(layout.analysis[0].children[1]), layout.analysis[0].children[1].children))
             print('type(layout.analysis[0].children[3]): {}, .value: {}'.format(type(layout.analysis[0].children[3]), layout.analysis[0].children[3].children))
             # layout.analysis[0].children[3].children = user.getStartDate(user.name)
@@ -780,7 +780,7 @@ def show_content():
         select = changePeriod(select)
 
         try:
-            df_comp_pkl = pd.read_pickle('./data/processed/comparison_0901_{}.pkl'.format(user.userid))
+            df_comp_pkl = pd.read_pickle('./data/processed/comparison_0930_{}.pkl'.format(user.userid))
             print('리밸런싱 전/후 비교(1):', df_comp_pkl)
         except:
             # 최초 입금일 잔고를 가져옴
